@@ -1,5 +1,5 @@
 // Global Variables
-const API_BASE_URL = 'https://silasschool.netlify.app/api';
+const API_BASE_URL = 'https://school-management-api-nu0b.onrender.com/api';
 let currentUser = null;
 let currentToken = null;
 
