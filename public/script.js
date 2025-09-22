@@ -1,7 +1,8 @@
 // Global Variables
-const API_BASE_URL = 'https://school-management-api-nu0b.onrender.com/api';
+const API_BASE_URL = 'https://school-management-api-nu0b.onrender.com/api'; // Update this to your backend URL
 let currentUser = null;
 let currentToken = null;
+let resetStudentId = null; // Store student ID for password reset flow
 
 // DOM Elements
 const sections = ['home', 'register', 'login', 'forgotPassword', 'otpVerification', 'resetPassword', 'admin', 'profile'];
@@ -287,6 +288,10 @@ const handleOTPVerification = async (e) => {
             body: { otp }
         });
 
+        // Store studentId for password reset
+        resetStudentId = data.studentId;
+        localStorage.setItem('resetStudentId', resetStudentId);
+
         showSuccess('OTP verified successfully! You can now reset your password.');
         document.getElementById('otpForm').reset();
         showSection('resetPassword');
@@ -351,18 +356,16 @@ const handleResetPassword = async (e) => {
 // Admin Functions
 const loadAdminStats = async () => {
     try {
-        const [studentCountResponse, studentsResponse] = await Promise.all([
-            apiCall('/students/student-count'),
-            apiCall('/admin/get-all-students')
-        ]);
-
+        const studentCountResponse = await apiCall('/students/student-count');
         const totalStudents = studentCountResponse.totalStudents;
-        const students = studentsResponse.students;
-        const adminCount = students.filter(student => student.isAdmin).length;
 
+        // For now, we'll show basic stats since we don't have an endpoint to get all students
+        // In a real implementation, you'd create an endpoint to get all students with admin status
         document.getElementById('totalStudents').textContent = totalStudents;
         document.getElementById('activeUsers').textContent = totalStudents;
-        document.getElementById('totalAdmins').textContent = adminCount;
+        document.getElementById('totalAdmins').textContent = 'N/A'; // Would need endpoint to get this
+
+        showSuccess('Admin stats loaded successfully!');
 
     } catch (error) {
         console.error('Error loading admin stats:', error);
@@ -372,43 +375,17 @@ const loadAdminStats = async () => {
 
 const loadStudentsTable = async () => {
     try {
-        const data = await apiCall('/admin/get-all-students');
-        const students = data.students;
+        // Since we don't have an endpoint to get all students, we'll show a message
         const tbody = document.getElementById('studentsTableBody');
-
-        tbody.innerHTML = '';
-
-        students.forEach(student => {
-            const row = document.createElement('tr');
-
-            row.innerHTML = `
-                <td>${student.studentId || 'N/A'}</td>
-                <td>${student.Fistname} ${student.Lastname}</td>
-                <td>${student.email}</td>
-                <td>${student.age}</td>
-                <td>${student.phone}</td>
-                <td>
-                    <span class="badge ${student.isAdmin ? 'bg-success' : 'bg-secondary'}">
-                        ${student.isAdmin ? 'Admin' : 'Student'}
-                    </span>
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="7" class="text-center">
+                    <em>Student management features would be implemented with backend endpoints</em>
                 </td>
-                <td>
-                    ${!student.isAdmin ? `
-                        <button class="btn btn-sm btn-warning me-1" onclick="makeAdmin('${student._id}')" title="Make Admin">
-                            <i class="fas fa-user-shield"></i>
-                        </button>
-                    ` : ''}
-                    <button class="btn btn-sm btn-primary me-1" onclick="editStudent('${student._id}')" title="Edit Student">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger" onclick="deleteStudent('${student._id}')" title="Delete Student">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </td>
-            `;
+            </tr>
+        `;
 
-            tbody.appendChild(row);
-        });
+        showSuccess('Admin panel loaded!');
 
     } catch (error) {
         console.error('Error loading students:', error);

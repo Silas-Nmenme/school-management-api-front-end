@@ -390,6 +390,43 @@ body {
     .card-body {
         padding: 1.5rem;
     }
+
+    /* Mobile Navigation */
+    .navbar-collapse {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: var(--border-radius);
+        margin-top: 1rem;
+        box-shadow: var(--shadow-medium);
+    }
+
+    .navbar-nav .nav-link {
+        color: var(--dark-color) !important;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        margin: 0.25rem 0;
+        transition: var(--transition);
+    }
+
+    .navbar-nav .nav-link:hover {
+        background: rgba(102, 126, 234, 0.1);
+        color: var(--primary-color) !important;
+    }
+
+    /* Mobile Forms */
+    .form-control {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+
+    /* Mobile Cards */
+    .card {
+        margin-bottom: 1rem;
+    }
+
+    /* Mobile Tables */
+    .table-responsive {
+        border-radius: var(--border-radius);
+    }
 }
 
 @media (max-width: 576px) {
@@ -411,6 +448,51 @@ body {
 
     .table-responsive {
         font-size: 0.8rem;
+    }
+
+    /* Extra small screens */
+    .btn {
+        padding: 0.4rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    /* Mobile modals */
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+
+    .modal-content {
+        border-radius: 8px;
+    }
+}
+
+/* Extra responsive improvements */
+@media (max-width: 480px) {
+    .hero-section {
+        padding: 1.5rem 0.75rem;
+    }
+
+    .hero-section h1 {
+        font-size: 1.5rem;
+    }
+
+    .feature-card {
+        padding: 1rem;
+    }
+
+    /* Stack elements on very small screens */
+    .btn-group {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn-group .btn {
+        margin-bottom: 0.5rem;
+        border-radius: 8px;
     }
 }
 
@@ -600,6 +682,7 @@ body {
 /* Mouse tracking styles */
 .kite.mouse-follow {
     transition: transform 0.05s linear;
+}
 
 /* Floating Animation */
 @keyframes float {
