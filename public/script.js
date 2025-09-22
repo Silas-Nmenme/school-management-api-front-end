@@ -252,7 +252,7 @@ const handleForgotPassword = async (e) => {
     try {
         showLoading();
 
-        const data = await apiCall('/students/forgot-password', {
+        const data = await apiCall('/students/forget-password', {
             method: 'POST',
             body: { email }
         });
