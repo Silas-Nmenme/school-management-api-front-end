@@ -63,34 +63,20 @@ const updateNavigation = () => {
 };
 
 const logout = async () => {
+    showLoading();
     try {
-        showLoading();
-
-        const response = await fetch(`${API_BASE_URL}/students/logout`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${currentToken}`
-            }
+        await apiCall('/students/logout', {
+            method: 'POST'
+            // No body needed, token is sent in Authorization header automatically
         });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            // Clear local storage and user data
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            currentUser = null;
-            currentToken = null;
-
-            showSuccess('Logged out successfully!');
-            showSection('home');
-        } else {
-            showError(data.message || 'Logout failed');
-        }
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        currentUser = null;
+        currentToken = null;
+        showSuccess('Logged out successfully!');
+        showSection('login');
     } catch (error) {
-        console.error('Logout error:', error);
-        showError('Network error occurred');
+        showError(error.message || 'Logout failed');
     } finally {
         hideLoading();
     }
@@ -163,7 +149,15 @@ const handleRegister = async (e) => {
     };
 
     // Validation
-    if (!formData.firstname || !formData.lastname || !formData.email || !formData.age || !formData.phone || !formData.password) {
+    if (
+        !formData.firstname ||
+        !formData.lastname ||
+        !formData.email ||
+        !formData.age ||
+        !formData.phone ||
+        !formData.password ||
+        !formData.confirmPassword
+    ) {
         showError('All fields are required');
         return;
     }
@@ -174,37 +168,25 @@ const handleRegister = async (e) => {
     }
 
     if (formData.password.length < 6) {
-        showError('Password must be at least 6 characters long');
+        showError('Password must be at least 6 characters');
         return;
     }
 
     if (!formData.email.includes('@')) {
-        showError('Please enter a valid email address');
+        showError('Invalid email address');
         return;
     }
 
+    showLoading();
     try {
-        showLoading();
-
         const data = await apiCall('/students/register', {
             method: 'POST',
             body: formData
         });
-
-        showSuccess('Registration successful! Please login with your credentials.');
-        document.getElementById('registerForm').reset();
+        showSuccess('Registration successful! Please login.');
         showSection('login');
-
     } catch (error) {
-        console.error('Registration error:', error);
-        // Provide more specific error messages based on the error
-        if (error.message.includes('400')) {
-            showError('Registration failed. Please check all fields and try again.');
-        } else if (error.message.includes('email') || error.message.includes('Email')) {
-            showError('This email is already registered. Please use a different email.');
-        } else {
-            showError(error.message || 'Registration failed. Please try again.');
-        }
+        showError(error.message || 'Registration failed');
     } finally {
         hideLoading();
     }
