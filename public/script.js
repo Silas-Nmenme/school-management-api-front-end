@@ -139,24 +139,31 @@ const handleRegister = async (e) => {
     e.preventDefault();
 
     const formData = {
-        firstName: document.getElementById('regFirstname').value.trim(),
-        lastName: document.getElementById('regLastname').value.trim(),
+        firstname: document.getElementById('regFirstname').value.trim(),
+        lastname: document.getElementById('regLastname').value.trim(),
         email: document.getElementById('regEmail').value.trim(),
         age: parseInt(document.getElementById('regAge').value),
         phone: document.getElementById('regPhone').value.trim(),
-        password: document.getElementById('regPassword').value
+        password: document.getElementById('regPassword').value,
+        confirmPassword: document.getElementById('regConfirmPassword').value
     };
 
     // Validation
     if (
-        !formData.firstName ||
-        !formData.lastName ||
+        !formData.firstname ||
+        !formData.lastname ||
         !formData.email ||
         !formData.age ||
         !formData.phone ||
-        !formData.password
+        !formData.password ||
+        !formData.confirmPassword
     ) {
         showError('All fields are required');
+        return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+        showError('Passwords do not match');
         return;
     }
 
@@ -170,13 +177,6 @@ const handleRegister = async (e) => {
         return;
     }
 
-    // Check if passwords match
-    const confirmPassword = document.getElementById('regConfirmPassword').value;
-    if (formData.password !== confirmPassword) {
-        showError('Passwords do not match');
-        return;
-    }
-
     showLoading();
     try {
         const data = await apiCall('/students/register', {
@@ -185,11 +185,9 @@ const handleRegister = async (e) => {
         });
         showSuccess('Registration successful! Please login.');
         showSection('login');
-        // Reset form
         document.getElementById('registerForm').reset();
     } catch (error) {
         console.error('Registration error:', error);
-        // Provide more specific error messages based on error type
         if (error.message.includes('400')) {
             showError('Registration failed. Please check all fields and try again.');
         } else if (error.message.includes('email') || error.message.includes('Email')) {
