@@ -153,7 +153,7 @@ const handleRegister = async (e) => {
     e.preventDefault();
 
     const formData = {
-        Fistname: document.getElementById('regFirstname').value.trim(),
+        Firstname: document.getElementById('regFirstname').value.trim(),
         Lastname: document.getElementById('regLastname').value.trim(),
         email: document.getElementById('regEmail').value.trim(),
         age: parseInt(document.getElementById('regAge').value),
@@ -163,7 +163,7 @@ const handleRegister = async (e) => {
     };
 
     // Validation
-    if (!formData.Fistname || !formData.Lastname || !formData.email || !formData.age || !formData.phone || !formData.password) {
+    if (!formData.Firstname || !formData.Lastname || !formData.email || !formData.age || !formData.phone || !formData.password) {
         showError('All fields are required');
         return;
     }
@@ -397,7 +397,7 @@ const handleAddStudent = async (e) => {
     e.preventDefault();
 
     const formData = {
-        Fistname: document.getElementById('adminFirstname').value.trim(),
+        Firstname: document.getElementById('adminFirstname').value.trim(),
         Lastname: document.getElementById('adminLastname').value.trim(),
         email: document.getElementById('adminEmail').value.trim(),
         age: parseInt(document.getElementById('adminAge').value),
@@ -407,7 +407,7 @@ const handleAddStudent = async (e) => {
     };
 
     // Validation
-    if (!formData.Fistname || !formData.Lastname || !formData.email || !formData.age || !formData.phone || !formData.password) {
+    if (!formData.Firstname || !formData.Lastname || !formData.email || !formData.age || !formData.phone || !formData.password) {
         showError('All fields are required');
         return;
     }
@@ -501,7 +501,7 @@ const loadProfile = () => {
     if (!currentUser) return;
 
     document.getElementById('profileStudentId').textContent = currentUser.studentId || 'N/A';
-    document.getElementById('profileName').textContent = `${currentUser.Fistname || ''} ${currentUser.Lastname || ''}`.trim() || 'N/A';
+    document.getElementById('profileName').textContent = `${currentUser.Firstname || ''} ${currentUser.Lastname || ''}`.trim() || 'N/A';
     document.getElementById('profileEmail').textContent = currentUser.email || 'N/A';
     document.getElementById('profileAge').textContent = currentUser.age || 'N/A';
     document.getElementById('profilePhone').textContent = currentUser.phone || 'N/A';
