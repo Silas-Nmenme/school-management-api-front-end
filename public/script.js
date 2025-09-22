@@ -139,31 +139,24 @@ const handleRegister = async (e) => {
     e.preventDefault();
 
     const formData = {
-        firstname: document.getElementById('regFirstname').value.trim(),
-        lastname: document.getElementById('regLastname').value.trim(),
+        firstName: document.getElementById('regFirstname').value.trim(),
+        lastName: document.getElementById('regLastname').value.trim(),
         email: document.getElementById('regEmail').value.trim(),
         age: parseInt(document.getElementById('regAge').value),
         phone: document.getElementById('regPhone').value.trim(),
-        password: document.getElementById('regPassword').value,
-        confirmPassword: document.getElementById('regConfirmPassword').value
+        password: document.getElementById('regPassword').value
     };
 
     // Validation
     if (
-        !formData.firstname ||
-        !formData.lastname ||
+        !formData.firstName ||
+        !formData.lastName ||
         !formData.email ||
         !formData.age ||
         !formData.phone ||
-        !formData.password ||
-        !formData.confirmPassword
+        !formData.password
     ) {
         showError('All fields are required');
-        return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-        showError('Passwords do not match');
         return;
     }
 
@@ -177,6 +170,13 @@ const handleRegister = async (e) => {
         return;
     }
 
+    // Check if passwords match
+    const confirmPassword = document.getElementById('regConfirmPassword').value;
+    if (formData.password !== confirmPassword) {
+        showError('Passwords do not match');
+        return;
+    }
+
     showLoading();
     try {
         const data = await apiCall('/students/register', {
@@ -185,8 +185,20 @@ const handleRegister = async (e) => {
         });
         showSuccess('Registration successful! Please login.');
         showSection('login');
+        // Reset form
+        document.getElementById('registerForm').reset();
     } catch (error) {
-        showError(error.message || 'Registration failed');
+        console.error('Registration error:', error);
+        // Provide more specific error messages based on error type
+        if (error.message.includes('400')) {
+            showError('Registration failed. Please check all fields and try again.');
+        } else if (error.message.includes('email') || error.message.includes('Email')) {
+            showError('This email is already registered. Please use a different email.');
+        } else if (error.message.includes('validation')) {
+            showError('Please check your input data and try again.');
+        } else {
+            showError(error.message || 'Registration failed. Please try again.');
+        }
     } finally {
         hideLoading();
     }
@@ -402,23 +414,17 @@ const handleAddStudent = async (e) => {
     e.preventDefault();
 
     const formData = {
-        firstname: document.getElementById('adminFirstname').value.trim(),
-        lastname: document.getElementById('adminLastname').value.trim(),
+        firstName: document.getElementById('adminFirstname').value.trim(),
+        lastName: document.getElementById('adminLastname').value.trim(),
         email: document.getElementById('adminEmail').value.trim(),
         age: parseInt(document.getElementById('adminAge').value),
         phone: document.getElementById('adminPhone').value.trim(),
-        password: document.getElementById('adminPassword').value,
-        confirmPassword: document.getElementById('adminConfirmPassword').value
+        password: document.getElementById('adminPassword').value
     };
 
     // Validation
-    if (!formData.firstname || !formData.lastname || !formData.email || !formData.age || !formData.phone || !formData.password) {
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.age || !formData.phone || !formData.password) {
         showError('All fields are required');
-        return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-        showError('Passwords do not match');
         return;
     }
 
@@ -429,6 +435,13 @@ const handleAddStudent = async (e) => {
 
     if (!formData.email.includes('@')) {
         showError('Please enter a valid email address');
+        return;
+    }
+
+    // Check if passwords match
+    const confirmPassword = document.getElementById('adminConfirmPassword').value;
+    if (formData.password !== confirmPassword) {
+        showError('Passwords do not match');
         return;
     }
 
@@ -452,6 +465,8 @@ const handleAddStudent = async (e) => {
             showError('Failed to add student. Please check all fields and try again.');
         } else if (error.message.includes('email') || error.message.includes('Email')) {
             showError('This email is already registered. Please use a different email.');
+        } else if (error.message.includes('validation')) {
+            showError('Please check your input data and try again.');
         } else {
             showError(error.message || 'Failed to add student. Please try again.');
         }
