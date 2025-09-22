@@ -153,28 +153,33 @@ const handleRegister = async (e) => {
     e.preventDefault();
 
     const formData = {
-        Firstname: document.getElementById('regFirstname').value.trim(),
-        Lastname: document.getElementById('regLastname').value.trim(),
+        firstname: document.getElementById('regFirstname').value.trim(),
+        lastname: document.getElementById('regLastname').value.trim(),
         email: document.getElementById('regEmail').value.trim(),
         age: parseInt(document.getElementById('regAge').value),
         phone: document.getElementById('regPhone').value.trim(),
         password: document.getElementById('regPassword').value,
-        confirmpassword: document.getElementById('regConfirmPassword').value
+        confirmPassword: document.getElementById('regConfirmPassword').value
     };
 
     // Validation
-    if (!formData.Firstname || !formData.Lastname || !formData.email || !formData.age || !formData.phone || !formData.password) {
+    if (!formData.firstname || !formData.lastname || !formData.email || !formData.age || !formData.phone || !formData.password) {
         showError('All fields are required');
         return;
     }
 
-    if (formData.password !== formData.confirmpassword) {
+    if (formData.password !== formData.confirmPassword) {
         showError('Passwords do not match');
         return;
     }
 
     if (formData.password.length < 6) {
         showError('Password must be at least 6 characters long');
+        return;
+    }
+
+    if (!formData.email.includes('@')) {
+        showError('Please enter a valid email address');
         return;
     }
 
@@ -192,7 +197,14 @@ const handleRegister = async (e) => {
 
     } catch (error) {
         console.error('Registration error:', error);
-        showError(error.message || 'Registration failed');
+        // Provide more specific error messages based on the error
+        if (error.message.includes('400')) {
+            showError('Registration failed. Please check all fields and try again.');
+        } else if (error.message.includes('email') || error.message.includes('Email')) {
+            showError('This email is already registered. Please use a different email.');
+        } else {
+            showError(error.message || 'Registration failed. Please try again.');
+        }
     } finally {
         hideLoading();
     }
@@ -223,9 +235,13 @@ const handleLogin = async (e) => {
         currentToken = data.token;
         localStorage.setItem('token', currentToken);
 
-        // Get user profile (you might want to create a profile endpoint)
-        // For now, we'll store basic info
-        currentUser = { email: formData.email };
+        // Store user data from login response
+        currentUser = data.user || data.student || {
+            email: formData.email,
+            firstname: data.firstname,
+            lastname: data.lastname,
+            isAdmin: data.isAdmin || false
+        };
         localStorage.setItem('user', JSON.stringify(currentUser));
 
         showSuccess('Login successful! Welcome back.');
@@ -234,7 +250,14 @@ const handleLogin = async (e) => {
 
     } catch (error) {
         console.error('Login error:', error);
-        showError(error.message || 'Login failed');
+        // Provide more specific error messages
+        if (error.message.includes('401') || error.message.includes('Unauthorized')) {
+            showError('Invalid email or password. Please try again.');
+        } else if (error.message.includes('404')) {
+            showError('Account not found. Please register first.');
+        } else {
+            showError(error.message || 'Login failed. Please try again.');
+        }
     } finally {
         hideLoading();
     }
@@ -397,28 +420,33 @@ const handleAddStudent = async (e) => {
     e.preventDefault();
 
     const formData = {
-        Firstname: document.getElementById('adminFirstname').value.trim(),
-        Lastname: document.getElementById('adminLastname').value.trim(),
+        firstname: document.getElementById('adminFirstname').value.trim(),
+        lastname: document.getElementById('adminLastname').value.trim(),
         email: document.getElementById('adminEmail').value.trim(),
         age: parseInt(document.getElementById('adminAge').value),
         phone: document.getElementById('adminPhone').value.trim(),
         password: document.getElementById('adminPassword').value,
-        confirmpassword: document.getElementById('adminConfirmPassword').value
+        confirmPassword: document.getElementById('adminConfirmPassword').value
     };
 
     // Validation
-    if (!formData.Firstname || !formData.Lastname || !formData.email || !formData.age || !formData.phone || !formData.password) {
+    if (!formData.firstname || !formData.lastname || !formData.email || !formData.age || !formData.phone || !formData.password) {
         showError('All fields are required');
         return;
     }
 
-    if (formData.password !== formData.confirmpassword) {
+    if (formData.password !== formData.confirmPassword) {
         showError('Passwords do not match');
         return;
     }
 
     if (formData.password.length < 6) {
         showError('Password must be at least 6 characters long');
+        return;
+    }
+
+    if (!formData.email.includes('@')) {
+        showError('Please enter a valid email address');
         return;
     }
 
@@ -437,7 +465,14 @@ const handleAddStudent = async (e) => {
 
     } catch (error) {
         console.error('Add student error:', error);
-        showError(error.message || 'Failed to add student');
+        // Provide more specific error messages
+        if (error.message.includes('400')) {
+            showError('Failed to add student. Please check all fields and try again.');
+        } else if (error.message.includes('email') || error.message.includes('Email')) {
+            showError('This email is already registered. Please use a different email.');
+        } else {
+            showError(error.message || 'Failed to add student. Please try again.');
+        }
     } finally {
         hideLoading();
     }
