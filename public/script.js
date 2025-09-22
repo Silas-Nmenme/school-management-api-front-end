@@ -70,11 +70,7 @@ const logout = async () => {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${currentToken}`
-            },
-            body: JSON.stringify({
-                email: currentUser.email,
-                password: document.getElementById('loginPassword').value // This should be stored securely
-            })
+            }
         });
 
         const data = await response.json();
@@ -256,7 +252,7 @@ const handleForgotPassword = async (e) => {
     try {
         showLoading();
 
-        const data = await apiCall('/students/forget-password', {
+        const data = await apiCall('/students/forgot-password', {
             method: 'POST',
             body: { email }
         });
@@ -397,10 +393,15 @@ const loadStudentsTable = async () => {
                     </span>
                 </td>
                 <td>
-                    <button class="btn btn-sm btn-primary me-1" onclick="editStudent('${student._id}')">
+                    ${!student.isAdmin ? `
+                        <button class="btn btn-sm btn-warning me-1" onclick="makeAdmin('${student._id}')" title="Make Admin">
+                            <i class="fas fa-user-shield"></i>
+                        </button>
+                    ` : ''}
+                    <button class="btn btn-sm btn-primary me-1" onclick="editStudent('${student._id}')" title="Edit Student">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="btn btn-sm btn-danger" onclick="deleteStudent('${student._id}')">
+                    <button class="btn btn-sm btn-danger" onclick="deleteStudent('${student._id}')" title="Delete Student">
                         <i class="fas fa-trash"></i>
                     </button>
                 </td>
@@ -494,6 +495,30 @@ const deleteStudent = async (studentId) => {
     }
 };
 
+const makeAdmin = async (studentId) => {
+    if (!confirm('Are you sure you want to make this student an admin?')) {
+        return;
+    }
+
+    try {
+        showLoading();
+
+        await apiCall(`/students/make-admin/${studentId}`, {
+            method: 'PATCH'
+        });
+
+        showSuccess('Student has been granted admin privileges successfully!');
+        loadStudentsTable();
+        loadAdminStats();
+
+    } catch (error) {
+        console.error('Make admin error:', error);
+        showError(error.message || 'Failed to make student admin');
+    } finally {
+        hideLoading();
+    }
+};
+
 // Profile Functions
 const loadProfile = () => {
     if (!currentUser) return;
@@ -549,12 +574,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+            const href = this.getAttribute('href');
+            if (href && href !== '#') {
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
             }
         });
     });
@@ -664,3 +692,4 @@ window.showSection = showSection;
 window.logout = logout;
 window.editStudent = editStudent;
 window.deleteStudent = deleteStudent;
+window.makeAdmin = makeAdmin;
