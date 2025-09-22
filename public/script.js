@@ -114,10 +114,17 @@ const apiCall = async (endpoint, options = {}) => {
     }
 
     const response = await fetch(`${API_BASE_URL}${endpoint}`, finalOptions);
-    const data = await response.json();
+
+    let data;
+    try {
+        data = await response.json();
+    } catch (err) {
+        data = null; // Response is not JSON
+    }
 
     if (!response.ok) {
-        throw new Error(data.message || 'API call failed');
+        // If there's a message in the response, use it; otherwise, show a generic error
+        throw new Error((data && data.message) || `API call failed: ${response.status} ${response.statusText}`);
     }
 
     return data;
