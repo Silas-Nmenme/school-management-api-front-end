@@ -335,18 +335,6 @@
                 loadingSpinner.style.display = 'none';
             }
         });
-
-        // Check if user is already logged in
-        document.addEventListener('DOMContentLoaded', function() {
-            const token = localStorage.getItem('token');
-            if (token) {
-                // User is already logged in, show message or stay on login page
-                const alertMessage = document.getElementById('alertMessage');
-                alertMessage.className = 'alert alert-success';
-                alertMessage.textContent = 'You are already logged in.';
-                alertMessage.style.display = 'block';
-            }
-        });
     </script>
 </body>
 </html>
