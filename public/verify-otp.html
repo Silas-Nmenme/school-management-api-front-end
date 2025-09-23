@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP - School Management System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .verify-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 400px;
+            width: 100%;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        .verify-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .verify-header h2 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        .verify-header p {
+            margin: 10px 0 0;
+            opacity: 0.9;
+        }
+        .verify-body {
+            padding: 40px 30px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .form-control {
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 1.5rem;
+            letter-spacing: 0.5rem;
+        }
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .btn-verify {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        .btn-verify:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        .btn-verify:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .back-to-forgot {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e5e9;
+        }
+        .back-to-forgot a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-to-forgot a:hover {
+            text-decoration: underline;
+        }
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+        .alert-danger {
+            background-color: #fee;
+            color: #c33;
+        }
+        .alert-success {
+            background-color: #efe;
+            color: #363;
+        }
+        .alert-info {
+            background-color: #eef;
+            color: #036;
+        }
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        .otp-display {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .otp-display h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .otp-code {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+            letter-spacing: 0.5rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .back-to-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+        }
+        .back-to-home a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+        .back-to-home a:hover {
+            color: #e1e5e9;
+        }
+        .resend-otp {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .resend-otp a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .resend-otp a:hover {
+            text-decoration: underline;
+        }
+        .countdown {
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="back-to-home">
+        <a href="index.html"><i class="fas fa-arrow-left me-2"></i>Back to Home</a>
+    </div>
+
+    <div class="verify-container">
+        <div class="verify-header">
+            <h2><i class="fas fa-shield-alt me-2"></i>Verify OTP</h2>
+            <p>Enter the OTP sent to your email</p>
+        </div>
+        <div class="verify-body">
+            <!-- Alert Messages -->
+            <div id="alertMessage" class="alert" style="display: none;"></div>
+
+            <!-- OTP Display (if available) -->
+            <div id="otpDisplay" class="otp-display" style="display: none;">
+                <h4>Your OTP Code:</h4>
+                <div class="otp-code" id="otpCode">123456</div>
+            </div>
+
+            <form id="verifyOtpForm">
+                <div class="form-group">
+                    <label for="otp" class="form-label">Enter OTP</label>
+                    <input type="text" class="form-control" id="otp" name="otp" required placeholder="000000" maxlength="6">
+                </div>
+                <button type="submit" class="btn btn-verify" id="verifyBtn">
+                    <span class="loading-spinner" id="loadingSpinner"></span>
+                    Verify OTP
+                </button>
+            </form>
+
+            <div class="resend-otp">
+                <span id="countdownText">Didn't receive OTP? <a href="#" id="resendOtp">Resend</a></span>
+                <div class="countdown" id="countdown" style="display: none;">Resend in <span id="countdownTimer">60</span> seconds</div>
+            </div>
+
+            <div class="back-to-forgot">
+                <a href="forgot-password.html">Back to Forgot Password</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        let countdownTimer = null;
+        let timeLeft = 60;
+
+        // Start countdown
+        function startCountdown() {
+            const countdownText = document.getElementById('countdownText');
+            const countdown = document.getElementById('countdown');
+            const resendOtp = document.getElementById('resendOtp');
+            
+            countdownText.style.display = 'none';
+            countdown.style.display = 'block';
+            resendOtp.style.pointerEvents = 'none';
+            
+            countdownTimer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('countdownTimer').textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownTimer);
+                    countdownText.style.display = 'block';
+                    countdown.style.display = 'none';
+                    resendOtp.style.pointerEvents = 'auto';
+                    timeLeft = 60;
+                }
+            }, 1000);
+        }
+
+        // Resend OTP
+        document.getElementById('resendOtp').addEventListener('click', async function(e) {
+            e.preventDefault();
+            
+            const email = localStorage.getItem('resetEmail');
+            const alertMessage = document.getElementById('alertMessage');
+            
+            if (!email) {
+                showAlert('Email not found. Please go back to forgot password page.', 'danger');
+                return;
+            }
+            
+            try {
+                const response = await fetch('https://school-management-api-nu0b.onrender.com/api/students/forget-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showAlert('OTP resent successfully! Please check your email.', 'success');
+                    startCountdown();
+                } else {
+                    showAlert(data.message || 'Failed to resend OTP. Please try again.', 'danger');
+                }
+            } catch (error) {
+                console.error('Resend OTP error:', error);
+                showAlert('Network error. Please check your connection and try again.', 'danger');
+            }
+        });
+
+        // Form submission
+        document.getElementById('verifyOtpForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const otp = document.getElementById('otp').value;
+            const verifyBtn = document.getElementById('verifyBtn');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const alertMessage = document.getElementById('alertMessage');
+            
+            if (!otp || otp.length !== 6) {
+                showAlert('Please enter a valid 6-digit OTP', 'danger');
+                return;
+            }
+            
+            // Show loading state
+            verifyBtn.disabled = true;
+            loadingSpinner.style.display = 'inline-block';
+            
+            // Hide previous alerts
+            alertMessage.style.display = 'none';
+            
+            try {
+                const response = await fetch('https://school-management-api-nu0b.onrender.com/api/students/verify-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ otp })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Store student ID for password reset
+                    localStorage.setItem('studentId', data.studentId);
+                    
+                    showAlert('OTP verified successfully! Redirecting to password reset...', 'success');
+                    
+                    // Redirect to reset password page after delay
+                    setTimeout(() => {
+                        window.location.href = 'reset-password.html';
+                    }, 2000);
+                } else {
+                    showAlert(data.message || 'Invalid OTP. Please try again.', 'danger');
+                }
+            } catch (error) {
+                console.error('Verify OTP error:', error);
+                showAlert('Network error. Please check your connection and try again.', 'danger');
+            } finally {
+                // Hide loading state
+                verifyBtn.disabled = false;
+                loadingSpinner.style.display = 'none';
+            }
+        });
+
+        // Auto-focus and auto-submit on OTP input
+        document.getElementById('otp').addEventListener('input', function() {
+            // Remove any non-numeric characters
+            this.value = this.value.replace(/\D/g, '');
+            
+            // Auto-submit when 6 digits are entered
+            if (this.value.length === 6) {
+                document.getElementById('verifyBtn').click();
+            }
+        });
+
+        // Utility function to show alerts
+        function showAlert(message, type) {
+            const alertMessage = document.getElementById('alertMessage');
+            alertMessage.className = `alert alert-${type}`;
+            alertMessage.textContent = message;
+            alertMessage.style.display = 'block';
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                alertMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        // Check for OTP in URL parameters (for demo purposes)
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const otpFromUrl = urlParams.get('otp');
+            const emailFromUrl = urlParams.get('email');
+            
+            if (otpFromUrl) {
+                document.getElementById('otp').value = otpFromUrl;
+                document.getElementById('otpDisplay').style.display = 'block';
+                document.getElementById('otpCode').textContent = otpFromUrl;
+            }
+            
+            if (emailFromUrl) {
+                localStorage.setItem('resetEmail', emailFromUrl);
+            }
+            
+            // Start countdown if email exists
+            if (localStorage.getItem('resetEmail')) {
+                startCountdown();
+            }
+        });
+    </script>
+</body>
+</html>
