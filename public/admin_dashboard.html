@@ -202,24 +202,57 @@
                     <h5 class="mb-0"><i class="fas fa-tachometer-alt me-2"></i>System Overview</h5>
                 </div>
                 <div class="card-body">
-                    <div class="row">
+                    <div class="row" id="systemOverview">
                         <div class="col-md-3">
-                            <h4 class="text-primary">150</h4>
+                            <h4 class="text-primary" id="totalStudents">Loading...</h4>
                             <p class="text-muted">Total Students</p>
                         </div>
                         <div class="col-md-3">
-                            <h4 class="text-success">25</h4>
+                            <h4 class="text-success" id="activeCourses">Loading...</h4>
                             <p class="text-muted">Active Courses</p>
                         </div>
                         <div class="col-md-3">
-                            <h4 class="text-warning">10</h4>
+                            <h4 class="text-warning" id="staffMembers">Loading...</h4>
                             <p class="text-muted">Staff Members</p>
                         </div>
                         <div class="col-md-3">
-                            <h4 class="text-info">98%</h4>
+                            <h4 class="text-info" id="systemUptime">Loading...</h4>
                             <p class="text-muted">System Uptime</p>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Manage Users Section -->
+            <div class="card" id="users" style="display: none;">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-users me-2"></i>Manage Users</h5>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-custom mb-3" onclick="loadStudents()"><i class="fas fa-sync-alt me-2"></i>Load Students</button>
+                    <div id="studentsList">Click to load students data.</div>
+                </div>
+            </div>
+
+            <!-- Reports Section -->
+            <div class="card" id="reports" style="display: none;">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Reports</h5>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-custom mb-3" onclick="loadReports()"><i class="fas fa-sync-alt me-2"></i>Generate Reports</button>
+                    <div id="reportsData">Click to generate reports.</div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div class="card" id="settings" style="display: none;">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-cog me-2"></i>Settings</h5>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-custom mb-3" onclick="loadSettings()"><i class="fas fa-sync-alt me-2"></i>Load Settings</button>
+                    <div id="settingsData">Click to load settings.</div>
                 </div>
             </div>
         </div>
@@ -229,14 +262,18 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
     <script>
+        const API_BASE_URL = 'http://localhost:3000/admin'; // Adjust based on your backend URL
+        const token = localStorage.getItem('token');
+
         // Role-based access check
         document.addEventListener('DOMContentLoaded', function() {
             const userRole = localStorage.getItem('userRole');
-            const token = localStorage.getItem('token');
             
             if (!token || userRole !== 'admin') {
                 alert('Access denied. Please log in as an admin.');
                 window.location.href = 'login.html';
+            } else {
+                loadDashboardOverview();
             }
         });
 
@@ -253,10 +290,141 @@
                 e.preventDefault();
                 const target = this.getAttribute('href');
                 if (target.startsWith('#')) {
+                    document.querySelector(target).style.display = 'block';
                     document.querySelector(target).scrollIntoView({ behavior: 'smooth' });
                 }
             });
         });
+
+        // Function to load dashboard overview
+        async function loadDashboardOverview() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/dashboard/overview`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    document.getElementById('totalStudents').textContent = data.totalStudents;
+                    document.getElementById('activeCourses').textContent = data.activeCourses;
+                    document.getElementById('staffMembers').textContent = data.staffMembers;
+                    document.getElementById('systemUptime').textContent = `${data.systemUptime}%`;
+                } else {
+                    console.error('Error loading dashboard overview:', data.message);
+                }
+            } catch (error) {
+                console.error('Error fetching dashboard overview:', error);
+            }
+        }
+
+        // Function to load students
+        async function loadStudents() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/get-all-students`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    const students = data.students;
+                    let html = '<h6>Students List:</h6><ul class="list-group">';
+                    students.forEach(student => {
+                        html += `<li class="list-group-item">${student.Fistname} ${student.Lastname} - ${student.email}</li>`;
+                    });
+                    html += '</ul>';
+                    document.getElementById('studentsList').innerHTML = html;
+                } else {
+                    document.getElementById('studentsList').innerHTML = `<p class="text-danger">Error: ${data.message}</p>`;
+                }
+            } catch (error) {
+                document.getElementById('studentsList').innerHTML = '<p class="text-danger">Error loading students.</p>';
+                console.error('Error fetching students:', error);
+            }
+        }
+
+        // Function to load reports
+        async function loadReports() {
+            try {
+                const [studentReportResponse, courseReportResponse] = await Promise.all([
+                    fetch(`${API_BASE_URL}/reports/students`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }),
+                    fetch(`${API_BASE_URL}/reports/courses`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                ]);
+
+                const studentData = await studentReportResponse.json();
+                const courseData = await courseReportResponse.json();
+
+                let html = '<h6>Student Report:</h6>';
+                if (studentReportResponse.ok) {
+                    html += `<p>Total Students: ${studentData.totalStudents}</p>`;
+                    html += '<h6>Students by Age:</h6><ul>';
+                    studentData.studentsByAge.forEach(group => {
+                        html += `<li>Age ${group._id}: ${group.count}</li>`;
+                    });
+                    html += '</ul>';
+                } else {
+                    html += `<p class="text-danger">Error: ${studentData.message}</p>`;
+                }
+
+                html += '<h6>Course Report:</h6>';
+                if (courseReportResponse.ok) {
+                    html += `<p>Total Courses: ${courseData.totalCourses}</p>`;
+                    html += `<p>Active Courses: ${courseData.activeCourses}</p>`;
+                } else {
+                    html += `<p class="text-danger">Error: ${courseData.message}</p>`;
+                }
+
+                document.getElementById('reportsData').innerHTML = html;
+            } catch (error) {
+                document.getElementById('reportsData').innerHTML = '<p class="text-danger">Error loading reports.</p>';
+                console.error('Error fetching reports:', error);
+            }
+        }
+
+        // Function to load settings
+        async function loadSettings() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/settings`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    const settings = data.settings;
+                    let html = '<h6>Current Settings:</h6>';
+                    html += `<p>School Name: ${settings.schoolName}</p>`;
+                    html += `<p>School Email: ${settings.schoolEmail}</p>`;
+                    html += `<p>Allow Student Registration: ${settings.systemPreferences.allowStudentRegistration ? 'Yes' : 'No'}</p>`;
+                    html += `<p>Max Students Per Course: ${settings.systemPreferences.maxStudentsPerCourse}</p>`;
+                    document.getElementById('settingsData').innerHTML = html;
+                } else {
+                    document.getElementById('settingsData').innerHTML = `<p class="text-danger">Error: ${data.message}</p>`;
+                }
+            } catch (error) {
+                document.getElementById('settingsData').innerHTML = '<p class="text-danger">Error loading settings.</p>';
+                console.error('Error fetching settings:', error);
+            }
+        }
     </script>
 </body>
 </html>
