@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses - School Management System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .courses-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin: 20px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        .courses-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .courses-header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        .courses-body {
+            padding: 40px;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+            height: 100%;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 20px;
+        }
+        .btn-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+        .btn-secondary-custom {
+            background: #6c757d;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary-custom:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            color: white;
+        }
+        .course-icon {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        .course-card {
+            text-align: center;
+            padding: 30px 20px;
+        }
+        .course-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .course-description {
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+        .course-meta {
+            font-size: 0.875rem;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        .no-courses {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+        .no-courses i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @media (max-width: 768px) {
+            .courses-container {
+                margin: 10px;
+            }
+            .courses-header h1 {
+                font-size: 2rem;
+            }
+            .courses-body {
+                padding: 20px;
+            }
+            .card {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="courses-container">
+        <div class="courses-header">
+            <h1><i class="fas fa-book me-2"></i>Courses</h1>
+            <p>Browse your enrolled courses and materials</p>
+        </div>
+        <div class="courses-body">
+            <!-- Alert Messages -->
+            <div id="alertMessage" class="alert" style="display: none;"></div>
+            
+            <!-- Loading State -->
+            <div id="loadingState" class="text-center" style="padding: 60px 20px;">
+                <div class="loading-spinner" style="width: 40px; height: 40px; border-width: 3px; margin: 0 auto 20px;"></div>
+                <h5>Loading your courses...</h5>
+            </div>
+
+            <!-- Courses Grid -->
+            <div id="coursesGrid" style="display: none;">
+                <div class="row" id="coursesRow">
+                    <!-- Courses will be populated here -->
+                </div>
+            </div>
+
+            <!-- No Courses State -->
+            <div id="noCoursesState" class="no-courses" style="display: none;">
+                <i class="fas fa-book-open"></i>
+                <h4>No Courses Enrolled</h4>
+                <p>You haven't enrolled in any courses yet. Contact your administrator to get started with your academic journey.</p>
+                <a href="student_dashboard.html" class="btn btn-custom">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+
+            <!-- Back Button (shown when courses exist) -->
+            <div id="backButton" class="text-center mt-4" style="display: none;">
+                <a href="student_dashboard.html" class="btn btn-secondary-custom">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        // Authentication check
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            const userRole = localStorage.getItem('userRole');
+            
+            if (!token || userRole !== 'student') {
+                alert('Access denied. Please log in as a student.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            loadCourses();
+        });
+
+        // Load courses data
+        async function loadCourses() {
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch('https://school-management-api-nu0b.onrender.com/api/students/courses', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    displayCourses(data.courses || []);
+                } else {
+                    throw new Error('Failed to load courses');
+                }
+            } catch (error) {
+                console.error('Error loading courses:', error);
+                showAlert('Failed to load courses. Please try again.', 'danger');
+                hideLoading();
+            }
+        }
+
+        // Display courses
+        function displayCourses(courses) {
+            const coursesRow = document.getElementById('coursesRow');
+            const coursesGrid = document.getElementById('coursesGrid');
+            const noCoursesState = document.getElementById('noCoursesState');
+            const backButton = document.getElementById('backButton');
+            
+            hideLoading();
+            
+            if (courses.length === 0) {
+                noCoursesState.style.display = 'block';
+                return;
+            }
+            
+            coursesGrid.style.display = 'block';
+            backButton.style.display = 'block';
+            
+            courses.forEach(course => {
+                const courseCard = createCourseCard(course);
+                coursesRow.appendChild(courseCard);
+            });
+        }
+
+        // Create course card
+        function createCourseCard(course) {
+            const colDiv = document.createElement('div');
+            colDiv.className = 'col-lg-4 col-md-6 mb-4';
+            
+            colDiv.innerHTML = `
+                <div class="card course-card">
+                    <div class="card-body">
+                        <i class="fas fa-graduation-cap course-icon"></i>
+                        <h5 class="course-title">${course.name || 'Course Name'}</h5>
+                        <p class="course-description">${course.description || 'No description available'}</p>
+                        <div class="course-meta">
+                            <strong>Code:</strong> ${course.code || 'N/A'}<br>
+                            <strong>Credits:</strong> ${course.credits || 'N/A'}<br>
+                            <strong>Instructor:</strong> ${course.instructor || 'N/A'}
+                        </div>
+                        <button class="btn btn-custom btn-sm" onclick="viewCourseDetails('${course.id}')">
+                            <i class="fas fa-eye me-1"></i>View Details
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            return colDiv;
+        }
+
+        // View course details (placeholder function)
+        function viewCourseDetails(courseId) {
+            // This would typically open a modal or navigate to a course details page
+            alert(`Course details for ${courseId} would be displayed here. This feature can be expanded based on your requirements.`);
+        }
+
+        // Utility functions
+        function showAlert(message, type) {
+            const alertDiv = document.getElementById('alertMessage');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            alertDiv.style.display = 'block';
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                alertDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingState').style.display = 'none';
+        }
+
+        // Add CSS animation for loading spinner
+        const style = document.createElement('style');
+        style.textContent = `
+            .loading-spinner {
+                border: 3px solid #f3f3f3;
+                border-top: 3px solid #667eea;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                display: inline-block;
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

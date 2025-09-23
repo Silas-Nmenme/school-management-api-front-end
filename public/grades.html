@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grades - School Management System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .grades-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin: 20px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        .grades-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .grades-header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        .grades-body {
+            padding: 40px;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 20px;
+        }
+        .btn-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+        .btn-secondary-custom {
+            background: #6c757d;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary-custom:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            color: white;
+        }
+        .table {
+            margin-bottom: 0;
+        }
+        .table th {
+            background-color: #f8f9fa;
+            border-top: none;
+            font-weight: 600;
+            color: #333;
+            padding: 15px;
+        }
+        .table td {
+            padding: 15px;
+            vertical-align: middle;
+        }
+        .grade-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        .grade-A { background-color: #d4edda; color: #155724; }
+        .grade-B { background-color: #cce7ff; color: #004085; }
+        .grade-C { background-color: #fff3cd; color: #856404; }
+        .grade-D { background-color: #f8d7da; color: #721c24; }
+        .grade-F { background-color: #f5c6cb; color: #721c24; }
+        .gpa-display {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 30px;
+        }
+        .gpa-value {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .no-grades {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+        .no-grades i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @media (max-width: 768px) {
+            .grades-container {
+                margin: 10px;
+            }
+            .grades-header h1 {
+                font-size: 2rem;
+            }
+            .grades-body {
+                padding: 20px;
+            }
+            .gpa-value {
+                font-size: 2.5rem;
+            }
+            .table-responsive {
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grades-container">
+        <div class="grades-header">
+            <h1><i class="fas fa-chart-line me-2"></i>Grades</h1>
+            <p>Check your academic performance and grades</p>
+        </div>
+        <div class="grades-body">
+            <!-- Alert Messages -->
+            <div id="alertMessage" class="alert" style="display: none;"></div>
+            
+            <!-- Loading State -->
+            <div id="loadingState" class="text-center" style="padding: 60px 20px;">
+                <div class="loading-spinner" style="width: 40px; height: 40px; border-width: 3px; margin: 0 auto 20px;"></div>
+                <h5>Loading your grades...</h5>
+            </div>
+
+            <!-- GPA Display -->
+            <div id="gpaDisplay" class="gpa-display" style="display: none;">
+                <h4>Overall GPA</h4>
+                <div class="gpa-value" id="gpaValue">0.00</div>
+                <p id="gpaStatus">Calculating...</p>
+            </div>
+
+            <!-- Grades Table -->
+            <div class="card" id="gradesTableCard" style="display: none;">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-table me-2"></i>Your Grades</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="gradesTable">
+                            <thead>
+                                <tr>
+                                    <th>Course Code</th>
+                                    <th>Course Name</th>
+                                    <th>Grade</th>
+                                    <th>Credits</th>
+                                    <th>Points</th>
+                                    <th>Semester</th>
+                                </tr>
+                            </thead>
+                            <tbody id="gradesTableBody">
+                                <!-- Grades will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- No Grades State -->
+            <div id="noGradesState" class="no-grades" style="display: none;">
+                <i class="fas fa-chart-bar"></i>
+                <h4>No Grades Available</h4>
+                <p>You don't have any grades recorded yet. Grades will appear here once your instructors submit them.</p>
+                <a href="student_dashboard.html" class="btn btn-custom">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+
+            <!-- Back Button (shown when grades exist) -->
+            <div id="backButton" class="text-center mt-4" style="display: none;">
+                <a href="student_dashboard.html" class="btn btn-secondary-custom">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        // Authentication check
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            const userRole = localStorage.getItem('userRole');
+            
+            if (!token || userRole !== 'student') {
+                alert('Access denied. Please log in as a student.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            loadGrades();
+        });
+
+        // Load grades data
+        async function loadGrades() {
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch('https://school-management-api-nu0b.onrender.com/api/students/grades', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    displayGrades(data.grades || []);
+                } else {
+                    throw new Error('Failed to load grades');
+                }
+            } catch (error) {
+                console.error('Error loading grades:', error);
+                showAlert('Failed to load grades. Please try again.', 'danger');
+                hideLoading();
+            }
+        }
+
+        // Display grades
+        function displayGrades(grades) {
+            const gradesTableBody = document.getElementById('gradesTableBody');
+            const gradesTableCard = document.getElementById('gradesTableCard');
+            const gpaDisplay = document.getElementById('gpaDisplay');
+            const noGradesState = document.getElementById('noGradesState');
+            const backButton = document.getElementById('backButton');
+            
+            hideLoading();
+            
+            if (grades.length === 0) {
+                noGradesState.style.display = 'block';
+                return;
+            }
+            
+            gradesTableCard.style.display = 'block';
+            gpaDisplay.style.display = 'block';
+            backButton.style.display = 'block';
+            
+            let totalPoints = 0;
+            let totalCredits = 0;
+            
+            grades.forEach(grade => {
+                const gradeRow = createGradeRow(grade);
+                gradesTableBody.appendChild(gradeRow);
+                
+                const points = calculateGradePoints(grade.grade) * (grade.credits || 3);
+                const credits = grade.credits || 3;
+                
+                totalPoints += points;
+                totalCredits += credits;
+            });
+            
+            // Calculate and display GPA
+            const gpa = totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : '0.00';
+            document.getElementById('gpaValue').textContent = gpa;
+            document.getElementById('gpaStatus').textContent = getGPAStatus(parseFloat(gpa));
+        }
+
+        // Create grade row
+        function createGradeRow(grade) {
+            const row = document.createElement('tr');
+            
+            const gradeClass = getGradeClass(grade.grade);
+            
+            row.innerHTML = `
+                <td><strong>${grade.courseCode || 'N/A'}</strong></td>
+                <td>${grade.courseName || 'Course Name'}</td>
+                <td><span class="grade-badge ${gradeClass}">${grade.grade || 'N/A'}</span></td>
+                <td>${grade.credits || 3}</td>
+                <td>${calculateGradePoints(grade.grade)}</td>
+                <td>${grade.semester || 'N/A'}</td>
+            `;
+            
+            return row;
+        }
+
+        // Calculate grade points
+        function calculateGradePoints(grade) {
+            const gradePoints = {
+                'A': 4.0, 'A-': 3.7,
+                'B+': 3.3, 'B': 3.0, 'B-': 2.7,
+                'C+': 2.3, 'C': 2.0, 'C-': 1.7,
+                'D+': 1.3, 'D': 1.0,
+                'F': 0.0
+            };
+            return gradePoints[grade] || 0.0;
+        }
+
+        // Get grade CSS class
+        function getGradeClass(grade) {
+            if (!grade) return '';
+            const upperGrade = grade.toUpperCase();
+            if (upperGrade.startsWith('A')) return 'grade-A';
+            if (upperGrade.startsWith('B')) return 'grade-B';
+            if (upperGrade.startsWith('C')) return 'grade-C';
+            if (upperGrade.startsWith('D')) return 'grade-D';
+            if (upperGrade.startsWith('F')) return 'grade-F';
+            return '';
+        }
+
+        // Get GPA status
+        function getGPAStatus(gpa) {
+            if (gpa >= 3.5) return 'Excellent Performance';
+            if (gpa >= 3.0) return 'Good Performance';
+            if (gpa >= 2.5) return 'Satisfactory Performance';
+            if (gpa >= 2.0) return 'Needs Improvement';
+            return 'Academic Support Needed';
+        }
+
+        // Utility functions
+        function showAlert(message, type) {
+            const alertDiv = document.getElementById('alertMessage');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            alertDiv.style.display = 'block';
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                alertDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingState').style.display = 'none';
+        }
+
+        // Add CSS animation for loading spinner
+        const style = document.createElement('style');
+        style.textContent = `
+            .loading-spinner {
+                border: 3px solid #f3f3f3;
+                border-top: 3px solid #667eea;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                display: inline-block;
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
