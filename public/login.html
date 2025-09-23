@@ -215,7 +215,7 @@
                     <label for="password" class="form-label">Password</label>
                     <div class="position-relative">
                         <input type="password" class="form-control" id="password" name="password" required>
-                        <button type="button" class="btn position-absolute" style="right: 10px; top: 50%; transform: translateY(-50%); border: none; background: none;" id="togglePassword">
+                        <button type="button" class="btn position-absolute" style="right: 10px; top: 50%; transform: translateY(-50%); border: none; background: none;" id="togglePassword" aria-label="Toggle password visibility">
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
@@ -340,13 +340,11 @@
         document.addEventListener('DOMContentLoaded', function() {
             const token = localStorage.getItem('token');
             if (token) {
-                // User is already logged in, redirect to appropriate dashboard
-                const userRole = localStorage.getItem('userRole') || 'student';
-                if (userRole === 'admin') {
-                    window.location.href = 'dashboard.html';
-                } else {
-                    window.location.href = 'student-dashboard.html';
-                }
+                // User is already logged in, show message or stay on login page
+                const alertMessage = document.getElementById('alertMessage');
+                alertMessage.className = 'alert alert-success';
+                alertMessage.textContent = 'You are already logged in.';
+                alertMessage.style.display = 'block';
             }
         });
     </script>
