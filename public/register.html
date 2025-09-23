@@ -443,16 +443,48 @@
         document.querySelectorAll('.type-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const type = this.dataset.type;
-                
+
                 // Update active button
                 document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
-                
+
                 // Show/hide forms
                 document.querySelectorAll('.form-container').forEach(form => form.classList.remove('active'));
                 document.getElementById(`${type}Form`).classList.add('active');
+
+                // Toggle required attributes to prevent validation on hidden fields
+                toggleRequiredAttributes(type);
             });
         });
+
+        // Function to toggle required attributes based on active form
+        function toggleRequiredAttributes(activeType) {
+            const studentFields = ['firstName', 'lastName', 'email', 'age', 'phone', 'password', 'confirmPassword'];
+            const staffFields = ['staffFirstName', 'staffLastName', 'staffEmail', 'staffPhone', 'staffRole', 'staffDepartment', 'staffPassword', 'staffConfirmPassword'];
+
+            if (activeType === 'student') {
+                studentFields.forEach(field => {
+                    const element = document.getElementById(field);
+                    if (element) element.required = true;
+                });
+                staffFields.forEach(field => {
+                    const element = document.getElementById(field);
+                    if (element) element.required = false;
+                });
+            } else if (activeType === 'staff') {
+                staffFields.forEach(field => {
+                    const element = document.getElementById(field);
+                    if (element) element.required = true;
+                });
+                studentFields.forEach(field => {
+                    const element = document.getElementById(field);
+                    if (element) element.required = false;
+                });
+            }
+        }
+
+        // Initialize required attributes on page load
+        toggleRequiredAttributes('student');
 
         // Student form event listeners
         document.getElementById('password').addEventListener('input', function() {
