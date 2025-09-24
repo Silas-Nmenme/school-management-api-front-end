@@ -302,8 +302,11 @@ function displayCourses(courses) {
     tbody.innerHTML = courses.map(course => {
         // Format schedule display
         let scheduleDisplay = 'N/A';
-        if (course.schedule && course.schedule.startTime && course.schedule.endTime) {
-            scheduleDisplay = `${course.schedule.startTime} - ${course.schedule.endTime}`;
+        if (course.schedule) {
+            const days = course.schedule.days || '';
+            const startTime = course.schedule.startTime || '';
+            const endTime = course.schedule.endTime || '';
+            scheduleDisplay = `${days} ${startTime} - ${endTime}`.trim();
         }
 
         // Format instructor display (if instructor is an object)
@@ -362,9 +365,9 @@ function displayCourses(courses) {
             document.getElementById('courseInstructor').value = course.instructor || '';
             document.getElementById('courseMaxStudents').value = course.maxStudents;
             document.getElementById('courseDuration').value = course.duration;
-            document.getElementById('courseSchedule').value = course.schedule;
-            document.getElementById('courseStartTime').value = course.schedule.startTime;
-            document.getElementById('courseEndTime').value = course.schedule.endTime;
+            document.getElementById('courseSchedule').value = course.schedule.days || '';
+            document.getElementById('courseStartTime').value = course.schedule.startTime || '';
+            document.getElementById('courseEndTime').value = course.schedule.endTime || '';
             document.getElementById('courseIdHidden').value = course._id;
             new bootstrap.Modal(document.getElementById('courseModal')).show();
         }
@@ -377,12 +380,12 @@ function displayCourses(courses) {
             const instructor = document.getElementById('courseInstructor').value;
             const maxStudents = document.getElementById('courseMaxStudents').value;
             const duration = document.getElementById('courseDuration').value;
-            // Add these two fields to your form:
+            const days = document.getElementById('courseSchedule').value; // <-- schedule days
             const startTime = document.getElementById('courseStartTime').value;
             const endTime = document.getElementById('courseEndTime').value;
             const hiddenId = document.getElementById('courseIdHidden').value;
 
-            if (!courseId || !name || !instructor || !maxStudents || !duration || !startTime || !endTime) {
+            if (!courseId || !name || !instructor || !maxStudents || !duration || !days || !startTime || !endTime) {
                 alert('All required fields must be filled.');
                 return;
             }
@@ -395,6 +398,7 @@ function displayCourses(courses) {
                 maxStudents,
                 duration,
                 schedule: {
+                    days,        // <-- add days to schedule object
                     startTime,
                     endTime
                 }
