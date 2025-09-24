@@ -27,7 +27,7 @@
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            max-width: 500px;
+            max-width: 550px;
             width: 100%;
             animation: fadeInUp 0.8s ease-out;
         }
@@ -39,12 +39,13 @@
         }
         .register-header h2 {
             margin: 0;
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: bold;
         }
         .register-header p {
             margin: 10px 0 0;
             opacity: 0.9;
+            font-size: 1.1rem;
         }
         .register-body {
             padding: 40px 30px;
@@ -63,6 +64,12 @@
             font-weight: 600;
             color: #333;
             margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        .form-label i {
+            margin-right: 8px;
+            color: #667eea;
         }
         .form-control {
             border: 2px solid #e1e5e9;
@@ -183,27 +190,35 @@
             color: #e1e5e9;
         }
         .registration-type-selector {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border: 1px solid #dee2e6;
         }
         .registration-type-selector h5 {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             color: #333;
+            font-size: 1.2rem;
+            font-weight: 600;
         }
         .type-buttons {
             display: flex;
-            gap: 10px;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
         }
         .type-btn {
             flex: 1;
-            padding: 10px;
-            border: 2px solid #667eea;
+            padding: 15px;
+            border: none;
             background: white;
             color: #667eea;
-            border-radius: 8px;
+            border-radius: 0;
             transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1rem;
         }
         .type-btn.active {
             background: #667eea;
@@ -215,9 +230,32 @@
         }
         .form-container {
             display: none;
+            animation: fadeIn 0.5s ease-in-out;
         }
         .form-container.active {
             display: block;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #dee2e6;
+        }
+        .form-section h6 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -249,83 +287,93 @@
             </div>
 
             <!-- Student Registration Form -->
-            <form class="form-container active" id="registerForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="firstName" class="form-label">First Name</label>
-                        <input type="text" class="form-control" id="firstName" name="Fistname" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="lastName" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="lastName" name="Lastname" required>
-                    </div>
+            <div class="form-container active" id="studentForm">
+                <div class="form-section">
+                    <h6><i class="fas fa-user-graduate me-2"></i>Student Information</h6>
+                    <form id="registerForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName" class="form-label"><i class="fas fa-user"></i>First Name</label>
+                                <input type="text" class="form-control" id="firstName" name="Firstname" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName" class="form-label"><i class="fas fa-user"></i>Last Name</label>
+                                <input type="text" class="form-control" id="lastName" name="Lastname" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="form-label"><i class="fas fa-envelope"></i>Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="age" class="form-label"><i class="fas fa-birthday-cake"></i>Age</label>
+                                <input type="number" class="form-control" id="age" name="age" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone" class="form-label"><i class="fas fa-phone"></i>Phone Number</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="form-label"><i class="fas fa-lock"></i>Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                            <div class="password-strength" id="passwordStrength"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword" class="form-label"><i class="fas fa-lock"></i>Confirm Password</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmpassword" required>
+                            <div class="invalid-feedback" id="passwordMatch" style="display: none;">Passwords do not match</div>
+                        </div>
+                        <button type="submit" class="btn btn-register" id="registerBtn">
+                            <span class="loading-spinner" id="loadingSpinner"></span>
+                            <i class="fas fa-user-plus me-2"></i>Create Student Account
+                        </button>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <label for="email" class="form-label">Email Address</label>
-                    <input type="email" class="form-control" id="email" name="email" required>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="age" class="form-label">Age</label>
-                        <input type="number" class="form-control" id="age" name="age" min="1" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="phone" class="form-label">Phone Number</label>
-                        <input type="tel" class="form-control" id="phone" name="phone" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
-                    <div class="password-strength" id="passwordStrength"></div>
-                </div>
-                <div class="form-group">
-                    <label for="confirmPassword" class="form-label">Confirm Password</label>
-                    <input type="password" class="form-control" id="confirmPassword" name="confirmpassword" required>
-                    <div class="invalid-feedback" id="passwordMatch" style="display: none;">Passwords do not match</div>
-                </div>
-                <button type="submit" class="btn btn-register" id="registerBtn">
-                    <span class="loading-spinner" id="loadingSpinner"></span>
-                    Create Account
-                </button>
             </div>
 
             <!-- Admin Registration Form -->
-            <form class="form-container" id="adminForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="adminName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="adminName" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="adminEmail" class="form-label">Email Address</label>
-                        <input type="email" class="form-control" id="adminEmail" name="email" required>
-                    </div>
+            <div class="form-container" id="adminForm">
+                <div class="form-section">
+                    <h6><i class="fas fa-crown me-2"></i>Administrator Information</h6>
+                    <form id="adminRegisterForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="adminName" class="form-label"><i class="fas fa-user-tie"></i>Full Name</label>
+                                <input type="text" class="form-control" id="adminName" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="adminEmail" class="form-label"><i class="fas fa-envelope"></i>Email Address</label>
+                                <input type="email" class="form-control" id="adminEmail" name="email" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminPassword" class="form-label"><i class="fas fa-lock"></i>Password</label>
+                            <input type="password" class="form-control" id="adminPassword" name="password" required>
+                            <div class="password-strength" id="adminPasswordStrength"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminConfirmPassword" class="form-label"><i class="fas fa-lock"></i>Confirm Password</label>
+                            <input type="password" class="form-control" id="adminConfirmPassword" name="confirmpassword" required>
+                            <div class="invalid-feedback" id="adminPasswordMatch" style="display: none;">Passwords do not match</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminRole" class="form-label"><i class="fas fa-user-shield"></i>Role</label>
+                            <select class="form-control" id="adminRole" name="role" required>
+                                <option value="">Select Role</option>
+                                <option value="superadmin">Super Admin</option>
+                                <option value="admin">Admin</option>
+                                <option value="moderator">Moderator</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-register" id="adminRegisterBtn">
+                            <span class="loading-spinner" id="adminLoadingSpinner"></span>
+                            <i class="fas fa-crown me-2"></i>Create Admin Account
+                        </button>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <label for="adminPassword" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="adminPassword" name="password" required minlength="6">
-                    <div class="password-strength" id="adminPasswordStrength"></div>
-                </div>
-                <div class="form-group">
-                    <label for="adminConfirmPassword" class="form-label">Confirm Password</label>
-                    <input type="password" class="form-control" id="adminConfirmPassword" name="adminConfirmPassword" required>
-                    <div class="invalid-feedback" id="adminPasswordMatch" style="display: none;">Passwords do not match</div>
-                </div>
-                <div class="form-group">
-                    <label for="adminRole" class="form-label">Role</label>
-                    <select class="form-control" id="adminRole" name="role" required>
-                        <option value="">Select Role</option>
-                        <option value="superadmin">Super Admin</option>
-                        <option value="admin">Admin</option>
-                        <option value="moderator">Moderator</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-register" id="adminRegisterBtn">
-                    <span class="loading-spinner" id="adminLoadingSpinner"></span>
-                    Create Admin Account
-                </button>
-            </form>
+            </div>
 
             <div class="login-link">
                 Already have an account? <a href="login.html">Sign in here</a>
@@ -431,40 +479,8 @@
                 // Show/hide forms
                 document.querySelectorAll('.form-container').forEach(form => form.classList.remove('active'));
                 document.getElementById(`${type}Form`).classList.add('active');
-
-                // Toggle required attributes to prevent validation on hidden fields
-                toggleRequiredAttributes(type);
             });
         });
-
-        // Function to toggle required attributes based on active form
-        function toggleRequiredAttributes(activeType) {
-            const studentFields = ['firstName', 'lastName', 'email', 'age', 'phone', 'password', 'confirmPassword'];
-            const adminFields = ['adminName', 'adminEmail', 'adminPassword', 'adminConfirmPassword', 'adminRole'];
-
-            if (activeType === 'student') {
-                studentFields.forEach(field => {
-                    const element = document.getElementById(field);
-                    if (element) element.required = true;
-                });
-                adminFields.forEach(field => {
-                    const element = document.getElementById(field);
-                    if (element) element.required = false;
-                });
-            } else if (activeType === 'admin') {
-                adminFields.forEach(field => {
-                    const element = document.getElementById(field);
-                    if (element) element.required = true;
-                });
-                studentFields.forEach(field => {
-                    const element = document.getElementById(field);
-                    if (element) element.required = false;
-                });
-            }
-        }
-
-        // Initialize required attributes on page load
-        toggleRequiredAttributes('student');
 
         // Student form event listeners
         document.getElementById('password').addEventListener('input', function() {
@@ -503,7 +519,7 @@
             try {
                 const formData = new FormData(this);
                 const registrationData = {
-                    Fistname: formData.get('Fistname'),
+                    Firstname: formData.get('Firstname'),
                     Lastname: formData.get('Lastname'),
                     email: formData.get('email'),
                     age: formData.get('age'),
@@ -527,7 +543,7 @@
                     alertMessage.className = 'alert alert-success';
                     alertMessage.innerHTML = `
                         <strong>Registration successful!</strong><br>
-                        Welcome ${registrationData.Fistname}! Your account has been created.<br>
+                        Welcome ${registrationData.Firstname}! Your account has been created.<br>
                         <small>You will be redirected to login in a few seconds...</small>
                     `;
                     alertMessage.style.display = 'block';
@@ -567,49 +583,49 @@
             const alertMessage = document.getElementById('alertMessage');
 
             // Validate password match
-            const password = document.getElementById('adminPassword').value;
-            const confirmPassword = document.getElementById('adminConfirmPassword').value;
-            if (password !== confirmPassword) {
-                document.getElementById('adminConfirmPassword').classList.add('is-invalid');
-                document.getElementById('adminPasswordMatch').style.display = 'block';
+            if (!validateAdminPasswordMatch()) {
                 return;
-            } else {
-                document.getElementById('adminConfirmPassword').classList.remove('is-invalid');
-                document.getElementById('adminPasswordMatch').style.display = 'none';
             }
 
             // Validate required fields
-            const name = document.getElementById('adminName').value.trim();
-            const email = document.getElementById('adminEmail').value.trim();
-            const role = document.getElementById('adminRole').value;
-            if (!name || !email || !password || !role) {
-                alertMessage.className = 'alert alert-danger';
-                alertMessage.textContent = 'All fields are required';
-                alertMessage.style.display = 'block';
-                return;
-            }
-            if (password.length < 6) {
-                alertMessage.className = 'alert alert-danger';
-                alertMessage.textContent = 'Password must be at least 6 characters long';
-                alertMessage.style.display = 'block';
-                return;
+            const requiredFields = ['adminName', 'adminEmail', 'adminPassword', 'adminConfirmPassword', 'adminRole'];
+            for (let field of requiredFields) {
+                if (!document.getElementById(field).value) {
+                    alertMessage.className = 'alert alert-danger';
+                    alertMessage.textContent = 'Please fill in all required fields.';
+                    alertMessage.style.display = 'block';
+                    return;
+                }
             }
 
             // Show loading state
             registerBtn.disabled = true;
             loadingSpinner.style.display = 'inline-block';
+
+            // Hide previous alerts
             alertMessage.style.display = 'none';
 
             try {
-                const registrationData = { name, email, password, role };
+                const formData = new FormData(this);
+                const registrationData = {
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    password: formData.get('password'),
+                    role: formData.get('role')
+                };
+
                 const response = await fetch('https://school-management-api-nu0b.onrender.com/api/admin/register', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                     body: JSON.stringify(registrationData)
                 });
+
                 const data = await response.json();
 
                 if (response.ok) {
+                    // Show success message
                     alertMessage.className = 'alert alert-success';
                     alertMessage.innerHTML = `
                         <strong>Admin registration successful!</strong><br>
@@ -617,10 +633,17 @@
                         <small>You will be redirected to login in a few seconds...</small>
                     `;
                     alertMessage.style.display = 'block';
+
+                    // Store registration details in localStorage for potential use
+                    localStorage.setItem('registrationSuccess', 'true');
+                    localStorage.setItem('registeredEmail', registrationData.email);
+
+                    // Redirect to login after delay
                     setTimeout(() => {
                         window.location.href = 'login.html';
                     }, 3000);
                 } else {
+                    // Show error message
                     alertMessage.className = 'alert alert-danger';
                     alertMessage.textContent = data.message || 'Admin registration failed. Please try again.';
                     alertMessage.style.display = 'block';
@@ -631,6 +654,7 @@
                 alertMessage.textContent = 'Network error. Please check your connection and try again.';
                 alertMessage.style.display = 'block';
             } finally {
+                // Hide loading state
                 registerBtn.disabled = false;
                 loadingSpinner.style.display = 'none';
             }
