@@ -240,18 +240,16 @@
     <script>
         const API_BASE_URL = 'https://school-management-api-nu0b.onrender.com/api/admin';
         let coursesData = []; // Store courses data globally for editing
+        const token = localStorage.getItem('token'); // <-- Move this here
 
         // Authentication check
         document.addEventListener('DOMContentLoaded', function() {
-            const token = localStorage.getItem('token');
             const userRole = localStorage.getItem('userRole');
-            
             if (!token || userRole !== 'admin') {
                 alert('Access denied. Please log in as an admin.');
                 window.location.href = 'login.html';
                 return;
             }
-            
             loadCourses();
         });
 
