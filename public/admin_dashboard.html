@@ -136,8 +136,9 @@
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <a class="navbar-brand" href="#"><i class="fas fa-graduation-cap me-2"></i>SchoolMS</a>
-            <div class="navbar-nav ms-auto">
+        <div class="navbar-nav ms-auto">
                 <a class="nav-link" href="#users"><i class="fas fa-users me-1"></i>Manage Users</a>
+                <a class="nav-link" href="#courses"><i class="fas fa-book me-1"></i>Manage Courses</a>
                 <a class="nav-link" href="#reports"><i class="fas fa-chart-bar me-1"></i>Reports</a>
                 <a class="nav-link" href="#settings"><i class="fas fa-cog me-1"></i>Settings</a>
                 <button class="btn logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt me-1"></i>Logout</button>
@@ -164,7 +165,7 @@
 
             <!-- Quick Actions -->
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card text-center">
                         <div class="card-body">
                             <i class="fas fa-users icon-large"></i>
@@ -174,7 +175,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-book icon-large"></i>
+                            <h5>Manage Courses</h5>
+                            <p class="text-muted">Add, edit, or delete courses</p>
+                            <a href="#courses" class="btn btn-custom">Manage Courses</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
                     <div class="card text-center">
                         <div class="card-body">
                             <i class="fas fa-chart-bar icon-large"></i>
@@ -184,7 +195,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card text-center">
                         <div class="card-body">
                             <i class="fas fa-cog icon-large"></i>
@@ -253,6 +264,67 @@
                 <div class="card-body">
                     <button class="btn btn-custom mb-3" onclick="loadSettings()"><i class="fas fa-sync-alt me-2"></i>Load Settings</button>
                     <div id="settingsData">Click to load settings.</div>
+                </div>
+            </div>
+
+            <!-- Manage Courses Section -->
+            <div class="card" id="courses" style="display: none;">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-book me-2"></i>Manage Courses</h5>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-custom mb-3" onclick="loadCourses()"><i class="fas fa-sync-alt me-2"></i>Load Courses</button>
+                    <button class="btn btn-custom mb-3" onclick="showAddCourseForm()"><i class="fas fa-plus me-2"></i>Add Course</button>
+                    <div id="coursesList">Click to load courses data.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Course Modal -->
+    <div class="modal fade" id="courseModal" tabindex="-1" aria-labelledby="courseModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="courseModalLabel">Add/Edit Course</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="courseForm">
+                        <div class="mb-3">
+                            <label for="courseId" class="form-label">Course ID</label>
+                            <input type="text" class="form-control" id="courseId" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="courseName" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="courseName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="courseDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="courseDescription" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="courseInstructor" class="form-label">Instructor</label>
+                            <input type="text" class="form-control" id="courseInstructor" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="courseMaxStudents" class="form-label">Max Students</label>
+                            <input type="number" class="form-control" id="courseMaxStudents" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="courseDuration" class="form-label">Duration</label>
+                            <input type="text" class="form-control" id="courseDuration" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="courseSchedule" class="form-label">Schedule</label>
+                            <input type="text" class="form-control" id="courseSchedule" required>
+                        </div>
+                        <input type="hidden" id="courseIdHidden">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-custom" onclick="saveCourse()">Save Course</button>
                 </div>
             </div>
         </div>
@@ -423,6 +495,159 @@
             } catch (error) {
                 document.getElementById('settingsData').innerHTML = '<p class="text-danger">Error loading settings.</p>';
                 console.error('Error fetching settings:', error);
+            }
+        }
+
+        // Function to load courses
+        async function loadCourses() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/get-all-courses`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    const courses = data.courses;
+                    let html = '<h6>Courses List:</h6><table class="table table-striped"><thead><tr><th>ID</th><th>Name</th><th>Instructor</th><th>Max Students</th><th>Actions</th></tr></thead><tbody>';
+                    courses.forEach(course => {
+                        html += `<tr>
+                            <td>${course.courseId}</td>
+                            <td>${course.name}</td>
+                            <td>${course.instructor}</td>
+                            <td>${course.maxStudents}</td>
+                            <td>
+                                <button class="btn btn-sm btn-custom" onclick="editCourse('${course._id}')">Edit</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteCourse('${course._id}')">Delete</button>
+                            </td>
+                        </tr>`;
+                    });
+                    html += '</tbody></table>';
+                    document.getElementById('coursesList').innerHTML = html;
+                } else {
+                    document.getElementById('coursesList').innerHTML = `<p class="text-danger">Error: ${data.message}</p>`;
+                }
+            } catch (error) {
+                document.getElementById('coursesList').innerHTML = '<p class="text-danger">Error loading courses.</p>';
+                console.error('Error fetching courses:', error);
+            }
+        }
+
+        // Function to show add course form
+        function showAddCourseForm() {
+            document.getElementById('courseModalLabel').textContent = 'Add Course';
+            document.getElementById('courseId').value = '';
+            document.getElementById('courseName').value = '';
+            document.getElementById('courseDescription').value = '';
+            document.getElementById('courseInstructor').value = '';
+            document.getElementById('courseMaxStudents').value = '';
+            document.getElementById('courseDuration').value = '';
+            document.getElementById('courseSchedule').value = '';
+            document.getElementById('courseIdHidden').value = '';
+            new bootstrap.Modal(document.getElementById('courseModal')).show();
+        }
+
+        // Function to edit course
+        async function editCourse(courseId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/get-course/${courseId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    const course = data.course;
+                    document.getElementById('courseModalLabel').textContent = 'Edit Course';
+                    document.getElementById('courseId').value = course.courseId;
+                    document.getElementById('courseName').value = course.name;
+                    document.getElementById('courseDescription').value = course.description;
+                    document.getElementById('courseInstructor').value = course.instructor;
+                    document.getElementById('courseMaxStudents').value = course.maxStudents;
+                    document.getElementById('courseDuration').value = course.duration;
+                    document.getElementById('courseSchedule').value = course.schedule;
+                    document.getElementById('courseIdHidden').value = course._id;
+                    new bootstrap.Modal(document.getElementById('courseModal')).show();
+                } else {
+                    alert(`Error: ${data.message}`);
+                }
+            } catch (error) {
+                alert('Error loading course for editing.');
+                console.error('Error:', error);
+            }
+        }
+
+        // Function to save course (add or edit)
+        async function saveCourse() {
+            const courseId = document.getElementById('courseId').value;
+            const name = document.getElementById('courseName').value;
+            const description = document.getElementById('courseDescription').value;
+            const instructor = document.getElementById('courseInstructor').value;
+            const maxStudents = document.getElementById('courseMaxStudents').value;
+            const duration = document.getElementById('courseDuration').value;
+            const schedule = document.getElementById('courseSchedule').value;
+            const hiddenId = document.getElementById('courseIdHidden').value;
+
+            if (!courseId || !name || !instructor || !maxStudents || !duration || !schedule) {
+                alert('All required fields must be filled.');
+                return;
+            }
+
+            const courseData = { courseId, name, description, instructor, maxStudents, duration, schedule };
+            const url = hiddenId ? `${API_BASE_URL}/edit-course/${hiddenId}` : `${API_BASE_URL}/add-course`;
+            const method = hiddenId ? 'PUT' : 'POST';
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(courseData)
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    alert(hiddenId ? 'Course updated successfully' : 'Course added successfully');
+                    bootstrap.Modal.getInstance(document.getElementById('courseModal')).hide();
+                    loadCourses();
+                } else {
+                    alert(`Error: ${data.message}`);
+                }
+            } catch (error) {
+                alert('Error saving course.');
+                console.error('Error:', error);
+            }
+        }
+
+        // Function to delete course
+        async function deleteCourse(courseId) {
+            if (!confirm('Are you sure you want to delete this course?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/delete-course/${courseId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    alert('Course deleted successfully');
+                    loadCourses();
+                } else {
+                    alert(`Error: ${data.message}`);
+                }
+            } catch (error) {
+                alert('Error deleting course.');
+                console.error('Error:', error);
             }
         }
     </script>
