@@ -291,7 +291,7 @@
             </div>
 
             <!-- Admin Registration Form -->
-            <div class="form-container" id="adminForm">
+            <form class="form-container" id="adminForm">
                 <div class="form-row">
                     <div class="form-group">
                         <label for="adminName" class="form-label">Name</label>
@@ -304,12 +304,12 @@
                 </div>
                 <div class="form-group">
                     <label for="adminPassword" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="adminPassword" name="password" required>
+                    <input type="password" class="form-control" id="adminPassword" name="password" required minlength="6">
                     <div class="password-strength" id="adminPasswordStrength"></div>
                 </div>
                 <div class="form-group">
                     <label for="adminConfirmPassword" class="form-label">Confirm Password</label>
-                    <input type="password" class="form-control" id="adminConfirmPassword" name="confirmpassword" required>
+                    <input type="password" class="form-control" id="adminConfirmPassword" name="adminConfirmPassword" required>
                     <div class="invalid-feedback" id="adminPasswordMatch" style="display: none;">Passwords do not match</div>
                 </div>
                 <div class="form-group">
@@ -325,7 +325,7 @@
                     <span class="loading-spinner" id="adminLoadingSpinner"></span>
                     Create Admin Account
                 </button>
-            </div>
+            </form>
 
             <div class="login-link">
                 Already have an account? <a href="login.html">Sign in here</a>
@@ -567,49 +567,49 @@
             const alertMessage = document.getElementById('alertMessage');
 
             // Validate password match
-            if (!validateAdminPasswordMatch()) {
+            const password = document.getElementById('adminPassword').value;
+            const confirmPassword = document.getElementById('adminConfirmPassword').value;
+            if (password !== confirmPassword) {
+                document.getElementById('adminConfirmPassword').classList.add('is-invalid');
+                document.getElementById('adminPasswordMatch').style.display = 'block';
                 return;
+            } else {
+                document.getElementById('adminConfirmPassword').classList.remove('is-invalid');
+                document.getElementById('adminPasswordMatch').style.display = 'none';
             }
 
             // Validate required fields
-            const requiredFields = ['adminName', 'adminEmail', 'adminPassword', 'adminConfirmPassword', 'adminRole'];
-            for (let field of requiredFields) {
-                if (!document.getElementById(field).value) {
-                    alertMessage.className = 'alert alert-danger';
-                    alertMessage.textContent = 'Please fill in all required fields.';
-                    alertMessage.style.display = 'block';
-                    return;
-                }
+            const name = document.getElementById('adminName').value.trim();
+            const email = document.getElementById('adminEmail').value.trim();
+            const role = document.getElementById('adminRole').value;
+            if (!name || !email || !password || !role) {
+                alertMessage.className = 'alert alert-danger';
+                alertMessage.textContent = 'All fields are required';
+                alertMessage.style.display = 'block';
+                return;
+            }
+            if (password.length < 6) {
+                alertMessage.className = 'alert alert-danger';
+                alertMessage.textContent = 'Password must be at least 6 characters long';
+                alertMessage.style.display = 'block';
+                return;
             }
 
             // Show loading state
             registerBtn.disabled = true;
             loadingSpinner.style.display = 'inline-block';
-
-            // Hide previous alerts
             alertMessage.style.display = 'none';
 
             try {
-                const formData = new FormData(this);
-                const registrationData = {
-                    name: formData.get('name'),
-                    email: formData.get('email'),
-                    password: formData.get('password'),
-                    role: formData.get('role')
-                };
-
+                const registrationData = { name, email, password, role };
                 const response = await fetch('https://school-management-api-nu0b.onrender.com/api/admin/register', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(registrationData)
                 });
-
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Show success message
                     alertMessage.className = 'alert alert-success';
                     alertMessage.innerHTML = `
                         <strong>Admin registration successful!</strong><br>
@@ -617,17 +617,10 @@
                         <small>You will be redirected to login in a few seconds...</small>
                     `;
                     alertMessage.style.display = 'block';
-
-                    // Store registration details in localStorage for potential use
-                    localStorage.setItem('registrationSuccess', 'true');
-                    localStorage.setItem('registeredEmail', registrationData.email);
-
-                    // Redirect to login after delay
                     setTimeout(() => {
                         window.location.href = 'login.html';
                     }, 3000);
                 } else {
-                    // Show error message
                     alertMessage.className = 'alert alert-danger';
                     alertMessage.textContent = data.message || 'Admin registration failed. Please try again.';
                     alertMessage.style.display = 'block';
@@ -638,7 +631,6 @@
                 alertMessage.textContent = 'Network error. Please check your connection and try again.';
                 alertMessage.style.display = 'block';
             } finally {
-                // Hide loading state
                 registerBtn.disabled = false;
                 loadingSpinner.style.display = 'none';
             }
