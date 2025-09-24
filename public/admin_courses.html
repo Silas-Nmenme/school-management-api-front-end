@@ -213,6 +213,16 @@
                                 <input type="text" class="form-control" id="courseSchedule" required placeholder="e.g., Mon-Wed 10AM-12PM">
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="courseStartTime" class="form-label">Start Time</label>
+                                <input type="time" class="form-control" id="courseStartTime" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="courseEndTime" class="form-label">End Time</label>
+                                <input type="time" class="form-control" id="courseEndTime" required>
+                            </div>
+                        </div>
                         <input type="hidden" id="courseIdHidden">
                     </form>
                 </div>
@@ -336,33 +346,46 @@
             document.getElementById('courseMaxStudents').value = course.maxStudents;
             document.getElementById('courseDuration').value = course.duration;
             document.getElementById('courseSchedule').value = course.schedule;
+            document.getElementById('courseStartTime').value = course.schedule.startTime;
+            document.getElementById('courseEndTime').value = course.schedule.endTime;
             document.getElementById('courseIdHidden').value = course._id;
             new bootstrap.Modal(document.getElementById('courseModal')).show();
         }
 
         // Save course (add or edit)
         async function saveCourse() {
-            const token = localStorage.getItem('token');
-            const courseId = document.getElementById('courseId').value.trim();
-            const name = document.getElementById('courseName').value.trim();
-            const description = document.getElementById('courseDescription').value.trim();
-            const instructor = document.getElementById('courseInstructor').value.trim();
-            const maxStudents = parseInt(document.getElementById('courseMaxStudents').value);
-            const duration = document.getElementById('courseDuration').value.trim();
-            const schedule = document.getElementById('courseSchedule').value.trim();
+            const courseId = document.getElementById('courseId').value;
+            const name = document.getElementById('courseName').value;
+            const description = document.getElementById('courseDescription').value;
+            const instructor = document.getElementById('courseInstructor').value;
+            const maxStudents = document.getElementById('courseMaxStudents').value;
+            const duration = document.getElementById('courseDuration').value;
+            // Add these two fields to your form:
+            const startTime = document.getElementById('courseStartTime').value;
+            const endTime = document.getElementById('courseEndTime').value;
             const hiddenId = document.getElementById('courseIdHidden').value;
 
-            if (!courseId || !name || !instructor || !maxStudents || !duration || !schedule) {
-                showAlert('Please fill in all required fields', 'warning');
+            if (!courseId || !name || !instructor || !maxStudents || !duration || !startTime || !endTime) {
+                alert('All required fields must be filled.');
                 return;
             }
 
-            const courseData = { courseId, name, description, instructor, maxStudents, duration, schedule };
+            const courseData = {
+                courseId,
+                name,
+                description,
+                instructor,
+                maxStudents,
+                duration,
+                schedule: {
+                    startTime,
+                    endTime
+                }
+            };
             const url = hiddenId ? `${API_BASE_URL}/edit-course/${hiddenId}` : `${API_BASE_URL}/add-course`;
             const method = hiddenId ? 'PUT' : 'POST';
 
             try {
-                showAlert('Saving course...', 'info');
                 const response = await fetch(url, {
                     method: method,
                     headers: {
@@ -371,18 +394,17 @@
                     },
                     body: JSON.stringify(courseData)
                 });
-                
                 const data = await response.json();
                 if (response.ok) {
-                    showAlert(hiddenId ? 'Course updated successfully' : 'Course added successfully', 'success');
+                    alert(hiddenId ? 'Course updated successfully' : 'Course added successfully');
                     bootstrap.Modal.getInstance(document.getElementById('courseModal')).hide();
-                    loadCourses(); // Refresh the list
+                    loadCourses();
                 } else {
-                    throw new Error(data.message || 'Failed to save course');
+                    alert(`Error: ${data.message}`);
                 }
             } catch (error) {
-                console.error('Error saving course:', error);
-                showAlert('Failed to save course: ' + error.message, 'danger');
+                alert('Error saving course.');
+                console.error('Error:', error);
             }
         }
 
