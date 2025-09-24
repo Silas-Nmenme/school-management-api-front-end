@@ -283,42 +283,61 @@
             }
         }
 
-        // Display courses in table
-        function displayCourses(courses) {
-            const tbody = document.getElementById('coursesTableBody');
-            
-            if (courses.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="8" class="text-center">
-                            <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
-                            <p class="text-muted">No courses found. Add your first course!</p>
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-            
-            tbody.innerHTML = courses.map(course => `
-                <tr>
-                    <td>${course.courseId}</td>
-                    <td>${course.name}</td>
-                    <td>${course.description || 'N/A'}</td>
-                    <td>${course.instructor ? `${course.instructor.firstName} ${course.instructor.lastName}` : 'N/A'}</td>
-                    <td>${course.maxStudents}</td>
-                    <td>${course.duration}</td>
-                    <td>${course.schedule}</td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-primary me-2" onclick="editCourse('${course._id}')">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="deleteCourse('${course._id}')">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
+       
+function displayCourses(courses) {
+    const tbody = document.getElementById('coursesTableBody');
+    
+    if (courses.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8" class="text-center">
+                    <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No courses found. Add your first course!</p>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+    tbody.innerHTML = courses.map(course => {
+        // Format schedule display
+        let scheduleDisplay = 'N/A';
+        if (course.schedule && course.schedule.startTime && course.schedule.endTime) {
+            scheduleDisplay = `${course.schedule.startTime} - ${course.schedule.endTime}`;
         }
+
+        // Format instructor display (if instructor is an object)
+        let instructorDisplay = 'N/A';
+        if (course.instructor) {
+            if (typeof course.instructor === 'object' && course.instructor.firstName && course.instructor.lastName) {
+                instructorDisplay = `${course.instructor.firstName} ${course.instructor.lastName}`;
+            } else {
+                instructorDisplay = course.instructor;
+            }
+        }
+
+        return `
+            <tr>
+                <td>${course.courseId}</td>
+                <td>${course.name}</td>
+                <td>${course.description || 'N/A'}</td>
+                <td>${instructorDisplay}</td>
+                <td>${course.maxStudents}</td>
+                <td>${course.duration}</td>
+                <td>${scheduleDisplay}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary me-2" onclick="editCourse('${course._id}')">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteCourse('${course._id}')">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
 
         // Show add course modal
         function showAddCourseModal() {
