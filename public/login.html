@@ -302,19 +302,53 @@
                         password: password
                     })
                 });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
+
+                // Check if the response is ok (status 200-299)
+                if (!response.ok) {
+                    let errorMessage = 'Login failed. Please try again.';
+                    if (response.status === 404) {
+                        errorMessage = 'The login endpoint for admin is not available. Please check the server configuration.';
+                    } else if (response.status === 500) {
+                        errorMessage = 'Server error. Please try again later.';
+                    } else {
+                        // Try to get error message from response if possible
+                        try {
+                            const errorData = await response.json();
+                            errorMessage = errorData.message || errorMessage;
+                        } catch (jsonError) {
+                            // If JSON parsing fails, use default message
+                            console.warn('Failed to parse error response as JSON:', jsonError);
+                        }
+                    }
+                    alertMessage.className = 'alert alert-danger';
+                    alertMessage.textContent = errorMessage;
+                    alertMessage.style.display = 'block';
+                    return; // Exit early on error
+                }
+
+                // Parse JSON response for successful requests
+                let data;
+                try {
+                    data = await response.json();
+                } catch (jsonError) {
+                    console.error('Failed to parse response as JSON:', jsonError);
+                    alertMessage.className = 'alert alert-danger';
+                    alertMessage.textContent = 'Invalid response from server. Please try again.';
+                    alertMessage.style.display = 'block';
+                    return;
+                }
+
+                // Proceed with successful login
+                if (data.token) {
                     // Store token in localStorage
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('userRole', selectedRole);
-                    
+
                     // Show success message
                     alertMessage.className = 'alert alert-success';
                     alertMessage.textContent = 'Login successful! Redirecting...';
                     alertMessage.style.display = 'block';
-                    
+
                     // Redirect after delay
                     setTimeout(() => {
                         if (selectedRole === 'admin') {
@@ -324,7 +358,7 @@
                         }
                     }, 1500);
                 } else {
-                    // Show error message
+                    // Show error message if no token
                     alertMessage.className = 'alert alert-danger';
                     alertMessage.textContent = data.message || 'Login failed. Please try again.';
                     alertMessage.style.display = 'block';
