@@ -195,31 +195,36 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="courseInstructor" class="form-label">Instructor <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="courseInstructor" required>
+                                <label for="courseInstructor" class="form-label">Instructor ID <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="courseInstructor" required placeholder="MongoDB ObjectId">
                             </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="courseInstructorModel" class="form-label">Instructor Type <span class="text-danger">*</span></label>
+                                <select class="form-control" id="courseInstructorModel" required>
+                                    <option value="">Select Type</option>
+                                    <option value="Staff">Staff</option>
+                                    <option value="Student">Student</option>
+                                    <option value="Admin">Admin</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="courseMaxStudents" class="form-label">Max Students <span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" id="courseMaxStudents" required min="1">
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="courseDuration" class="form-label">Duration <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="courseDuration" required placeholder="e.g., 3 months">
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="courseSchedule" class="form-label">Schedule <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="courseSchedule" required placeholder="e.g., Mon-Wed 10AM-12PM">
-                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="courseStartTime" class="form-label">Start Time</label>
+                                <label for="courseStartTime" class="form-label">Start Time <span class="text-danger">*</span></label>
                                 <input type="time" class="form-control" id="courseStartTime" required>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="courseEndTime" class="form-label">End Time</label>
+                                <label for="courseEndTime" class="form-label">End Time <span class="text-danger">*</span></label>
                                 <input type="time" class="form-control" id="courseEndTime" required>
                             </div>
                         </div>
@@ -315,32 +320,23 @@ function displayCourses(courses) {
     }
     
     tbody.innerHTML = courses.map(course => {
-        // Format schedule display
-        let scheduleDisplay = 'N/A';
-        if (course.schedule) {
-            const daysArr = course.schedule.days || [];
-            const daysStr = Array.isArray(daysArr) ? daysArr.map(d => d.charAt(0) + d.slice(1).toLowerCase()).join(', ') : '';
-            const startTime = course.schedule.startTime || '';
-            const endTime = course.schedule.endTime || '';
-            scheduleDisplay = `${daysStr} ${startTime} - ${endTime}`.trim();
-        }
+        // Format days display
+        const daysArr = course.days || [];
+        const daysStr = Array.isArray(daysArr) ? daysArr.map(d => d.charAt(0) + d.slice(1).toLowerCase()).join(', ') : '';
+        const startTime = course.startTime || '';
+        const endTime = course.endTime || '';
+        const scheduleDisplay = `${daysStr} ${startTime} - ${endTime}`.trim();
 
-        // Format instructor display (if instructor is an object)
-        let instructorDisplay = 'N/A';
-        if (course.instructor) {
-            if (typeof course.instructor === 'object' && course.instructor.firstName && course.instructor.lastName) {
-                instructorDisplay = `${course.instructor.firstName} ${course.instructor.lastName}`;
-            } else {
-                instructorDisplay = course.instructor;
-            }
-        }
+        // Instructor display
+        let instructorDisplay = course.instructor || 'N/A';
+        let instructorTypeDisplay = course.instructorModel || '';
 
         return `
             <tr>
                 <td>${course.courseId}</td>
                 <td>${course.name}</td>
                 <td>${course.description || 'N/A'}</td>
-                <td>${instructorDisplay}</td>
+                <td>${instructorDisplay} <span class="text-muted">(${instructorTypeDisplay})</span></td>
                 <td>${course.maxStudents}</td>
                 <td>${course.duration}</td>
                 <td>${scheduleDisplay}</td>
@@ -394,16 +390,16 @@ function displayCourses(courses) {
             const name = document.getElementById('courseName').value;
             const description = document.getElementById('courseDescription').value;
             const instructor = document.getElementById('courseInstructor').value;
+            const instructorModel = document.getElementById('courseInstructorModel').value;
             const maxStudents = document.getElementById('courseMaxStudents').value;
             const duration = document.getElementById('courseDuration').value;
-            // Get selected days as array
-            const daysSelect = document.getElementById('courseDays');
-            const days = Array.from(daysSelect.selectedOptions).map(opt => opt.value);
             const startTime = document.getElementById('courseStartTime').value;
             const endTime = document.getElementById('courseEndTime').value;
+            const daysSelect = document.getElementById('courseDays');
+            const days = Array.from(daysSelect.selectedOptions).map(opt => opt.value);
             const hiddenId = document.getElementById('courseIdHidden').value;
 
-            if (!courseId || !name || !instructor || !maxStudents || !duration || days.length === 0 || !startTime || !endTime) {
+            if (!courseId || !name || !instructor || !instructorModel || !maxStudents || !duration || !startTime || !endTime || days.length === 0) {
                 alert('All required fields must be filled.');
                 return;
             }
@@ -413,13 +409,12 @@ function displayCourses(courses) {
                 name,
                 description,
                 instructor,
+                instructorModel,
                 maxStudents,
                 duration,
-                schedule: {
-                    days,        // <-- array of enum values
-                    startTime,
-                    endTime
-                }
+                startTime,
+                endTime,
+                days
             };
             const url = hiddenId ? `${API_BASE_URL}/edit-course/${hiddenId}` : `${API_BASE_URL}/add-course`;
             const method = hiddenId ? 'PUT' : 'POST';
