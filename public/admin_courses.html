@@ -223,6 +223,21 @@
                                 <input type="time" class="form-control" id="courseEndTime" required>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="courseDays" class="form-label">Days <span class="text-danger">*</span></label>
+                                <select class="form-control" id="courseDays" multiple required>
+                                    <option value="MONDAY">Monday</option>
+                                    <option value="TUESDAY">Tuesday</option>
+                                    <option value="WEDNESDAY">Wednesday</option>
+                                    <option value="THURSDAY">Thursday</option>
+                                    <option value="FRIDAY">Friday</option>
+                                    <option value="SATURDAY">Saturday</option>
+                                    <option value="SUNDAY">Sunday</option>
+                                </select>
+                                <small class="text-muted">Hold Ctrl (Windows) or Command (Mac) to select multiple days.</small>
+                            </div>
+                        </div>
                         <input type="hidden" id="courseIdHidden">
                     </form>
                 </div>
@@ -303,10 +318,11 @@ function displayCourses(courses) {
         // Format schedule display
         let scheduleDisplay = 'N/A';
         if (course.schedule) {
-            const days = course.schedule.days || '';
+            const daysArr = course.schedule.days || [];
+            const daysStr = Array.isArray(daysArr) ? daysArr.map(d => d.charAt(0) + d.slice(1).toLowerCase()).join(', ') : '';
             const startTime = course.schedule.startTime || '';
             const endTime = course.schedule.endTime || '';
-            scheduleDisplay = `${days} ${startTime} - ${endTime}`.trim();
+            scheduleDisplay = `${daysStr} ${startTime} - ${endTime}`.trim();
         }
 
         // Format instructor display (if instructor is an object)
@@ -380,12 +396,14 @@ function displayCourses(courses) {
             const instructor = document.getElementById('courseInstructor').value;
             const maxStudents = document.getElementById('courseMaxStudents').value;
             const duration = document.getElementById('courseDuration').value;
-            const days = document.getElementById('courseSchedule').value; // <-- schedule days
+            // Get selected days as array
+            const daysSelect = document.getElementById('courseDays');
+            const days = Array.from(daysSelect.selectedOptions).map(opt => opt.value);
             const startTime = document.getElementById('courseStartTime').value;
             const endTime = document.getElementById('courseEndTime').value;
             const hiddenId = document.getElementById('courseIdHidden').value;
 
-            if (!courseId || !name || !instructor || !maxStudents || !duration || !days || !startTime || !endTime) {
+            if (!courseId || !name || !instructor || !maxStudents || !duration || days.length === 0 || !startTime || !endTime) {
                 alert('All required fields must be filled.');
                 return;
             }
@@ -398,7 +416,7 @@ function displayCourses(courses) {
                 maxStudents,
                 duration,
                 schedule: {
-                    days,        // <-- add days to schedule object
+                    days,        // <-- array of enum values
                     startTime,
                     endTime
                 }
