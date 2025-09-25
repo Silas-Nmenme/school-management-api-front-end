@@ -330,8 +330,14 @@ function displayCourses(courses) {
         // Instructor display
         let instructorDisplay = 'N/A';
         let instructorTypeDisplay = course.instructorModel || '';
-        if (course.instructor && typeof course.instructor === 'object' && course.instructor.firstName) {
-            instructorDisplay = `${course.instructor.firstName} ${course.instructor.lastName || ''}`.trim();
+        if (course.instructor && typeof course.instructor === 'object') {
+            if (course.instructor.firstName) {
+                instructorDisplay = `${course.instructor.firstName} ${course.instructor.lastName || ''}`.trim();
+            } else if (course.instructor.$oid) {
+                instructorDisplay = course.instructor.$oid;
+            } else {
+                instructorDisplay = 'N/A';
+            }
         } else if (course.instructor) {
             instructorDisplay = course.instructor;
         }
