@@ -328,8 +328,13 @@ function displayCourses(courses) {
         const scheduleDisplay = `${daysStr} ${startTime} - ${endTime}`.trim();
 
         // Instructor display
-        let instructorDisplay = course.instructor || 'N/A';
+        let instructorDisplay = 'N/A';
         let instructorTypeDisplay = course.instructorModel || '';
+        if (course.instructor && typeof course.instructor === 'object' && course.instructor.firstName) {
+            instructorDisplay = `${course.instructor.firstName} ${course.instructor.lastName || ''}`.trim();
+        } else if (course.instructor) {
+            instructorDisplay = course.instructor;
+        }
 
         return `
             <tr>
@@ -369,17 +374,25 @@ function displayCourses(courses) {
                 showAlert('Course not found', 'danger');
                 return;
             }
-            
+
             document.getElementById('courseModalLabel').textContent = 'Edit Course';
             document.getElementById('courseId').value = course.courseId;
             document.getElementById('courseName').value = course.name;
             document.getElementById('courseDescription').value = course.description || '';
-            document.getElementById('courseInstructor').value = course.instructor || '';
+            document.getElementById('courseInstructor').value = (course.instructor && typeof course.instructor === 'object') ? course.instructor._id : course.instructor || '';
+            document.getElementById('courseInstructorModel').value = course.instructorModel || '';
             document.getElementById('courseMaxStudents').value = course.maxStudents;
             document.getElementById('courseDuration').value = course.duration;
-            document.getElementById('courseSchedule').value = course.schedule.days || '';
-            document.getElementById('courseStartTime').value = course.schedule.startTime || '';
-            document.getElementById('courseEndTime').value = course.schedule.endTime || '';
+            document.getElementById('courseStartTime').value = course.startTime || '';
+            document.getElementById('courseEndTime').value = course.endTime || '';
+
+            // Set selected days
+            const daysSelect = document.getElementById('courseDays');
+            const days = course.days || [];
+            for (let option of daysSelect.options) {
+                option.selected = days.includes(option.value);
+            }
+
             document.getElementById('courseIdHidden').value = course._id;
             new bootstrap.Modal(document.getElementById('courseModal')).show();
         }
