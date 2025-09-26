@@ -324,6 +324,20 @@
             const colDiv = document.createElement('div');
             colDiv.className = 'col-lg-4 col-md-6 mb-4';
 
+            // Instructor display
+            let instructorDisplay = 'N/A';
+            if (course.instructor && typeof course.instructor === 'object') {
+                if (course.instructor.firstName) {
+                    instructorDisplay = `${course.instructor.firstName} ${course.instructor.lastName || ''}`.trim();
+                } else if (course.instructor.$oid) {
+                    instructorDisplay = course.instructor.$oid;
+                } else {
+                    instructorDisplay = 'N/A';
+                }
+            } else if (course.instructor) {
+                instructorDisplay = course.instructor;
+            }
+
             colDiv.innerHTML = `
                 <div class="card course-card">
                     <div class="card-body">
@@ -331,9 +345,9 @@
                         <h5 class="course-title">${course.name || 'Course Name'}</h5>
                         <p class="course-description">${course.description || 'No description available'}</p>
                         <div class="course-meta">
-                            <strong>Code:</strong> ${course._id || course.id || 'N/A'}<br>
+                            <strong>Code:</strong> ${course.courseId || 'N/A'}<br>
                             <strong>Credits:</strong> 3<br>
-                            <strong>Instructor:</strong> ${course.instructor?.name || course.instructor || 'N/A'}
+                            <strong>Instructor:</strong> ${instructorDisplay}
                         </div>
                         <button class="btn btn-custom btn-sm" onclick="registerCourse('${course._id || course.id}')">
                             <i class="fas fa-plus me-1"></i>Register
@@ -350,6 +364,20 @@
             const colDiv = document.createElement('div');
             colDiv.className = 'col-lg-4 col-md-6 mb-4';
 
+            // Instructor display
+            let instructorDisplay = 'N/A';
+            if (course.instructor && typeof course.instructor === 'object') {
+                if (course.instructor.firstName) {
+                    instructorDisplay = `${course.instructor.firstName} ${course.instructor.lastName || ''}`.trim();
+                } else if (course.instructor.$oid) {
+                    instructorDisplay = course.instructor.$oid;
+                } else {
+                    instructorDisplay = 'N/A';
+                }
+            } else if (course.instructor) {
+                instructorDisplay = course.instructor;
+            }
+
             colDiv.innerHTML = `
                 <div class="card course-card">
                     <div class="card-body">
@@ -357,9 +385,9 @@
                         <h5 class="course-title">${course.name || 'Course Name'}</h5>
                         <p class="course-description">${course.description || 'No description available'}</p>
                         <div class="course-meta">
-                            <strong>Code:</strong> ${course._id || course.id || 'N/A'}<br>
+                            <strong>Code:</strong> ${course.courseId || 'N/A'}<br>
                             <strong>Credits:</strong> 3<br>
-                            <strong>Instructor:</strong> ${course.instructor?.name || course.instructor || 'N/A'}
+                            <strong>Instructor:</strong> ${instructorDisplay}
                         </div>
                         <button class="btn btn-secondary-custom btn-sm" onclick="viewCourseDetails('${course.id}')">
                             <i class="fas fa-eye me-1"></i>View Details
