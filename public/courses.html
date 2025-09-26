@@ -349,7 +349,7 @@
                             <strong>Credits:</strong> 3<br>
                             <strong>Instructor:</strong> ${instructorDisplay}
                         </div>
-                        <button class="btn btn-custom btn-sm" onclick="registerCourse('${course._id || course.id}')">
+                        <button class="btn btn-custom btn-sm" data-course-id="${course._id || course.id}" onclick="registerCourse('${course._id || course.id}')">
                             <i class="fas fa-plus me-1"></i>Register
                         </button>
                     </div>
@@ -401,6 +401,14 @@
 
         // Register for a course
         async function registerCourse(courseId) {
+            if (!confirm('Are you sure you want to register for this course?')) return;
+
+            const button = document.querySelector(`button[data-course-id="${courseId}"]`);
+            if (button) {
+                button.disabled = true;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Registering...';
+            }
+
             const token = localStorage.getItem('token');
 
             try {
@@ -425,6 +433,11 @@
             } catch (error) {
                 console.error('Error registering for course:', error);
                 showAlert('Failed to register for the course: ' + error.message, 'danger');
+            } finally {
+                if (button) {
+                    button.disabled = false;
+                    button.innerHTML = '<i class="fas fa-plus me-1"></i>Register';
+                }
             }
         }
 
