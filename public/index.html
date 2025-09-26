@@ -578,7 +578,24 @@
             observer.observe(card);
         });
 
-        // Student count is set statically to 1500+
+        // Fetch and update student count dynamically
+        async function updateStudentCount() {
+            try {
+                const response = await fetch('https://school-management-api-nu0b.onrender.com/api/students/student-count');
+                if (response.ok) {
+                    const data = await response.json();
+                    const studentCountElement = document.getElementById('studentCount');
+                    studentCountElement.textContent = data.totalStudents + '+';
+                } else {
+                    console.error('Failed to fetch student count:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error fetching student count:', error);
+            }
+        }
+
+        // Update student count on page load
+        updateStudentCount();
 
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
