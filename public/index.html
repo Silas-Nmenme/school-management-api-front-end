@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>School Management System</title>
+    <title>Bethel College</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -22,6 +22,7 @@
         .navbar {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
             position: fixed;
             top: 0;
@@ -161,6 +162,14 @@
         .footer-links a:hover {
             color: #667eea;
         }
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+        .social-links a:hover {
+            color: #667eea;
+        }
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -177,7 +186,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <a class="navbar-brand" href="#"><i class="fas fa-graduation-cap me-2"></i>SchoolMS</a>
+            <a class="navbar-brand" href="#"><i class="fas fa-graduation-cap me-2"></i>Bethel College</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -217,8 +226,8 @@
     <!-- Hero Section -->
     <section id="home" class="hero-section">
         <div class="container">
-            <h1 class="hero-title animate__animated animate__fadeInUp">Welcome to School Management System</h1>
-            <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-1s">Streamline your school's operations with our comprehensive management solution</p>
+            <h1 class="hero-title animate__animated animate__fadeInUp">Welcome to Bethel College</h1>
+            <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-1s">Excellence in Education, Innovation in Learning</p>
             <div class="animate__animated animate__fadeInUp animate__delay-2s">
                 <a href="register.html" class="btn btn-primary me-3">Get Started</a>
                 <a href="#features" class="btn btn-outline-light">Learn More</a>
@@ -226,29 +235,85 @@
         </div>
     </section>
 
-    <!-- Features Section -->
+    <!-- Why Choose Bethel Section -->
     <section id="features" class="features-section">
         <div class="container">
+            <h2 class="text-center mb-5 animate__animated animate__fadeInUp">Why Choose Bethel College</h2>
             <div class="row">
                 <div class="col-md-4">
                     <div class="feature-card animate__animated animate__fadeInUp">
-                        <i class="fas fa-users feature-icon"></i>
-                        <h3 class="feature-title">Student Management</h3>
-                        <p class="feature-description">Efficiently manage student records, attendance, and academic progress with our intuitive interface.</p>
+                        <i class="fas fa-star feature-icon"></i>
+                        <h3 class="feature-title">Academic Excellence</h3>
+                        <p class="feature-description">Renowned for our rigorous curriculum and commitment to high educational standards, preparing students for global success.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="feature-card animate__animated animate__fadeInUp animate__delay-1s">
-                        <i class="fas fa-chart-line feature-icon"></i>
-                        <h3 class="feature-title">Performance Analytics</h3>
-                        <p class="feature-description">Track and analyze student performance with detailed reports and insights.</p>
+                        <i class="fas fa-book-open feature-icon"></i>
+                        <h3 class="feature-title">Diverse Programs</h3>
+                        <p class="feature-description">Offering a wide range of undergraduate and postgraduate programs across various disciplines to suit every passion.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="feature-card animate__animated animate__fadeInUp animate__delay-2s">
-                        <i class="fas fa-shield-alt feature-icon"></i>
-                        <h3 class="feature-title">Secure & Reliable</h3>
-                        <p class="feature-description">Built with security in mind, ensuring your data is protected at all times.</p>
+                        <i class="fas fa-chalkboard-teacher feature-icon"></i>
+                        <h3 class="feature-title">Experienced Faculty</h3>
+                        <p class="feature-description">Our dedicated professors bring years of expertise and real-world experience to inspire and guide our students.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card animate__animated animate__fadeInUp animate__delay-3s">
+                        <i class="fas fa-building feature-icon"></i>
+                        <h3 class="feature-title">Modern Facilities</h3>
+                        <p class="feature-description">State-of-the-art laboratories, libraries, and campus amenities designed for optimal learning and student life.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card animate__animated animate__fadeInUp animate__delay-4s">
+                        <i class="fas fa-users feature-icon"></i>
+                        <h3 class="feature-title">Vibrant Community</h3>
+                        <p class="feature-description">Join a diverse and inclusive community that fosters collaboration, leadership, and lifelong friendships.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card animate__animated animate__fadeInUp animate__delay-5s">
+                        <i class="fas fa-trophy feature-icon"></i>
+                        <h3 class="feature-title">Career Success</h3>
+                        <p class="feature-description">Strong industry connections and career services ensuring our graduates excel in their chosen fields.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="features-section" style="background: #f8f9fa;">
+        <div class="container">
+            <h2 class="text-center mb-5 animate__animated animate__fadeInUp">About Bethel College</h2>
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <img src="https://via.placeholder.com/600x400/667eea/ffffff?text=Bethel+College+Campus" alt="Bethel College Campus" class="img-fluid rounded shadow animate__animated animate__fadeInLeft">
+                </div>
+                <div class="col-md-6">
+                    <h3 class="animate__animated animate__fadeInRight">Our Mission & Vision</h3>
+                    <p class="lead animate__animated animate__fadeInRight animate__delay-1s">Founded in 2005, Bethel College is committed to providing quality higher education that nurtures intellectual growth, ethical values, and professional skills. Our vision is to be a leading institution in innovative teaching and research.</p>
+                    <div class="row animate__animated animate__fadeInRight animate__delay-2s">
+                        <div class="col-6">
+                            <h5>Mission</h5>
+                            <ul>
+                                <li>Deliver excellence in education</li>
+                                <li>Foster research and innovation</li>
+                                <li>Promote community engagement</li>
+                            </ul>
+                        </div>
+                        <div class="col-6">
+                            <h5>Vision</h5>
+                            <ul>
+                                <li>Global leaders in education</li>
+                                <li>Empowering future generations</li>
+                                <li>Sustainable academic excellence</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -382,20 +447,70 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-3">
-                    <div class="stat-number" id="studentCount">0</div>
+                    <div class="stat-number" id="studentCount">1500+</div>
                     <div class="stat-label">Total Students</div>
                 </div>
                 <div class="col-md-3">
-                    <div class="stat-number">500+</div>
-                    <div class="stat-label">Schools Using</div>
+                    <div class="stat-number">25+</div>
+                    <div class="stat-label">Academic Programs</div>
                 </div>
                 <div class="col-md-3">
-                    <div class="stat-number">99.9%</div>
-                    <div class="stat-label">Uptime</div>
+                    <div class="stat-number">10+</div>
+                    <div class="stat-label">Years of Excellence</div>
                 </div>
                 <div class="col-md-3">
-                    <div class="stat-number">24/7</div>
-                    <div class="stat-label">Support</div>
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Placement Rate</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="features-section">
+        <div class="container">
+            <h2 class="text-center mb-5 animate__animated animate__fadeInUp">Contact Us</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>Get in Touch</h3>
+                    <p class="lead">We'd love to hear from you. Reach out for admissions, inquiries, or any questions about Bethel College.</p>
+                    <div class="mb-3">
+                        <i class="fas fa-map-marker-alt me-3"></i>
+                        <strong>Address:</strong> 123 College Avenue, Academic City, State 12345
+                    </div>
+                    <div class="mb-3">
+                        <i class="fas fa-phone me-3"></i>
+                        <strong>Phone:</strong> (123) 456-7890
+                    </div>
+                    <div class="mb-3">
+                        <i class="fas fa-envelope me-3"></i>
+                        <strong>Email:</strong> info@bethelcollege.edu
+                    </div>
+                    <div class="mb-3">
+                        <i class="fas fa-clock me-3"></i>
+                        <strong>Office Hours:</strong> Mon-Fri 8:00 AM - 5:00 PM
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <form>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Subject</label>
+                            <input type="text" class="form-control" id="subject" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea class="form-control" id="message" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -405,22 +520,39 @@
     <footer class="footer">
         <div class="container">
             <div class="row">
-                <div class="col-md-6">
-                    <h5>School Management System</h5>
-                    <p>Empowering educational institutions with cutting-edge technology.</p>
+                <div class="col-md-4">
+                    <h5>Bethel College</h5>
+                    <p>Excellence in Education, Innovation in Learning. Empowering minds, shaping futures since 2005.</p>
+                    <div class="social-links mt-3">
+                        <a href="#" class="me-3"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
                     <ul class="footer-links">
                         <li><a href="#home">Home</a></li>
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#programs">Programs</a></li>
+                        <li><a href="#features">Why Choose Us</a></li>
+                        <li><a href="#programs">Academic Programs</a></li>
                         <li><a href="#about">About</a></li>
                         <li><a href="#contact">Contact</a></li>
                     </ul>
                 </div>
+                <div class="col-md-4">
+                    <h5>Admissions</h5>
+                    <ul class="footer-links">
+                        <li><a href="register.html">Apply Now</a></li>
+                        <li><a href="#">Tuition & Fees</a></li>
+                        <li><a href="#">Financial Aid</a></li>
+                        <li><a href="#">Visit Campus</a></li>
+                        <li><a href="#">Student Life</a></li>
+                    </ul>
+                </div>
             </div>
             <hr>
-            <p>&copy; 2023 School Management System. All rights reserved.</p>
+            <p>&copy; 2024 Bethel College. All rights reserved.</p>
         </div>
     </footer>
 
@@ -446,19 +578,7 @@
             observer.observe(card);
         });
 
-        // Fetch student count from API
-        async function fetchStudentCount() {
-            try {
-                const response = await fetch('https://school-management-api-nu0b.onrender.com/api/students/student-count');
-                const data = await response.json();
-                document.getElementById('studentCount').textContent = data.totalStudents || 0;
-            } catch (error) {
-                console.error('Error fetching student count:', error);
-            }
-        }
-
-        // Call the function on page load
-        document.addEventListener('DOMContentLoaded', fetchStudentCount);
+        // Student count is set statically to 1500+
 
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
