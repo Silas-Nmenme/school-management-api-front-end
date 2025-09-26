@@ -181,9 +181,28 @@
             background: #667eea;
             color: white;
         }
+        .back-to-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+        }
+        .back-to-home a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+        .back-to-home a:hover {
+            color: #e1e5e9;
+        }
     </style>
 </head>
 <body>
+    <div class="back-to-home">
+        <a href="index.html"><i class="fas fa-arrow-left me-2"></i>Back to Home</a>
+    </div>
+
     <div class="login-container">
         <div class="login-header">
             <h2><i class="fas fa-graduation-cap me-2"></i>Bethel College</h2>
