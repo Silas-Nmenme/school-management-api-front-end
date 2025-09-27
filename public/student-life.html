@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Life - Bethel College</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .hero-section p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        .content-section {
+            background: white;
+            padding: 60px 0;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card-header {
+            background: linear-gradient(135deg, #e83e8c 0%, #fd7e14 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 20px;
+        }
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        .card-body {
+            padding: 30px;
+        }
+        .btn-custom {
+            background: linear-gradient(135deg, #e83e8c 0%, #fd7e14 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(232, 62, 140, 0.3);
+            color: white;
+        }
+        .back-to-home {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+        }
+        .back-to-home a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+        .back-to-home a:hover {
+            color: #e1e5e9;
+        }
+        .icon-box {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #e83e8c 0%, #fd7e14 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .testimonial-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            border-left: 4px solid #e83e8c;
+        }
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+        .testimonial-author {
+            font-weight: bold;
+            color: #e83e8c;
+        }
+        .club-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .club-card:hover {
+            background: linear-gradient(135deg, #e83e8c 0%, #fd7e14 100%);
+            color: white;
+        }
+        .club-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #e83e8c;
+        }
+        .club-card:hover .club-icon {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="back-to-home">
+        <a href="index.html"><i class="fas fa-arrow-left me-2"></i>Back to Home</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="animate__animated animate__fadeInDown"><i class="fas fa-users me-3"></i>Student Life at Bethel</h1>
+            <p class="animate__animated animate__fadeInUp">Where learning meets living - Discover the vibrant community that awaits you</p>
+        </div>
+    </section>
+
+    <!-- Content Section -->
+    <section class="content-section">
+        <div class="container">
+            <!-- Clubs and Organizations -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="card animate__animated animate__fadeInUp">
+                        <div class="card-header">
+                            <div class="icon-box">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h3>Clubs & Organizations</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-4">Join over 50 student organizations and find your passion. From academic societies to recreational clubs, there's something for everyone.</p>
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <div class="club-card">
+                                        <div class="club-icon">
+                                            <i class="fas fa-music"></i>
+                                        </div>
+                                        <h6>Music Club</h6>
+                                        <p>Share your love for music</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="club-card">
+                                        <div class="club-icon">
+                                            <i class="fas fa-paint-brush"></i>
+                                        </div>
+                                        <h6>Art Society</h6>
+                                        <p>Express your creativity</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="club-card">
+                                        <div class="club-icon">
+                                            <i class="fas fa-volleyball-ball"></i>
+                                        </div>
+                                        <h6>Sports Teams</h6>
+                                        <p>Compete and stay active</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="club-card">
+                                        <div class="club-icon">
+                                            <i class="fas fa-microscope"></i>
+                                        </div>
+                                        <h6>Science Club</h6>
+                                        <p>Explore scientific wonders</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="club-card">
+                                        <div class="club-icon">
+                                            <i class="fas fa-theater-masks"></i>
+                                        </div>
+                                        <h6>Drama Club</h6>
+                                        <p>Bring stories to life</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="club-card">
+                                        <div class="club-icon">
+                                            <i class="fas fa-globe"></i>
+                                        </div>
+                                        <h6>International Club</h6>
+                                        <p>Celebrate diversity</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="club-card">
+                                        <div class="club-icon">
+                                            <i class="fas fa-handshake"></i>
+                                        </div>
+                                        <h6>Volunteer Group</h6>
+                                        <p>Give back to the community</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="club-card">
+                                        <div class="club-icon">
+                                            <i class="fas fa-code"></i>
+                                        </div>
+                                        <h6>Coding Club</h6>
+                                        <p>Build the future</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Housing and Events -->
+            <div class="row mb-5">
+                <div class="col-lg-6 mb-4">
+                    <div class="card animate__animated animate__fadeInLeft">
+                        <div class="card-header">
+                            <div class="icon-box">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <h3>Housing Options</h3>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                <li class="mb-3"><i class="fas fa-check text-success me-2"></i><strong>Traditional Residence Halls:</strong> Classic dorm living with community bathrooms</li>
+                                <li class="mb-3"><i class="fas fa-check text-success me-2"></i><strong>Suite-Style Housing:</strong> Private bathrooms and shared living spaces</li>
+                                <li class="mb-3"><i class="fas fa-check text-success me-2"></i><strong>Apartment Living:</strong> Independent living for upperclassmen</li>
+                                <li class="mb-3"><i class="fas fa-check text-success me-2"></i><strong>Theme Housing:</strong> Specialized communities based on interests</li>
+                            </ul>
+                            <p class="mt-3">All housing includes high-speed internet, laundry facilities, and 24/7 security.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 mb-4">
+                    <div class="card animate__animated animate__fadeInRight">
+                        <div class="card-header">
+                            <div class="icon-box">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <h3>Campus Events</h3>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                <li class="mb-3"><i class="fas fa-calendar text-primary me-2"></i><strong>Homecoming Weekend:</strong> Annual celebration with parades and games</li>
+                                <li class="mb-3"><i class="fas fa-calendar text-primary me-2"></i><strong>Cultural Festivals:</strong> Celebrate diversity through food and performances</li>
+                                <li class="mb-3"><i class="fas fa-calendar text-primary me-2"></i><strong>Guest Speakers:</strong> Renowned leaders and experts visit campus</li>
+                                <li class="mb-3"><i class="fas fa-calendar text-primary me-2"></i><strong>Club Fairs:</strong> Discover new organizations and activities</li>
+                            </ul>
+                            <p class="mt-3">Weekly events keep campus life exciting and engaging throughout the year.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Testimonials -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="card animate__animated animate__fadeInUp">
+                        <div class="card-header">
+                            <div class="icon-box">
+                                <i class="fas fa-quote-left"></i>
+                            </div>
+                            <h3>What Our Students Say</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4 mb-4">
+                                    <div class="testimonial-card">
+                                        <div class="testimonial-text">
+                                            "The clubs and organizations at Bethel helped me discover my passion for environmental activism. I've made lifelong friends and gained leadership skills I'll use forever."
+                                        </div>
+                                        <div class="testimonial-author">
+                                            - Sarah Johnson, Environmental Science Major
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-4">
+                                    <div class="testimonial-card">
+                                        <div class="testimonial-text">
+                                            "Living on campus has been incredible. The residence halls feel like home, and the events keep things exciting. I wouldn't trade this experience for anything."
+                                        </div>
+                                        <div class="testimonial-author">
+                                            - Michael Chen, Business Major
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-4">
+                                    <div class="testimonial-card">
+                                        <div class="testimonial-text">
+                                            "The diversity of clubs means there's always something to do. From coding competitions to volunteer work, Bethel offers endless opportunities for growth."
+                                        </div>
+                                        <div class="testimonial-author">
+                                            - Emily Rodriguez, Computer Science Major
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Support Services -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card animate__animated animate__fadeInUp">
+                        <div class="card-header">
+                            <div class="icon-box">
+                                <i class="fas fa-hands-helping"></i>
+                            </div>
+                            <h3>Student Support Services</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3 text-center mb-4">
+                                    <div class="icon-box" style="width: 80px; height: 80px; margin: 0 auto 15px;">
+                                        <i class="fas fa-brain"></i>
+                                    </div>
+                                    <h6>Counseling Center</h6>
+                                    <p>Professional mental health support</p>
+                                </div>
+                                <div class="col-md-3 text-center mb-4">
+                                    <div class="icon-box" style="width: 80px; height: 80px; margin: 0 auto 15px;">
+                                        <i class="fas fa-graduation-cap"></i>
+                                    </div>
+                                    <h6>Academic Advising</h6>
+                                    <p>Guidance for course selection and planning</p>
+                                </div>
+                                <div class="col-md-3 text-center mb-4">
+                                    <div class="icon-box" style="width: 80px; height: 80px; margin: 0 auto 15px;">
+                                        <i class="fas fa-utensils"></i>
+                                    </div>
+                                    <h6>Dining Services</h6>
+                                    <p>Nutritious meals and dietary accommodations</p>
+                                </div>
+                                <div class="col-md-3 text-center mb-4">
+                                    <div class="icon-box" style="width: 80px; height: 80px; margin: 0 auto 15px;">
+                                        <i class="fas fa-dumbbell"></i>
+                                    </div>
+                                    <h6>Recreation Center</h6>
+                                    <p>Fitness facilities and wellness programs</p>
+                                </div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <a href="apply-now.html" class="btn btn-custom">
+                                    <i class="fas fa-paper-plane me-2"></i>Join Our Community
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
