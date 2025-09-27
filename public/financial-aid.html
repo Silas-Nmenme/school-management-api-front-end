@@ -10,6 +10,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <!-- Animate.css -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -18,300 +19,453 @@
             margin: 0;
             padding: 0;
         }
-        .hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 80px 0;
-            text-align: center;
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
         }
-        .hero-section h1 {
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #667eea !important;
+        }
+        .navbar-nav .nav-link {
+            color: #333 !important;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #667eea !important;
+        }
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        .hero-section {
+            padding: 120px 0 80px;
+            text-align: center;
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .hero-title {
             font-size: 3rem;
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: 1rem;
         }
-        .hero-section p {
+        .hero-subtitle {
             font-size: 1.2rem;
+            margin-bottom: 2rem;
             opacity: 0.9;
         }
         .content-section {
+            padding: 80px 0;
             background: white;
-            padding: 60px 0;
         }
-        .card {
-            border: none;
+        .aid-card {
+            background: #f8f9fa;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-        }
-        .card-header {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
-            border-radius: 15px 15px 0 0 !important;
-            padding: 20px;
-        }
-        .card-header h3 {
-            margin: 0;
-            font-size: 1.5rem;
-        }
-        .card-body {
             padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            border-left: 5px solid #667eea;
         }
-        .aid-type {
-            display: flex;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid #eee;
-        }
-        .aid-type:last-child {
-            border-bottom: none;
+        .aid-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
         .aid-icon {
-            width: 50px;
-            height: 50px;
-            background: #f8f9fa;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            color: #28a745;
-            font-size: 1.2rem;
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 1rem;
         }
-        .btn-custom {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        .aid-type {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .aid-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        .btn-primary {
+            background: #667eea;
             border: none;
-            border-radius: 25px;
             padding: 12px 30px;
-            color: white;
+            border-radius: 50px;
             font-weight: 600;
             transition: all 0.3s ease;
         }
-        .btn-custom:hover {
+        .btn-primary:hover {
+            background: #5a67d8;
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.3);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        .table {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .table th {
+            background: #667eea;
             color: white;
+            font-weight: 600;
         }
-        .back-to-home {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 10;
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
         }
-        .back-to-home a {
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .footer-links li {
+            display: inline-block;
+            margin: 0 15px;
+        }
+        .footer-links a {
             color: white;
             text-decoration: none;
-            font-size: 1.1rem;
             transition: color 0.3s ease;
         }
-        .back-to-home a:hover {
-            color: #e1e5e9;
+        .footer-links a:hover {
+            color: #667eea;
         }
-        .icon-box {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .social-links a {
             color: white;
             font-size: 1.5rem;
-            margin-bottom: 20px;
+            transition: color 0.3s ease;
+        }
+        .social-links a:hover {
+            color: #667eea;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate__animated {
+            animation-duration: 1s;
         }
     </style>
 </head>
 <body>
-    <div class="back-to-home">
-        <a href="index.html"><i class="fas fa-arrow-left me-2"></i>Back to Home</a>
-    </div>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="index.html"><i class="fas fa-graduation-cap me-2"></i>Bethel College</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#programs">Programs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#contact">Contact</a>
+                    </li>
+                </ul>
+                <div class="dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user me-1"></i>Account
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+                        <li><a class="dropdown-item" href="login.html"><i class="fas fa-sign-in-alt me-2"></i>Student Login</a></li>
+                        <li><a class="dropdown-item" href="register.html"><i class="fas fa-user-plus me-2"></i>Register</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="login.html"><i class="fas fa-crown me-2"></i>Admin Login</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
 
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="container">
-            <h1 class="animate__animated animate__fadeInDown"><i class="fas fa-hand-holding-usd me-3"></i>Financial Aid & Scholarships</h1>
-            <p class="animate__animated animate__fadeInUp">Making your education affordable - Explore your options</p>
+            <h1 class="hero-title animate__animated animate__fadeInUp">Financial Aid</h1>
+            <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-1s">Making education accessible for every student</p>
+            <a href="apply-now.html" class="btn btn-primary animate__animated animate__fadeInUp animate__delay-2s">Apply Now</a>
         </div>
     </section>
 
-    <!-- Content Section -->
+    <!-- Types of Financial Aid Section -->
     <section class="content-section">
         <div class="container">
+            <h2 class="text-center mb-5 animate__animated animate__fadeInUp">Types of Financial Aid</h2>
             <div class="row">
-                <!-- Types of Financial Aid -->
-                <div class="col-lg-8 mb-4">
-                    <div class="card animate__animated animate__fadeInLeft">
-                        <div class="card-header">
-                            <div class="icon-box">
-                                <i class="fas fa-gift"></i>
-                            </div>
-                            <h3>Types of Financial Aid</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="aid-type">
-                                <div class="aid-icon">
-                                    <i class="fas fa-trophy"></i>
-                                </div>
-                                <div>
-                                    <h5>Scholarships</h5>
-                                    <p>Merit-based awards based on academic achievement, leadership, and extracurricular activities. No repayment required.</p>
-                                </div>
-                            </div>
-                            <div class="aid-type">
-                                <div class="aid-icon">
-                                    <i class="fas fa-handshake"></i>
-                                </div>
-                                <div>
-                                    <h5>Grants</h5>
-                                    <p>Need-based aid from federal, state, and institutional sources. Free money that doesn't need to be repaid.</p>
-                                </div>
-                            </div>
-                            <div class="aid-type">
-                                <div class="aid-icon">
-                                    <i class="fas fa-university"></i>
-                                </div>
-                                <div>
-                                    <h5>Federal Loans</h5>
-                                    <p>Low-interest loans with flexible repayment options. Subsidized loans don't accrue interest while in school.</p>
-                                </div>
-                            </div>
-                            <div class="aid-type">
-                                <div class="aid-icon">
-                                    <i class="fas fa-briefcase"></i>
-                                </div>
-                                <div>
-                                    <h5>Work-Study</h5>
-                                    <p>Part-time jobs on campus to help cover educational expenses. Earn money while gaining valuable experience.</p>
-                                </div>
-                            </div>
-                        </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="aid-card animate__animated animate__fadeInUp">
+                        <i class="fas fa-gift aid-icon"></i>
+                        <div class="aid-type">Scholarships</div>
+                        <div class="aid-description">Merit-based awards based on academic achievement, leadership, and talents. No repayment required.</div>
+                        <ul class="list-unstyled text-start">
+                            <li><i class="fas fa-check text-success me-2"></i>Academic Excellence Scholarship: $5,000/year</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Leadership Award: $3,000/year</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Departmental Scholarships available</li>
+                        </ul>
                     </div>
                 </div>
-
-                <!-- Quick Facts -->
-                <div class="col-lg-4 mb-4">
-                    <div class="card animate__animated animate__fadeInRight">
-                        <div class="card-header">
-                            <div class="icon-box">
-                                <i class="fas fa-chart-pie"></i>
-                            </div>
-                            <h3>Quick Facts</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="aid-type">
-                                <div class="aid-icon">
-                                    <i class="fas fa-users"></i>
-                                </div>
-                                <div>
-                                    <h6>95% of students</h6>
-                                    <p>receive some form of financial aid</p>
-                                </div>
-                            </div>
-                            <div class="aid-type">
-                                <div class="aid-icon">
-                                    <i class="fas fa-dollar-sign"></i>
-                                </div>
-                                <div>
-                                    <h6>Average award</h6>
-                                    <p>$15,000 per year</p>
-                                </div>
-                            </div>
-                            <div class="aid-type">
-                                <div class="aid-icon">
-                                    <i class="fas fa-clock"></i>
-                                </div>
-                                <div>
-                                    <h6>Priority deadline</h6>
-                                    <p>March 1st</p>
-                                </div>
-                            </div>
-                        </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="aid-card animate__animated animate__fadeInUp animate__delay-1s">
+                        <i class="fas fa-hand-holding-usd aid-icon"></i>
+                        <div class="aid-type">Grants</div>
+                        <div class="aid-description">Need-based aid that doesn't need to be repaid. Based on financial need determined by FAFSA.</div>
+                        <ul class="list-unstyled text-start">
+                            <li><i class="fas fa-check text-success me-2"></i>Pell Grant: Up to $7,395/year</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Bethel Need-Based Grant: $2,000-$10,000/year</li>
+                            <li><i class="fas fa-check text-success me-2"></i>State Grants available</li>
+                        </ul>
                     </div>
                 </div>
-            </div>
-
-            <!-- Application Process -->
-            <div class="row mt-5">
-                <div class="col-12">
-                    <div class="card animate__animated animate__fadeInUp">
-                        <div class="card-header">
-                            <div class="icon-box">
-                                <i class="fas fa-file-alt"></i>
-                            </div>
-                            <h3>Application Process</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-3 text-center mb-4">
-                                    <div class="icon-box" style="width: 80px; height: 80px; margin: 0 auto 15px;">
-                                        <i class="fas fa-1" style="font-size: 2rem;"></i>
-                                    </div>
-                                    <h5>Step 1: Apply</h5>
-                                    <p>Complete your admission application to Bethel College</p>
-                                </div>
-                                <div class="col-md-3 text-center mb-4">
-                                    <div class="icon-box" style="width: 80px; height: 80px; margin: 0 auto 15px;">
-                                        <i class="fas fa-2" style="font-size: 2rem;"></i>
-                                    </div>
-                                    <h5>Step 2: FAFSA</h5>
-                                    <p>Submit your Free Application for Federal Student Aid (FAFSA)</p>
-                                </div>
-                                <div class="col-md-3 text-center mb-4">
-                                    <div class="icon-box" style="width: 80px; height: 80px; margin: 0 auto 15px;">
-                                        <i class="fas fa-3" style="font-size: 2rem;"></i>
-                                    </div>
-                                    <h5>Step 3: Review</h5>
-                                    <p>Our office reviews your application and determines eligibility</p>
-                                </div>
-                                <div class="col-md-3 text-center mb-4">
-                                    <div class="icon-box" style="width: 80px; height: 80px; margin: 0 auto 15px;">
-                                        <i class="fas fa-4" style="font-size: 2rem;"></i>
-                                    </div>
-                                    <h5>Step 4: Award</h5>
-                                    <p>Receive your financial aid award letter and accept the aid</p>
-                                </div>
-                            </div>
-                            <div class="text-center mt-4">
-                                <a href="apply-now.html" class="btn btn-custom">
-                                    <i class="fas fa-paper-plane me-2"></i>Start Your Application
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Contact Information -->
-            <div class="row mt-5">
-                <div class="col-12 text-center">
-                    <div class="card animate__animated animate__fadeInUp">
-                        <div class="card-body">
-                            <h4><i class="fas fa-headset text-success me-2"></i>Financial Aid Office</h4>
-                            <p class="mb-3">We're here to help you navigate your financial aid options and make your education affordable.</p>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <i class="fas fa-phone text-success"></i>
-                                    <p><strong>Phone:</strong><br>(555) 123-4568</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <i class="fas fa-envelope text-success"></i>
-                                    <p><strong>Email:</strong><br>finaid@bethelcollege.edu</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <i class="fas fa-map-marker-alt text-success"></i>
-                                    <p><strong>Office:</strong><br>Financial Aid Center, Room 101</p>
-                                </div>
-                            </div>
-                        </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="aid-card animate__animated animate__fadeInUp animate__delay-2s">
+                        <i class="fas fa-university aid-icon"></i>
+                        <div class="aid-type">Loans</div>
+                        <div class="aid-description">Low-interest federal loans with flexible repayment options. Subsidized loans don't accrue interest while in school.</div>
+                        <ul class="list-unstyled text-start">
+                            <li><i class="fas fa-check text-success me-2"></i>Federal Direct Subsidized: 4.53% interest</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Federal Direct Unsubsidized: 5.05% interest</li>
+                            <li><i class="fas fa-check text-success me-2"></i>PLUS Loans for parents</li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- FAFSA and Application Process Section -->
+    <section class="content-section" style="background: #f8f9fa;">
+        <div class="container">
+            <h2 class="text-center mb-5 animate__animated animate__fadeInUp">How to Apply for Financial Aid</h2>
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Financial Aid Application" class="img-fluid rounded shadow animate__animated animate__fadeInLeft">
+                </div>
+                <div class="col-md-6">
+                    <h3 class="animate__animated animate__fadeInRight">FAFSA - Free Application for Federal Student Aid</h3>
+                    <p class="lead animate__animated animate__fadeInRight animate__delay-1s">The FAFSA is the first step in applying for federal, state, and institutional financial aid. It's free and determines your eligibility for grants, loans, and work-study.</p>
+                    <div class="row animate__animated animate__fadeInRight animate__delay-2s">
+                        <div class="col-12">
+                            <h5>Key Deadlines</h5>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-calendar-alt me-2 text-primary"></i>FAFSA Opens: October 1</li>
+                                <li><i class="fas fa-calendar-alt me-2 text-primary"></i>Priority Deadline: March 1</li>
+                                <li><i class="fas fa-calendar-alt me-2 text-primary"></i>Bethel Scholarship Deadline: February 15</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <a href="https://studentaid.gov/h/apply-for-aid/fafsa" target="_blank" rel="noopener" class="btn btn-primary mt-3">Start FAFSA Application</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Aid Statistics Section -->
+    <section class="content-section">
+        <div class="container">
+            <h2 class="text-center mb-5 animate__animated animate__fadeInUp">Financial Aid at Bethel College</h2>
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <div class="stat-number animate__animated animate__fadeInUp">$15M</div>
+                    <div class="stat-label">Awarded Annually</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-number animate__animated animate__fadeInUp animate__delay-1s">95%</div>
+                    <div class="stat-label">Students Receive Aid</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-number animate__animated animate__fadeInUp animate__delay-2s">$25,000</div>
+                    <div class="stat-label">Average Aid Package</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-number animate__animated animate__fadeInUp animate__delay-3s">50%</div>
+                    <div class="stat-label">Merit Scholarships</div>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-md-8 mx-auto">
+                    <div class="aid-card animate__animated animate__fadeInUp animate__delay-4s">
+                        <h4>Net Price Calculator</h4>
+                        <p class="text-muted">Estimate your personalized financial aid package and net cost of attendance using our official calculator.</p>
+                        <a href="#" class="btn btn-primary">Launch Calculator</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Work-Study and Other Opportunities Section -->
+    <section class="content-section" style="background: #f8f9fa;">
+        <div class="container">
+            <h2 class="text-center mb-5 animate__animated animate__fadeInUp">Work-Study & Other Opportunities</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="aid-card animate__animated animate__fadeInUp">
+                        <i class="fas fa-briefcase aid-icon"></i>
+                        <h4>Federal Work-Study</h4>
+                        <p class="text-muted">Earn money for education expenses through part-time employment on or off campus. Average earnings: $2,500/year.</p>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i>Flexible hours around class schedule</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Positions in various departments</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Community service opportunities</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="aid-card animate__animated animate__fadeInUp animate__delay-1s">
+                        <i class="fas fa-users aid-icon"></i>
+                        <h4>Scholarship Search</h4>
+                        <p class="text-muted">Explore additional scholarships from private organizations, corporations, and community sources.</p>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i>Local business scholarships</li>
+                            <li><i class="fas fa-check text-success me-2"></i>National merit awards</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Minority and first-generation student awards</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="content-section">
+        <div class="container">
+            <h2 class="text-center mb-5 animate__animated animate__fadeInUp">Financial Aid Office</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Get Personalized Assistance</h4>
+                    <div class="mb-3">
+                        <i class="fas fa-phone me-3"></i>
+                        <strong>Phone:</strong> (123) 456-7892
+                    </div>
+                    <div class="mb-3">
+                        <i class="fas fa-envelope me-3"></i>
+                        <strong>Email:</strong> finaid@bethelcollege.edu
+                    </div>
+                    <div class="mb-3">
+                        <i class="fas fa-clock me-3"></i>
+                        <strong>Hours:</strong> Mon-Fri 8:00 AM - 5:00 PM
+                    </div>
+                    <div class="mb-3">
+                        <i class="fas fa-map-marker-alt me-3"></i>
+                        <strong>Location:</strong> Financial Aid Office, Student Services Building
+                    </div>
+                    <a href="#" class="btn btn-primary">Schedule Appointment</a>
+                </div>
+                <div class="col-md-6">
+                    <h4>Important Resources</h4>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-file-alt me-2 text-primary"></i><a href="#" class="text-decoration-none">FAFSA Worksheet</a></li>
+                        <li><i class="fas fa-file-alt me-2 text-primary"></i><a href="#" class="text-decoration-none">Scholarship Application Guide</a></li>
+                        <li><i class="fas fa-file-alt me-2 text-primary"></i><a href="#" class="text-decoration-none">Cost of Attendance Breakdown</a></li>
+                        <li><i class="fas fa-file-alt me-2 text-primary"></i><a href="#" class="text-decoration-none">Verification Process</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Bethel College</h5>
+                    <p>Excellence in Education, Innovation in Learning. Empowering minds, shaping futures since 2005.</p>
+                    <div class="social-links mt-3">
+                        <a href="#" class="me-3"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="index.html#home">Home</a></li>
+                        <li><a href="index.html#features">Why Choose Us</a></li>
+                        <li><a href="index.html#programs">Academic Programs</a></li>
+                        <li><a href="index.html#about">About</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Admissions</h5>
+                    <ul class="footer-links">
+                        <li><a href="apply-now.html">Apply Now</a></li>
+                        <li><a href="tuition-fees.html">Tuition & Fees</a></li>
+                        <li><a href="financial-aid.html">Financial Aid</a></li>
+                        <li><a href="visit-campus.html">Visit Campus</a></li>
+                        <li><a href="student-life.html">Student Life</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <p>&copy; 2024 Bethel College. All rights reserved.</p>
+        </div>
+    </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Animate on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate__animated', 'animate__fadeInUp');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.aid-card, .stat-number').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>

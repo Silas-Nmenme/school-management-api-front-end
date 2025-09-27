@@ -10,6 +10,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <!-- Animate.css -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -18,278 +19,455 @@
             margin: 0;
             padding: 0;
         }
-        .hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 80px 0;
-            text-align: center;
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
         }
-        .hero-section h1 {
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #667eea !important;
+        }
+        .navbar-nav .nav-link {
+            color: #333 !important;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #667eea !important;
+        }
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        .hero-section {
+            padding: 120px 0 80px;
+            text-align: center;
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .hero-title {
             font-size: 3rem;
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: 1rem;
         }
-        .hero-section p {
+        .hero-subtitle {
             font-size: 1.2rem;
+            margin-bottom: 2rem;
             opacity: 0.9;
         }
         .content-section {
+            padding: 80px 0;
             background: white;
-            padding: 60px 0;
         }
-        .card {
-            border: none;
+        .fee-card {
+            background: #f8f9fa;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-        }
-        .card-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 15px 15px 0 0 !important;
-            padding: 20px;
-        }
-        .card-header h3 {
-            margin: 0;
-            font-size: 1.5rem;
-        }
-        .card-body {
             padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
         }
-        .fee-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid #eee;
+        .fee-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
-        .fee-item:last-child {
-            border-bottom: none;
+        .fee-icon {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 1rem;
         }
         .fee-amount {
+            font-size: 2.5rem;
             font-weight: bold;
             color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        .fee-label {
             font-size: 1.1rem;
+            color: #666;
         }
-        .total-fee {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-            border-left: 4px solid #28a745;
+        .table {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
-        .total-fee .fee-amount {
-            color: #28a745;
-            font-size: 1.3rem;
-        }
-        .btn-custom {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 25px;
-            padding: 12px 30px;
+        .table th {
+            background: #667eea;
             color: white;
+            font-weight: 600;
+        }
+        .btn-primary {
+            background: #667eea;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
             font-weight: 600;
             transition: all 0.3s ease;
         }
-        .btn-custom:hover {
+        .btn-primary:hover {
+            background: #5a67d8;
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        .footer {
+            background: #2c3e50;
             color: white;
+            padding: 40px 0;
+            text-align: center;
         }
-        .back-to-home {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 10;
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
-        .back-to-home a {
+        .footer-links li {
+            display: inline-block;
+            margin: 0 15px;
+        }
+        .footer-links a {
             color: white;
             text-decoration: none;
-            font-size: 1.1rem;
             transition: color 0.3s ease;
         }
-        .back-to-home a:hover {
-            color: #e1e5e9;
+        .footer-links a:hover {
+            color: #667eea;
         }
-        .icon-box {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .social-links a {
             color: white;
             font-size: 1.5rem;
-            margin-bottom: 20px;
+            transition: color 0.3s ease;
+        }
+        .social-links a:hover {
+            color: #667eea;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate__animated {
+            animation-duration: 1s;
         }
     </style>
 </head>
 <body>
-    <div class="back-to-home">
-        <a href="index.html"><i class="fas fa-arrow-left me-2"></i>Back to Home</a>
-    </div>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="index.html"><i class="fas fa-graduation-cap me-2"></i>Bethel College</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#programs">Programs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#contact">Contact</a>
+                    </li>
+                </ul>
+                <div class="dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user me-1"></i>Account
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+                        <li><a class="dropdown-item" href="login.html"><i class="fas fa-sign-in-alt me-2"></i>Student Login</a></li>
+                        <li><a class="dropdown-item" href="register.html"><i class="fas fa-user-plus me-2"></i>Register</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="login.html"><i class="fas fa-crown me-2"></i>Admin Login</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
 
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="container">
-            <h1 class="animate__animated animate__fadeInDown"><i class="fas fa-dollar-sign me-3"></i>Tuition & Fees</h1>
-            <p class="animate__animated animate__fadeInUp">Transparent pricing for your educational investment</p>
+            <h1 class="hero-title animate__animated animate__fadeInUp">Tuition & Fees</h1>
+            <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-1s">Transparent pricing for your educational journey</p>
+            <a href="apply-now.html" class="btn btn-primary animate__animated animate__fadeInUp animate__delay-2s">Apply Now</a>
         </div>
     </section>
 
-    <!-- Content Section -->
+    <!-- Tuition Overview Section -->
     <section class="content-section">
         <div class="container">
+            <h2 class="text-center mb-5 animate__animated animate__fadeInUp">Undergraduate Tuition</h2>
             <div class="row">
-                <!-- Undergraduate Tuition -->
-                <div class="col-lg-6 mb-4">
-                    <div class="card animate__animated animate__fadeInLeft">
-                        <div class="card-header">
-                            <div class="icon-box">
-                                <i class="fas fa-graduation-cap"></i>
-                            </div>
-                            <h3>Undergraduate Tuition</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="fee-item">
-                                <span>Tuition per Year</span>
-                                <span class="fee-amount">$20,000</span>
-                            </div>
-                            <div class="fee-item">
-                                <span>Room & Board</span>
-                                <span class="fee-amount">$8,500</span>
-                            </div>
-                            <div class="fee-item">
-                                <span>Books & Supplies</span>
-                                <span class="fee-amount">$1,200</span>
-                            </div>
-                            <div class="fee-item">
-                                <span>Transportation</span>
-                                <span class="fee-amount">$1,800</span>
-                            </div>
-                            <div class="fee-item">
-                                <span>Personal Expenses</span>
-                                <span class="fee-amount">$2,500</span>
-                            </div>
-                            <div class="total-fee">
-                                <div class="fee-item" style="border: none; padding: 0;">
-                                    <span><strong>Total Estimated Cost per Year</strong></span>
-                                    <span class="fee-amount">$34,000</span>
-                                </div>
-                            </div>
-                        </div>
+                <div class="col-md-4">
+                    <div class="fee-card animate__animated animate__fadeInUp">
+                        <i class="fas fa-dollar-sign fee-icon"></i>
+                        <div class="fee-amount">$12,500</div>
+                        <div class="fee-label">Per Year (Full-Time)</div>
+                        <small class="text-muted">12-18 credit hours per semester</small>
                     </div>
                 </div>
-
-                <!-- Additional Fees -->
-                <div class="col-lg-6 mb-4">
-                    <div class="card animate__animated animate__fadeInRight">
-                        <div class="card-header">
-                            <div class="icon-box">
-                                <i class="fas fa-list-ul"></i>
-                            </div>
-                            <h3>Additional Fees</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="fee-item">
-                                <span>Application Fee</span>
-                                <span class="fee-amount">$50</span>
-                            </div>
-                            <div class="fee-item">
-                                <span>Registration Fee</span>
-                                <span class="fee-amount">$100</span>
-                            </div>
-                            <div class="fee-item">
-                                <span>Technology Fee</span>
-                                <span class="fee-amount">$300</span>
-                            </div>
-                            <div class="fee-item">
-                                <span>Student Activity Fee</span>
-                                <span class="fee-amount">$150</span>
-                            </div>
-                            <div class="fee-item">
-                                <span>Health Insurance</span>
-                                <span class="fee-amount">$800</span>
-                            </div>
-                            <div class="total-fee">
-                                <div class="fee-item" style="border: none; padding: 0;">
-                                    <span><strong>Total Additional Fees</strong></span>
-                                    <span class="fee-amount">$1,400</span>
-                                </div>
-                            </div>
-                        </div>
+                <div class="col-md-4">
+                    <div class="fee-card animate__animated animate__fadeInUp animate__delay-1s">
+                        <i class="fas fa-coins fee-icon"></i>
+                        <div class="fee-amount">$420</div>
+                        <div class="fee-label">Per Credit Hour</div>
+                        <small class="text-muted">Part-time or overload</small>
                     </div>
                 </div>
-            </div>
-
-            <!-- Payment Options -->
-            <div class="row mt-5">
-                <div class="col-12">
-                    <div class="card animate__animated animate__fadeInUp">
-                        <div class="card-header">
-                            <div class="icon-box">
-                                <i class="fas fa-credit-card"></i>
-                            </div>
-                            <h3>Payment Options</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <h5><i class="fas fa-calendar-alt text-primary me-2"></i>Payment Plans</h5>
-                                    <p>Flexible monthly payment options available through our partners.</p>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <h5><i class="fas fa-university text-primary me-2"></i>Direct Billing</h5>
-                                    <p>Work directly with our billing department for customized payment arrangements.</p>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <h5><i class="fas fa-hand-holding-usd text-primary me-2"></i>Financial Aid</h5>
-                                    <p>Many students qualify for scholarships, grants, and work-study programs.</p>
-                                </div>
-                            </div>
-                            <div class="text-center mt-4">
-                                <a href="financial-aid.html" class="btn btn-custom">
-                                    <i class="fas fa-info-circle me-2"></i>Learn About Financial Aid
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Contact Information -->
-            <div class="row mt-5">
-                <div class="col-12 text-center">
-                    <div class="card animate__animated animate__fadeInUp">
-                        <div class="card-body">
-                            <h4><i class="fas fa-envelope text-primary me-2"></i>Questions About Tuition & Fees?</h4>
-                            <p class="mb-3">Our financial aid office is here to help you understand your options and find the best way to fund your education.</p>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <i class="fas fa-phone text-primary"></i>
-                                    <p><strong>Phone:</strong><br>(555) 123-4567</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <i class="fas fa-envelope text-primary"></i>
-                                    <p><strong>Email:</strong><br>financialaid@bethelcollege.edu</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <i class="fas fa-clock text-primary"></i>
-                                    <p><strong>Hours:</strong><br>Mon-Fri: 9AM-5PM</p>
-                                </div>
-                            </div>
-                        </div>
+                <div class="col-md-4">
+                    <div class="fee-card animate__animated animate__fadeInUp animate__delay-2s">
+                        <i class="fas fa-university fee-icon"></i>
+                        <div class="fee-amount">$11,000</div>
+                        <div class="fee-label">Annual Room & Board</div>
+                        <small class="text-muted">Double occupancy, meal plan</small>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Fees Breakdown Section -->
+    <section class="content-section" style="background: #f8f9fa;">
+        <div class="container">
+            <h2 class="text-center mb-5 animate__animated animate__fadeInUp">Additional Fees</h2>
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="table-responsive">
+                        <table class="table table-striped animate__animated animate__fadeInUp">
+                            <thead>
+                                <tr>
+                                    <th>Fee Type</th>
+                                    <th>Description</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Application Fee</td>
+                                    <td>One-time non-refundable processing fee</td>
+                                    <td>$50</td>
+                                </tr>
+                                <tr>
+                                    <td>Technology Fee</td>
+                                    <td>Semester fee for IT services and software</td>
+                                    <td>$150/semester</td>
+                                </tr>
+                                <tr>
+                                    <td>Student Activity Fee</td>
+                                    <td>Supports campus events and organizations</td>
+                                    <td>$100/semester</td>
+                                </tr>
+                                <tr>
+                                    <td>Health & Wellness Fee</td>
+                                    <td>Access to gym, counseling, health services</td>
+                                    <td>$75/semester</td>
+                                </tr>
+                                <tr>
+                                    <td>Lab Fee (STEM courses)</td>
+                                    <td>Materials and equipment for science labs</td>
+                                    <td>$100/course</td>
+                                </tr>
+                                <tr>
+                                    <td>Books & Supplies</td>
+                                    <td>Estimated annual cost</td>
+                                    <td>$1,200/year</td>
+                                </tr>
+                                <tr>
+                                    <td>Graduation Fee</td>
+                                    <td>Diploma processing and ceremony</td>
+                                    <td>$150</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Payment Options Section -->
+    <section class="content-section">
+        <div class="container">
+            <h2 class="text-center mb-5 animate__animated animate__fadeInUp">Payment Options</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="fee-card animate__animated animate__fadeInUp">
+                        <i class="fas fa-credit-card fee-icon"></i>
+                        <h4>Payment Plans</h4>
+                        <p class="text-muted">Flexible monthly payment plans available with no interest for qualified students. Pay in 10 monthly installments starting August 1st.</p>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i>Interest-free options</li>
+                            <li><i class="fas fa-check text-success me-2"></i>$50 enrollment fee</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Automatic bank draft</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="fee-card animate__animated animate__fadeInUp animate__delay-1s">
+                        <i class="fas fa-university fee-icon"></i>
+                        <h4>Financial Aid</h4>
+                        <p class="text-muted">Most students receive some form of financial assistance. Complete the FAFSA to determine eligibility for scholarships, grants, and loans.</p>
+                        <a href="financial-aid.html" class="btn btn-primary">Learn About Financial Aid</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="fee-card animate__animated animate__fadeInUp animate__delay-2s">
+                        <i class="fas fa-mobile-alt fee-icon"></i>
+                        <h4>Payment Methods</h4>
+                        <p class="text-muted">We accept multiple payment methods for your convenience.</p>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i>Online payments via credit/debit card</li>
+                            <li><i class="fas fa-check text-success me-2"></i>ACH electronic transfers</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Checks and money orders</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Cash (in Student Accounts office)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="fee-card animate__animated animate__fadeInUp animate__delay-3s">
+                        <i class="fas fa-shield-alt fee-icon"></i>
+                        <h4>Refund Policy</h4>
+                        <p class="text-muted">Refunds are processed according to our published schedule. 100% refund if withdrawn before the first day of classes, prorated thereafter.</p>
+                        <a href="#" class="btn btn-outline-primary">View Full Refund Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="content-section" style="background: #f8f9fa;">
+        <div class="container">
+            <h2 class="text-center mb-5 animate__animated animate__fadeInUp">Need Help with Billing?</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Student Accounts Office</h4>
+                    <div class="mb-3">
+                        <i class="fas fa-phone me-3"></i>
+                        <strong>Phone:</strong> (123) 456-7891
+                    </div>
+                    <div class="mb-3">
+                        <i class="fas fa-envelope me-3"></i>
+                        <strong>Email:</strong> billing@bethelcollege.edu
+                    </div>
+                    <div class="mb-3">
+                        <i class="fas fa-clock me-3"></i>
+                        <strong>Hours:</strong> Mon-Fri 8:00 AM - 5:00 PM
+                    </div>
+                    <div class="mb-3">
+                        <i class="fas fa-map-marker-alt me-3"></i>
+                        <strong>Location:</strong> Student Services Building, Room 101
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h4>Important Dates</h4>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-calendar-alt me-2 text-primary"></i>Payment Due: August 15 (Fall) / January 15 (Spring)</li>
+                        <li><i class="fas fa-calendar-alt me-2 text-primary"></i>Payment Plans Open: July 1</li>
+                        <li><i class="fas fa-calendar-alt me-2 text-primary"></i>FAFSA Priority Deadline: March 1</li>
+                        <li><i class="fas fa-calendar-alt me-2 text-primary"></i>Late Registration Fee: $100 after add/drop period</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Bethel College</h5>
+                    <p>Excellence in Education, Innovation in Learning. Empowering minds, shaping futures since 2005.</p>
+                    <div class="social-links mt-3">
+                        <a href="#" class="me-3"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="index.html#home">Home</a></li>
+                        <li><a href="index.html#features">Why Choose Us</a></li>
+                        <li><a href="index.html#programs">Academic Programs</a></li>
+                        <li><a href="index.html#about">About</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Admissions</h5>
+                    <ul class="footer-links">
+                        <li><a href="apply-now.html">Apply Now</a></li>
+                        <li><a href="tuition-fees.html">Tuition & Fees</a></li>
+                        <li><a href="financial-aid.html">Financial Aid</a></li>
+                        <li><a href="visit-campus.html">Visit Campus</a></li>
+                        <li><a href="student-life.html">Student Life</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <p>&copy; 2024 Bethel College. All rights reserved.</p>
+        </div>
+    </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Animate on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate__animated', 'animate__fadeInUp');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fee-card, .table').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>
