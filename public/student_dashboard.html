@@ -394,7 +394,7 @@
 
             // Fetch student details from API
             try {
-                const response = await fetch('/api/students/profile', {
+                const response = await fetch('https://school-management-api-nu0b.onrender.com/api/students/profile', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -405,7 +405,7 @@
                 if (response.ok) {
                     const responseData = await response.json();
                     const profile = responseData.profile;
-                    const studentName = `${profile.Fistname || ''} ${profile.Lastname || ''}`.trim() || 'Student';
+                    const studentName = `${profile.Firstname || ''} ${profile.Lastname || ''}`.trim() || 'Student';
                     const studentId = profile.studentId || 'N/A';
 
                     // Set student name and ID
