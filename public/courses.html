@@ -300,9 +300,7 @@
 
                 if (response.ok) {
                     const data = await response.json();
-                    const filteredCourses = (data.courses || []).filter(course =>
-                        course.name !== 'INTRODUCTORY TO FINANCIAL MANAGEMENT (FIN 101)'
-                    );
+                    const filteredCourses = (data.courses || []);
                     displayAvailableCourses(filteredCourses);
                 } else {
                     throw new Error('Failed to load available courses');
@@ -525,9 +523,7 @@
 
                 if (response.ok) {
                     const data = await response.json();
-                    registeredCourses = (data.courses || []).filter(course =>
-                        course.name !== 'INTRODUCTORY TO FINANCIAL MANAGEMENT (FIN 101)'
-                    );
+                    registeredCourses = (data.courses || []);
                 }
             } catch (error) {
                 console.error('Error loading registered courses:', error);
