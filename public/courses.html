@@ -105,6 +105,26 @@
         .course-description {
             color: #6c757d;
             margin-bottom: 15px;
+            position: relative;
+        }
+        .course-description.expanded {
+            max-height: none;
+        }
+        .course-description.collapsed {
+            max-height: 3em;
+            overflow: hidden;
+        }
+        .view-more-btn {
+            background: none;
+            border: none;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 0.875rem;
+            padding: 0;
+            text-decoration: underline;
+        }
+        .view-more-btn:hover {
+            color: #5a67d8;
         }
         .course-meta {
             font-size: 0.875rem;
@@ -372,18 +392,29 @@
                 instructorDisplay = course.instructor;
             }
 
+            const courseId = course._id || course.id;
+            const description = course.description || 'No description available';
+            const isLongDesc = description.length > 100;
+            const descClass = isLongDesc ? 'course-description collapsed' : 'course-description';
+            const descId = `desc-${courseId}`;
+            let viewMoreBtn = '';
+            if (isLongDesc) {
+                viewMoreBtn = `<button class="view-more-btn" onclick="toggleDescription('${descId}', this)" style="margin-top: 5px;">View More</button>`;
+            }
+
             colDiv.innerHTML = `
                 <div class="card course-card">
                     <div class="card-body">
                         <i class="fas fa-graduation-cap course-icon"></i>
                         <h5 class="course-title">${course.name || 'Course Name'}</h5>
-                        <p class="course-description">${course.description || 'No description available'}</p>
+                        <p class="${descClass}" id="${descId}">${description}</p>
+                        ${viewMoreBtn}
                         <div class="course-meta">
                             <strong>Code:</strong> ${course.courseId || 'N/A'}<br>
                             <strong>Credits:</strong> 3<br>
                             <strong>Instructor:</strong> ${instructorDisplay}
                         </div>
-                        <button class="btn btn-custom btn-sm" data-course-id="${course._id || course.id}" onclick="registerCourse('${course._id || course.id}')">
+                        <button class="btn btn-custom btn-sm" data-course-id="${courseId}" onclick="registerCourse('${courseId}')">
                             <i class="fas fa-plus me-1"></i>Register
                         </button>
                     </div>
@@ -398,16 +429,28 @@
             const colDiv = document.createElement('div');
             colDiv.className = 'col-lg-4 col-md-6 mb-4';
 
+            const courseId = course._id;
+            const description = course.description || 'No description available';
+            const isLongDesc = description.length > 100;
+            const descClass = isLongDesc ? 'course-description collapsed' : 'course-description';
+            const descId = `desc-${courseId}`;
+            let viewMoreBtn = '';
+            if (isLongDesc) {
+                viewMoreBtn = `<button class="view-more-btn" onclick="toggleDescription('${descId}', this)" style="margin-top: 5px;">View More</button>`;
+            }
+
             colDiv.innerHTML = `
                 <div class="card course-card">
                     <div class="card-body">
                         <i class="fas fa-graduation-cap course-icon"></i>
                         <h5 class="course-title">${course.name || 'Course Name'}</h5>
+                        <p class="${descClass}" id="${descId}">${description}</p>
+                        ${viewMoreBtn}
                         <div class="course-meta">
                             <strong>Course ID:</strong> ${course.courseId || 'N/A'}<br>
                             <strong>Credits:</strong> 3
                         </div>
-                        <button class="btn btn-danger btn-sm" onclick="unregisterCourse('${course._id}')">
+                        <button class="btn btn-danger btn-sm" onclick="unregisterCourse('${courseId}')">
                             <i class="fas fa-times me-1"></i>Unregister
                         </button>
                     </div>
@@ -498,6 +541,20 @@
                     button.disabled = false;
                     button.innerHTML = '<i class="fas fa-times me-1"></i>Unregister';
                 }
+            }
+        }
+
+        // Toggle description expand/collapse
+        function toggleDescription(descId, button) {
+            const descElement = document.getElementById(descId);
+            if (descElement.classList.contains('collapsed')) {
+                descElement.classList.remove('collapsed');
+                descElement.classList.add('expanded');
+                button.textContent = 'View Less';
+            } else {
+                descElement.classList.remove('expanded');
+                descElement.classList.add('collapsed');
+                button.textContent = 'View More';
             }
         }
 
