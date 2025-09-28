@@ -420,9 +420,15 @@
                         <button class="btn btn-custom btn-sm" data-course-id="${courseId}" onclick="registerCourse('${courseId}')">
                             <i class="fas fa-plus me-1"></i>Register
                         </button>
-                        <button class="btn btn-secondary btn-sm" onclick="viewCourseDetails('${courseId}')">
+                        <button class="btn btn-secondary btn-sm" data-course-id="${courseId}" onclick="toggleCourseDetails('${courseId}')">
                             <i class="fas fa-eye me-1"></i>View More
                         </button>
+                        <div class="collapse mt-3" id="collapse-${courseId}">
+                            <div class="p-3 bg-light rounded">
+                                <h6>Course Name: ${course.name || 'Course Name'}</h6>
+                                <p>Course ID: ${course.courseId || 'N/A'}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
@@ -464,9 +470,15 @@
                         <button class="btn btn-unregister btn-sm" onclick="unregisterCourse('${courseId}')">
                             <i class="fas fa-times me-1"></i>Unregister
                         </button>
-                        <button class="btn btn-secondary btn-sm" onclick="viewCourseDetails('${courseId}')">
+                        <button class="btn btn-secondary btn-sm" data-course-id="${courseId}" onclick="toggleCourseDetails('${courseId}')">
                             <i class="fas fa-eye me-1"></i>View More
                         </button>
+                        <div class="collapse mt-3" id="collapse-${courseId}">
+                            <div class="p-3 bg-light rounded">
+                                <h6>Course Name: ${course.name || 'Course Name'}</h6>
+                                <p>Course ID: ${course.courseId || 'N/A'}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
@@ -474,60 +486,24 @@
             return colDiv;
         }
 
-        // View course details
-        function viewCourseDetails(courseId) {
-            let course = null;
+        // Toggle course details expansion
+        function toggleCourseDetails(courseId) {
+            const collapseElement = document.getElementById(`collapse-${courseId}`);
+            const button = document.querySelector(`button[data-course-id="${courseId}"][onclick*="toggleCourseDetails"]`);
 
-            // Search in available courses
-            if (window.availableCourses) {
-                course = window.availableCourses.find(c => c._id === courseId || c.courseId === courseId);
-            }
+            if (collapseElement && button) {
+                const bsCollapse = new bootstrap.Collapse(collapseElement, {
+                    toggle: false
+                });
 
-            // If not found, search in registered courses
-            if (!course && window.registeredCourses) {
-                course = window.registeredCourses.find(c => c._id === courseId || c.courseId === courseId);
-            }
-
-            if (!course) {
-                showAlert('Course not found.', 'danger');
-                return;
-            }
-
-            // Instructor display
-            let instructorDisplay = 'N/A';
-            if (course.instructor && typeof course.instructor === 'object') {
-                if (course.instructor.firstName) {
-                    instructorDisplay = `${course.instructor.firstName} ${course.instructor.lastName || ''}`.trim();
-                } else if (course.instructor.$oid) {
-                    instructorDisplay = course.instructor.$oid;
+                if (collapseElement.classList.contains('show')) {
+                    bsCollapse.hide();
+                    button.innerHTML = '<i class="fas fa-eye me-1"></i>View More';
+                } else {
+                    bsCollapse.show();
+                    button.innerHTML = '<i class="fas fa-eye-slash me-1"></i>View Less';
                 }
-            } else if (course.instructor) {
-                instructorDisplay = course.instructor;
             }
-
-            const detailsHtml = `
-                <div class="row">
-                    <div class="col-md-8">
-                        <h5>${course.name || 'Course Name'}</h5>
-                        <p class="lead">${course.description || 'No description available'}</p>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card bg-light">
-                            <div class="card-body">
-                                <h6 class="card-title">Course Information</h6>
-                                <p><strong>Code:</strong> ${course.courseId || 'N/A'}</p>
-                                <p><strong>Credits:</strong> 3</p>
-                                <p><strong>Instructor:</strong> ${instructorDisplay}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('courseDetailsBody').innerHTML = detailsHtml;
-
-            const modal = new bootstrap.Modal(document.getElementById('courseDetailsModal'));
-            modal.show();
         }
 
         // Register for a course
