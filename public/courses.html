@@ -306,20 +306,7 @@
                     }
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    const courses = (data.courses || []).filter(course =>
-                        course.name !== 'INTRODUCTORY TO FINANCIAL MANAGEMENT (FIN 101)'
-                    );
-                    displayRegisteredCourses(courses);
-                } else {
-                    throw new Error('Failed to load registered courses');
-                }
-            } catch (error) {
-                console.error('Error loading registered courses:', error);
-                showAlert('Failed to load registered courses. Please try again.', 'danger');
-            }
-        }
+    
 
         // Display available courses
         function displayAvailableCourses(courses) {
