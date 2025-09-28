@@ -492,6 +492,10 @@
             const button = document.querySelector(`button[data-course-id="${courseId}"][onclick*="toggleCourseDetails"]`);
 
             if (collapseElement && button) {
+                const cardBody = collapseElement.parentElement;
+                const description = cardBody.querySelector('.course-description');
+                const meta = cardBody.querySelector('.course-meta');
+
                 const bsCollapse = new bootstrap.Collapse(collapseElement, {
                     toggle: false
                 });
@@ -499,9 +503,13 @@
                 if (collapseElement.classList.contains('show')) {
                     bsCollapse.hide();
                     button.innerHTML = '<i class="fas fa-eye me-1"></i>View More';
+                    if (description) description.style.display = '';
+                    if (meta) meta.style.display = '';
                 } else {
                     bsCollapse.show();
                     button.innerHTML = '<i class="fas fa-eye-slash me-1"></i>View Less';
+                    if (description) description.style.display = 'none';
+                    if (meta) meta.style.display = 'none';
                 }
             }
         }
