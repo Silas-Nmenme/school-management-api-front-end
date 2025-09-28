@@ -382,7 +382,7 @@
                 instructorDisplay = course.instructor;
             }
 
-            const courseId = course._id || course.id;
+            const courseId = course.courseId || course._id || course.id;
             const description = course.description || 'No description available';
 
             colDiv.innerHTML = `
@@ -423,7 +423,7 @@
                 instructorDisplay = course.instructor;
             }
 
-            const courseId = course._id || course.id;
+            const courseId = course.courseId || course._id || course.id;
             const description = course.description || 'No description available';
 
             colDiv.innerHTML = `
