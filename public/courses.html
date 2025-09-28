@@ -53,12 +53,6 @@
             transform: translateY(-5px);
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
         }
-        .card-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 15px 15px 0 0 !important;
-            padding: 20px;
-        }
         .btn-custom {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: none;
@@ -71,6 +65,20 @@
         .btn-custom:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+        .btn-unregister {
+            background: #dc3545;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-unregister:hover {
+            background: #c82333;
+            transform: translateY(-2px);
             color: white;
         }
         .btn-secondary-custom {
@@ -105,26 +113,6 @@
         .course-description {
             color: #6c757d;
             margin-bottom: 15px;
-            position: relative;
-        }
-        .course-description.expanded {
-            max-height: none;
-        }
-        .course-description.collapsed {
-            max-height: 3em;
-            overflow: hidden;
-        }
-        .view-more-btn {
-            background: none;
-            border: none;
-            color: #667eea;
-            cursor: pointer;
-            font-size: 0.875rem;
-            padding: 0;
-            text-decoration: underline;
-        }
-        .view-more-btn:hover {
-            color: #5a67d8;
         }
         .course-meta {
             font-size: 0.875rem;
@@ -144,6 +132,12 @@
         .alert {
             border-radius: 10px;
             border: none;
+        }
+        .section-title {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
         }
         @keyframes fadeInUp {
             from {
@@ -189,7 +183,7 @@
 
             <!-- Available Courses Section -->
             <div id="availableCoursesSection" style="display: none;">
-                <h3 class="mb-4"><i class="fas fa-plus-circle me-2"></i>Available Courses</h3>
+                <h3 class="section-title"><i class="fas fa-plus-circle me-2"></i>Available Courses</h3>
                 <div class="row" id="availableCoursesRow">
                     <!-- Available courses will be populated here -->
                 </div>
@@ -198,41 +192,26 @@
                     <h4>No Available Courses</h4>
                     <p>All courses are currently full or unavailable.</p>
                 </div>
+            </div>
 
-                <!-- Exam Registration Button -->
-                <div class="text-center mt-4">
-                    <button class="btn btn-custom" onclick="registerForExam()">
-                        <i class="fas fa-clipboard-list me-2"></i>Register for Exams
-                    </button>
+            <!-- Registered Courses Section -->
+            <div id="registeredCoursesSection" style="display: none;">
+                <h3 class="section-title"><i class="fas fa-check-circle me-2"></i>Registered Courses</h3>
+                <div class="row" id="registeredCoursesRow">
+                    <!-- Registered courses will be populated here -->
+                </div>
+                <div id="noRegisteredCourses" class="no-courses" style="display: none;">
+                    <i class="fas fa-user-graduate"></i>
+                    <h4>No Registered Courses</h4>
+                    <p>You haven't registered for any courses yet.</p>
                 </div>
             </div>
 
-
-
-            <!-- Course Details Modal -->
-            <div class="modal fade" id="courseDetailsModal" tabindex="-1" aria-labelledby="courseDetailsModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="courseDetailsModalLabel">Course Details</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <h6 id="modalCourseName"></h6>
-                            <p><strong>Course ID:</strong> <span id="modalCourseId"></span></p>
-                            <p><strong>Description:</strong></p>
-                            <p id="modalDescription"></p>
-                            <p><strong>Credits:</strong> <span id="modalCredits">3</span></p>
-                            <div id="modalMaterials" style="display: none;">
-                                <p><strong>Materials:</strong></p>
-                                <ul id="materialsList"></ul>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
+            <!-- Exam Registration Button -->
+            <div class="text-center mt-4">
+                <button class="btn btn-custom" onclick="registerForExam()">
+                    <i class="fas fa-clipboard-list me-2"></i>Register for Exams
+                </button>
             </div>
 
             <!-- Exam Registration Modal -->
@@ -283,6 +262,7 @@
             }
 
             loadAvailableCourses();
+            loadRegisteredCourses();
         });
 
         // Load available courses data
@@ -300,19 +280,44 @@
 
                 if (response.ok) {
                     const data = await response.json();
-                    const filteredCourses = (data.courses || []);
-                    displayAvailableCourses(filteredCourses);
+                    const courses = (data.courses || []);
+                    displayAvailableCourses(courses);
                 } else {
                     throw new Error('Failed to load available courses');
                 }
             } catch (error) {
                 console.error('Error loading available courses:', error);
                 showAlert('Failed to load available courses. Please try again.', 'danger');
+            } finally {
                 hideLoading();
             }
         }
 
+        // Load registered courses data
+        async function loadRegisteredCourses() {
+            const token = localStorage.getItem('token');
 
+            try {
+                const response = await fetch('https://school-management-api-nu0b.onrender.com/api/students/courses', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const courses = (data.courses || []);
+                    displayRegisteredCourses(courses);
+                } else {
+                    throw new Error('Failed to load registered courses');
+                }
+            } catch (error) {
+                console.error('Error loading registered courses:', error);
+                showAlert('Failed to load registered courses. Please try again.', 'danger');
+            }
+        }
 
         // Display available courses
         function displayAvailableCourses(courses) {
@@ -337,6 +342,29 @@
             });
         }
 
+        // Display registered courses
+        function displayRegisteredCourses(courses) {
+            const registeredCoursesRow = document.getElementById('registeredCoursesRow');
+            const registeredCoursesSection = document.getElementById('registeredCoursesSection');
+            const noRegisteredCourses = document.getElementById('noRegisteredCourses');
+
+            registeredCoursesRow.innerHTML = '';
+
+            if (courses.length === 0) {
+                noRegisteredCourses.style.display = 'block';
+                registeredCoursesSection.style.display = 'block';
+                return;
+            }
+
+            registeredCoursesSection.style.display = 'block';
+            noRegisteredCourses.style.display = 'none';
+
+            courses.forEach(course => {
+                const courseCard = createRegisteredCourseCard(course);
+                registeredCoursesRow.appendChild(courseCard);
+            });
+        }
+
         // Create available course card
         function createAvailableCourseCard(course) {
             const colDiv = document.createElement('div');
@@ -349,8 +377,6 @@
                     instructorDisplay = `${course.instructor.firstName} ${course.instructor.lastName || ''}`.trim();
                 } else if (course.instructor.$oid) {
                     instructorDisplay = course.instructor.$oid;
-                } else {
-                    instructorDisplay = 'N/A';
                 }
             } else if (course.instructor) {
                 instructorDisplay = course.instructor;
@@ -358,21 +384,13 @@
 
             const courseId = course._id || course.id;
             const description = course.description || 'No description available';
-            const isLongDesc = description.length > 100;
-            const descClass = isLongDesc ? 'course-description collapsed' : 'course-description';
-            const descId = `desc-${courseId}`;
-            let viewMoreBtn = '';
-            if (isLongDesc) {
-                viewMoreBtn = `<button class="view-more-btn" onclick="toggleDescription('${descId}', this)" style="margin-top: 5px;">View More</button>`;
-            }
 
             colDiv.innerHTML = `
                 <div class="card course-card">
                     <div class="card-body">
                         <i class="fas fa-graduation-cap course-icon"></i>
                         <h5 class="course-title">${course.name || 'Course Name'}</h5>
-                        <p class="${descClass}" id="${descId}">${description}</p>
-                        ${viewMoreBtn}
+                        <p class="course-description">${description}</p>
                         <div class="course-meta">
                             <strong>Code:</strong> ${course.courseId || 'N/A'}<br>
                             <strong>Credits:</strong> 3<br>
@@ -380,6 +398,47 @@
                         </div>
                         <button class="btn btn-custom btn-sm" data-course-id="${courseId}" onclick="registerCourse('${courseId}')">
                             <i class="fas fa-plus me-1"></i>Register
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            return colDiv;
+        }
+
+        // Create registered course card
+        function createRegisteredCourseCard(course) {
+            const colDiv = document.createElement('div');
+            colDiv.className = 'col-lg-4 col-md-6 mb-4';
+
+            // Instructor display
+            let instructorDisplay = 'N/A';
+            if (course.instructor && typeof course.instructor === 'object') {
+                if (course.instructor.firstName) {
+                    instructorDisplay = `${course.instructor.firstName} ${course.instructor.lastName || ''}`.trim();
+                } else if (course.instructor.$oid) {
+                    instructorDisplay = course.instructor.$oid;
+                }
+            } else if (course.instructor) {
+                instructorDisplay = course.instructor;
+            }
+
+            const courseId = course._id || course.id;
+            const description = course.description || 'No description available';
+
+            colDiv.innerHTML = `
+                <div class="card course-card">
+                    <div class="card-body">
+                        <i class="fas fa-check-circle course-icon" style="color: #28a745;"></i>
+                        <h5 class="course-title">${course.name || 'Course Name'}</h5>
+                        <p class="course-description">${description}</p>
+                        <div class="course-meta">
+                            <strong>Code:</strong> ${course.courseId || 'N/A'}<br>
+                            <strong>Credits:</strong> 3<br>
+                            <strong>Instructor:</strong> ${instructorDisplay}
+                        </div>
+                        <button class="btn btn-unregister btn-sm" onclick="unregisterCourse('${courseId}')">
+                            <i class="fas fa-times me-1"></i>Unregister
                         </button>
                     </div>
                 </div>
@@ -412,8 +471,9 @@
 
                 if (response.ok) {
                     showAlert('Successfully registered for the course!', 'success');
-                    // Reload available courses
+                    // Reload both sections
                     loadAvailableCourses();
+                    loadRegisteredCourses();
                 } else {
                     const errorData = await response.json();
                     throw new Error(errorData.message || 'Failed to register for the course');
@@ -433,7 +493,7 @@
         async function unregisterCourse(courseId) {
             if (!confirm('Are you sure you want to unregister from this course?')) return;
 
-            const button = document.querySelector(`button[onclick="unregisterCourse('${courseId}')"]`);
+            const button = event ? event.target : document.querySelector(`button[onclick="unregisterCourse('${courseId}')"]`);
             if (button) {
                 button.disabled = true;
                 button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Unregistering...';
@@ -453,8 +513,9 @@
 
                 if (response.ok) {
                     showAlert('Successfully unregistered from the course!', 'success');
-                    // Reload available courses
+                    // Reload both sections
                     loadAvailableCourses();
+                    loadRegisteredCourses();
                 } else {
                     const errorData = await response.json();
                     throw new Error(errorData.message || 'Failed to unregister from the course');
@@ -468,43 +529,6 @@
                     button.innerHTML = '<i class="fas fa-times me-1"></i>Unregister';
                 }
             }
-        }
-
-        // Toggle description expand/collapse
-        function toggleDescription(descId, button) {
-            const descElement = document.getElementById(descId);
-            if (descElement.classList.contains('collapsed')) {
-                descElement.classList.remove('collapsed');
-                descElement.classList.add('expanded');
-                button.textContent = 'View Less';
-            } else {
-                descElement.classList.remove('expanded');
-                descElement.classList.add('collapsed');
-                button.textContent = 'View More';
-            }
-        }
-
-        // View course details
-        function viewCourseDetails(courseId, name, courseIdStr, description, materials) {
-            document.getElementById('modalCourseName').textContent = name;
-            document.getElementById('modalCourseId').textContent = courseIdStr;
-            document.getElementById('modalDescription').textContent = description;
-
-            const materialsList = document.getElementById('materialsList');
-            materialsList.innerHTML = '';
-            if (materials && materials.length > 0) {
-                materials.forEach(material => {
-                    const li = document.createElement('li');
-                    li.textContent = material;
-                    materialsList.appendChild(li);
-                });
-                document.getElementById('modalMaterials').style.display = 'block';
-            } else {
-                document.getElementById('modalMaterials').style.display = 'none';
-            }
-
-            const modal = new bootstrap.Modal(document.getElementById('courseDetailsModal'));
-            modal.show();
         }
 
         // Register for exam
