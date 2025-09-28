@@ -309,7 +309,9 @@
                 if (response.ok) {
                     const data = await response.json();
                     const courses = data.courses || [];
-                    displayRegisteredCourses(courses);
+                    // Filter out courses that may have been deleted (where _id is null due to populate)
+                    const validCourses = courses.filter(course => course._id);
+                    displayRegisteredCourses(validCourses);
                 } else {
                     throw new Error('Failed to load registered courses');
                 }
