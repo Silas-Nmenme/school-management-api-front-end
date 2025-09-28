@@ -516,6 +516,16 @@
                     // Reload both sections
                     loadAvailableCourses();
                     loadRegisteredCourses();
+                } else if (response.status === 404) {
+                    showAlert('Course not found or already unregistered.', 'warning');
+                    // Remove the course card from the page
+                    const card = button.closest('.card');
+                    if (card) {
+                        card.remove();
+                    }
+                    // Reload sections to update counts
+                    loadAvailableCourses();
+                    loadRegisteredCourses();
                 } else {
                     const errorData = await response.json();
                     throw new Error(errorData.message || 'Failed to unregister from the course');
