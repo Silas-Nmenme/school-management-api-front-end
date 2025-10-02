@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grades - Bethel College</title>
+    <title>Schedule - Bethel College</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -136,39 +136,78 @@
         .text-muted {
             color: #6c757d !important;
         }
-        .stat-card {
-            text-align: center;
-            padding: 20px;
-        }
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #667eea;
-        }
         .footer {
             background: #f8f9fa;
             padding: 20px;
             text-align: center;
             width: 100%;
         }
-        .grade-table {
+        .timetable {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
         }
-        .grade-table th, .grade-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+        .timetable th, .timetable td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+            vertical-align: middle;
         }
-        .grade-table th {
+        .timetable th {
             background-color: #f8f9fa;
             font-weight: bold;
+            color: #495057;
         }
-        .grade-A { color: #28a745; }
-        .grade-B { color: #007bff; }
-        .grade-C { color: #ffc107; }
-        .grade-D { color: #fd7e14; }
-        .grade-F { color: #dc3545; }
+        .timetable .time-column {
+            background-color: #e9ecef;
+            font-weight: bold;
+            width: 120px;
+        }
+        .course-cell {
+            background-color: #f8f9ff;
+            border-left: 4px solid #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .course-cell:hover {
+            background-color: #e7f3ff;
+            transform: scale(1.02);
+        }
+        .course-cell.empty {
+            background-color: #f8f9fa;
+            border-left: none;
+        }
+        .course-name {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+        .course-details {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+        .semester-selector {
+            margin-bottom: 30px;
+        }
+        .semester-btn {
+            margin: 0 10px 10px 0;
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .semester-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        .semester-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -180,7 +219,7 @@
                 <a class="nav-link" href="student_dashboard.html"><i class="fas fa-home me-1"></i>Dashboard</a>
                 <a class="nav-link" href="profile.html"><i class="fas fa-user me-1"></i>Profile</a>
                 <a class="nav-link" href="courses.html"><i class="fas fa-book me-1"></i>Courses</a>
-                <a class="nav-link active" href="grades.html"><i class="fas fa-chart-line me-1"></i>Grades</a>
+                <a class="nav-link active" href="schedule.html"><i class="fas fa-calendar-alt me-1"></i>Schedule</a>
                 <button class="btn logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt me-1"></i>Logout</button>
             </div>
         </div>
@@ -188,87 +227,55 @@
 
     <div class="dashboard-container">
         <div class="dashboard-header">
-            <h1><i class="fas fa-chart-line me-2"></i>Grades & Performance</h1>
-            <p>View your academic performance and grades</p>
+            <h1><i class="fas fa-calendar-alt me-2"></i>Class Schedule</h1>
+            <p>View your weekly class timetable</p>
             <div class="student-info">
                 <strong id="studentName">John Doe</strong><br>
                 <small>Student ID: 2023001</small>
             </div>
         </div>
         <div class="dashboard-body">
-            <!-- Performance Overview -->
-            <div class="row mb-4">
-                <div class="col-md-4">
-                    <div class="card stat-card text-center">
-                        <div class="card-body">
-                            <i class="fas fa-chart-bar icon-large"></i>
-                            <div class="stat-number" id="currentGPA">3.75</div>
-                            <h5>Current GPA</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card stat-card text-center">
-                        <div class="card-body">
-                            <i class="fas fa-graduation-cap icon-large"></i>
-                            <div class="stat-number" id="totalCredits">60</div>
-                            <h5>Total Credits</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card stat-card text-center">
-                        <div class="card-body">
-                            <i class="fas fa-calendar-alt icon-large"></i>
-                            <div class="stat-number" id="currentSemester">Fall 2025</div>
-                            <h5>Current Semester</h5>
-                        </div>
-                    </div>
-                </div>
+            <!-- Semester Selector -->
+            <div class="semester-selector text-center">
+                <button class="semester-btn active" data-semester="fall">Fall 2025</button>
+                <button class="semester-btn" data-semester="spring">Spring 2025</button>
+                <button class="semester-btn" data-semester="summer">Summer 2025</button>
             </div>
 
-            <!-- Grades Table -->
+            <!-- Timetable -->
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-table me-2"></i>Grade Report</h5>
+                    <h5 class="mb-0"><i class="fas fa-table me-2"></i>Weekly Schedule</h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="grade-table" id="gradesTable">
+                        <table class="timetable" id="timetable">
                             <thead>
                                 <tr>
-                                    <th>Course Code</th>
-                                    <th>Course Name</th>
-                                    <th>Credits</th>
-                                    <th>Grade</th>
-                                    <th>Grade Points</th>
-                                    <th>Semester</th>
+                                    <th class="time-column">Time</th>
+                                    <th>Monday</th>
+                                    <th>Tuesday</th>
+                                    <th>Wednesday</th>
+                                    <th>Thursday</th>
+                                    <th>Friday</th>
                                 </tr>
                             </thead>
-                            <tbody id="gradesTableBody">
-                                <!-- Grades will be loaded here -->
+                            <tbody id="timetableBody">
+                                <!-- Timetable rows will be generated here -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- Grade Legend -->
+            <!-- Course List -->
             <div class="card mt-4">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Grade Legend</h5>
+                    <h5 class="mb-0"><i class="fas fa-list me-2"></i>Enrolled Courses</h5>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <p><span class="grade-A">A (4.0)</span> - Excellent</p>
-                            <p><span class="grade-B">B (3.0)</span> - Good</p>
-                            <p><span class="grade-C">C (2.0)</span> - Satisfactory</p>
-                        </div>
-                        <div class="col-md-6">
-                            <p><span class="grade-D">D (1.0)</span> - Poor</p>
-                            <p><span class="grade-F">F (0.0)</span> - Fail</p>
-                        </div>
+                    <div class="row" id="coursesList">
+                        <!-- Courses will be loaded here -->
                     </div>
                 </div>
             </div>
@@ -319,9 +326,9 @@
                 console.error('Error fetching profile:', error);
             }
 
-            // Fetch grades
+            // Fetch courses and generate schedule
             try {
-                const gradesResponse = await fetch('https://school-management-api-nu0b.onrender.com/api/students/grades', {
+                const coursesResponse = await fetch('https://school-management-api-nu0b.onrender.com/api/students/courses', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -329,80 +336,123 @@
                     }
                 });
 
-                if (gradesResponse.ok) {
-                    const gradesData = await gradesResponse.json();
-                    const grades = gradesData.grades || [];
-                    displayGrades(grades);
-                    calculateGPA(grades);
+                if (coursesResponse.ok) {
+                    const coursesData = await coursesResponse.json();
+                    const courses = coursesData.courses || [];
+                    displayCourses(courses);
+                    generateTimetable(courses);
                 } else {
-                    document.getElementById('gradesTableBody').innerHTML = '<tr><td colspan="6" class="text-center">No grades available</td></tr>';
+                    document.getElementById('coursesList').innerHTML = '<p class="text-center">No courses available</p>';
                 }
             } catch (error) {
-                console.error('Error fetching grades:', error);
-                document.getElementById('gradesTableBody').innerHTML = '<tr><td colspan="6" class="text-center">Error loading grades</td></tr>';
+                console.error('Error fetching courses:', error);
+                document.getElementById('coursesList').innerHTML = '<p class="text-center">Error loading courses</p>';
             }
         });
 
-        function displayGrades(grades) {
-            const tbody = document.getElementById('gradesTableBody');
-            tbody.innerHTML = '';
+        function displayCourses(courses) {
+            const coursesList = document.getElementById('coursesList');
+            coursesList.innerHTML = '';
 
-            if (grades.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="text-center">No grades available</td></tr>';
+            if (courses.length === 0) {
+                coursesList.innerHTML = '<div class="col-12"><p class="text-center">No courses enrolled</p></div>';
                 return;
             }
 
-            grades.forEach(grade => {
-                const row = document.createElement('tr');
-                const gradeClass = getGradeClass(grade.grade);
-                const gradePoints = getGradePoints(grade.grade);
-
-                row.innerHTML = `
-                    <td>${grade.courseCode || 'N/A'}</td>
-                    <td>${grade.courseName || 'N/A'}</td>
-                    <td>${grade.credits || 3}</td>
-                    <td class="${gradeClass}">${grade.grade || 'N/A'}</td>
-                    <td>${gradePoints}</td>
-                    <td>${grade.semester || 'N/A'}</td>
+            courses.forEach(course => {
+                const courseCard = document.createElement('div');
+                courseCard.className = 'col-md-6 col-lg-4 mb-3';
+                courseCard.innerHTML = `
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h6 class="card-title">${course.name || 'Course Name'}</h6>
+                            <p class="card-text text-muted">${course.description || 'No description available'}</p>
+                            <small class="text-muted">Course ID: ${course.courseId || 'N/A'}</small>
+                        </div>
+                    </div>
                 `;
+                coursesList.appendChild(courseCard);
+            });
+        }
+
+        function generateTimetable(courses) {
+            const tbody = document.getElementById('timetableBody');
+            tbody.innerHTML = '';
+
+            // Time slots (assuming standard college schedule)
+            const timeSlots = [
+                '8:00 AM - 9:00 AM',
+                '9:00 AM - 10:00 AM',
+                '10:00 AM - 11:00 AM',
+                '11:00 AM - 12:00 PM',
+                '12:00 PM - 1:00 PM',
+                '1:00 PM - 2:00 PM',
+                '2:00 PM - 3:00 PM',
+                '3:00 PM - 4:00 PM',
+                '4:00 PM - 5:00 PM'
+            ];
+
+            // Days of the week
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+
+            // Create schedule matrix
+            const schedule = {};
+            timeSlots.forEach(time => {
+                schedule[time] = {};
+                days.forEach(day => {
+                    schedule[time][day] = null;
+                });
+            });
+
+            // Populate schedule with courses (dummy data for now)
+            // In a real app, courses would have schedule information
+            if (courses.length > 0) {
+                // Example: Assign first course to Monday 9 AM
+                if (courses[0]) {
+                    schedule['9:00 AM - 10:00 AM']['monday'] = courses[0];
+                }
+                // Assign second course to Wednesday 11 AM
+                if (courses[1]) {
+                    schedule['11:00 AM - 12:00 PM']['wednesday'] = courses[1];
+                }
+                // Assign third course to Friday 2 PM
+                if (courses[2]) {
+                    schedule['2:00 PM - 3:00 PM']['friday'] = courses[2];
+                }
+            }
+
+            // Generate table rows
+            timeSlots.forEach(time => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td class="time-column">${time}</td>`;
+
+                days.forEach(day => {
+                    const course = schedule[time][day];
+                    if (course) {
+                        row.innerHTML += `
+                            <td class="course-cell">
+                                <div class="course-name">${course.name || 'Course'}</div>
+                                <div class="course-details">${course.courseId || 'N/A'}</div>
+                            </td>
+                        `;
+                    } else {
+                        row.innerHTML += `<td class="course-cell empty">-</td>`;
+                    }
+                });
+
                 tbody.appendChild(row);
             });
         }
 
-        function calculateGPA(grades) {
-            if (grades.length === 0) return;
-
-            let totalPoints = 0;
-            let totalCredits = 0;
-
-            grades.forEach(grade => {
-                const credits = grade.credits || 3;
-                const points = getGradePoints(grade.grade);
-                totalPoints += points * credits;
-                totalCredits += credits;
+        // Semester selector functionality
+        document.querySelectorAll('.semester-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.semester-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                // In a real app, you would fetch schedule for the selected semester
+                console.log('Selected semester:', this.dataset.semester);
             });
-
-            const gpa = totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : 0;
-            document.getElementById('currentGPA').textContent = gpa;
-            document.getElementById('totalCredits').textContent = totalCredits;
-        }
-
-        function getGradePoints(grade) {
-            const gradeMap = {
-                'A': 4.0, 'A-': 3.7,
-                'B+': 3.3, 'B': 3.0, 'B-': 2.7,
-                'C+': 2.3, 'C': 2.0, 'C-': 1.7,
-                'D+': 1.3, 'D': 1.0,
-                'F': 0.0
-            };
-            return gradeMap[grade] || 0;
-        }
-
-        function getGradeClass(grade) {
-            if (!grade) return '';
-            const firstChar = grade.charAt(0);
-            return `grade-${firstChar}`;
-        }
+        });
 
         // Logout functionality
         document.getElementById('logoutBtn').addEventListener('click', function() {
