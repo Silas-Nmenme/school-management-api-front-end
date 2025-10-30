@@ -287,20 +287,20 @@
                     const students = data.students || [];
                     const totalStudents = students.length;
                     const studentsByAge = groupStudentsByAge(students);
-                    
+
                     let html = `<h6>Total Students: ${totalStudents}</h6>`;
                     html += '<h6>Students by Age:</h6><ul class="list-group mb-3">';
                     studentsByAge.forEach(group => {
                         html += `<li class="list-group-item">Age ${group._id}: ${group.count}</li>`;
                     });
                     html += '</ul>';
-                    
+
                     html += '<h6>Student List:</h6><table class="table table-striped"><thead><tr><th>Name</th><th>Email</th><th>Age</th></tr></thead><tbody>';
                     students.forEach(student => {
-                        html += `<tr><td>${student.Fistname} ${student.Lastname}</td><td>${student.email}</td><td>${student.age || 'N/A'}</td></tr>`;
+                        html += `<tr><td>${student.Firstname || 'N/A'} ${student.Lastname || 'N/A'}</td><td>${student.email}</td><td>${student.age || 'N/A'}</td></tr>`;
                     });
                     html += '</tbody></table>';
-                    
+
                     document.getElementById('studentReportData').innerHTML = html;
                 } else {
                     document.getElementById('studentReportData').innerHTML = `<p class="text-danger">Error: ${data.message}</p>`;
