@@ -236,10 +236,6 @@
                             <h4 class="text-warning" id="staffMembers">Loading...</h4>
                             <p class="text-muted">Staff Members</p>
                         </div>
-                        <div class="col-md-3">
-                            <h4 class="text-info" id="systemUptime">Loading...</h4>
-                            <p class="text-muted">System Uptime</p>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -381,7 +377,7 @@
         // Function to load dashboard overview
         async function loadDashboardOverview() {
             try {
-                const [studentResponse, courseResponse, staffResponse, uptimeResponse] = await Promise.all([
+                const [studentResponse, courseResponse, staffResponse] = await Promise.all([
                     fetch(`${API_BASE_URL}/get-all-students`, {
                         method: 'GET',
                         headers: {
@@ -397,13 +393,6 @@
                         }
                     }),
                     fetch(`${API_BASE_URL}/get-all-staff`, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        }
-                    }),
-                    fetch(`${API_BASE_URL}/system-uptime`, {
                         method: 'GET',
                         headers: {
                             'Authorization': `Bearer ${token}`,
@@ -439,21 +428,11 @@
                     document.getElementById('staffMembers').textContent = 'N/A';
                 }
 
-                if (uptimeResponse.ok) {
-                    const uptimeData = await uptimeResponse.json();
-                    const uptime = uptimeData.uptime || 'N/A';
-                    document.getElementById('systemUptime').textContent = uptime;
-                } else {
-                    console.error('Error loading uptime:', uptimeResponse.status);
-                    document.getElementById('systemUptime').textContent = 'N/A';
-                }
-
             } catch (error) {
                 console.error('Error fetching dashboard overview:', error);
                 document.getElementById('totalStudents').textContent = 'Error';
                 document.getElementById('activeCourses').textContent = 'Error';
                 document.getElementById('staffMembers').textContent = 'Error';
-                document.getElementById('systemUptime').textContent = 'Error';
             }
         }
 
