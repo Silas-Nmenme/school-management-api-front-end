@@ -276,13 +276,19 @@
         // Load courses data
         async function loadCourses() {
             const token = localStorage.getItem('token');
-            
+
+            if (!token) {
+                showAlert('Authentication token is missing. Please log in again.', 'danger');
+                window.location.href = 'login.html';
+                return;
+            }
+
             try {
                 showAlert('Loading courses...', 'info');
                 const response = await fetch(`${API_BASE_URL}/get-all-courses`, {
                     method: 'GET',
                     headers: {
-                        'Authorization': token,
+                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     }
                 });
@@ -405,6 +411,14 @@ function displayCourses(courses) {
 
         // Save course (add or edit)
         async function saveCourse() {
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                showAlert('Authentication token is missing. Please log in again.', 'danger');
+                window.location.href = 'login.html';
+                return;
+            }
+
             const courseId = document.getElementById('courseId').value;
             const name = document.getElementById('courseName').value;
             const description = document.getElementById('courseDescription').value;
@@ -442,7 +456,7 @@ function displayCourses(courses) {
                 const response = await fetch(url, {
                     method: method,
                     headers: {
-                        'Authorization': token,
+                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(courseData)
@@ -468,17 +482,23 @@ function displayCourses(courses) {
             }
 
             const token = localStorage.getItem('token');
-            
+
+            if (!token) {
+                showAlert('Authentication token is missing. Please log in again.', 'danger');
+                window.location.href = 'login.html';
+                return;
+            }
+
             try {
                 showAlert('Deleting course...', 'info');
                 const response = await fetch(`${API_BASE_URL}/delete-course/${courseId}`, {
                     method: 'DELETE',
                     headers: {
-                        'Authorization': token,
+                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     }
                 });
-                
+
                 const data = await response.json();
                 if (response.ok) {
                     showAlert('Course deleted successfully', 'success');
