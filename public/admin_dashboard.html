@@ -381,15 +381,15 @@
         // Function to load dashboard overview
         async function loadDashboardOverview() {
             try {
-                const [studentReportResponse, courseReportResponse] = await Promise.all([
-                    fetch(`${API_BASE_URL}/reports/students`, {
+                const [studentResponse, courseResponse] = await Promise.all([
+                    fetch(`${API_BASE_URL}/get-all-students`, {
                         method: 'GET',
                         headers: {
                             'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json'
                         }
                     }),
-                    fetch(`${API_BASE_URL}/reports/courses`, {
+                    fetch(`${API_BASE_URL}/get-all-courses`, {
                         method: 'GET',
                         headers: {
                             'Authorization': `Bearer ${token}`,
@@ -398,19 +398,21 @@
                     })
                 ]);
 
-                if (studentReportResponse.ok) {
-                    const studentData = await studentReportResponse.json();
-                    document.getElementById('totalStudents').textContent = studentData.totalStudents || 0;
+                if (studentResponse.ok) {
+                    const studentData = await studentResponse.json();
+                    const totalStudents = studentData.students ? studentData.students.length : 0;
+                    document.getElementById('totalStudents').textContent = totalStudents;
                 } else {
-                    console.error('Error loading student report:', studentReportResponse.status);
+                    console.error('Error loading students:', studentResponse.status);
                     document.getElementById('totalStudents').textContent = 'N/A';
                 }
 
-                if (courseReportResponse.ok) {
-                    const courseData = await courseReportResponse.json();
-                    document.getElementById('activeCourses').textContent = courseData.activeCourses || 0;
+                if (courseResponse.ok) {
+                    const courseData = await courseResponse.json();
+                    const activeCourses = courseData.courses ? courseData.courses.length : 0; // Assuming all courses are active
+                    document.getElementById('activeCourses').textContent = activeCourses;
                 } else {
-                    console.error('Error loading course report:', courseReportResponse.status);
+                    console.error('Error loading courses:', courseResponse.status);
                     document.getElementById('activeCourses').textContent = 'N/A';
                 }
 
@@ -455,18 +457,31 @@
             }
         }
 
+        // Helper function to group students by age
+        function groupStudentsByAge(students) {
+            const ageGroups = {};
+            students.forEach(student => {
+                const age = student.age || 'Unknown'; // Assuming 'age' field exists, default to 'Unknown' if not
+                if (!ageGroups[age]) {
+                    ageGroups[age] = 0;
+                }
+                ageGroups[age]++;
+            });
+            return Object.keys(ageGroups).map(age => ({ _id: age, count: ageGroups[age] }));
+        }
+
         // Function to load reports
         async function loadReports() {
             try {
-                const [studentReportResponse, courseReportResponse] = await Promise.all([
-                    fetch(`${API_BASE_URL}/reports/students`, {
+                const [studentResponse, courseResponse] = await Promise.all([
+                    fetch(`${API_BASE_URL}/get-all-students`, {
                         method: 'GET',
                         headers: {
                             'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json'
                         }
                     }),
-                    fetch(`${API_BASE_URL}/reports/courses`, {
+                    fetch(`${API_BASE_URL}/get-all-courses`, {
                         method: 'GET',
                         headers: {
                             'Authorization': `Bearer ${token}`,
@@ -475,14 +490,17 @@
                     })
                 ]);
 
-                const studentData = await studentReportResponse.json();
-                const courseData = await courseReportResponse.json();
+                const studentData = await studentResponse.json();
+                const courseData = await courseResponse.json();
 
                 let html = '<h6>Student Report:</h6>';
-                if (studentReportResponse.ok) {
-                    html += `<p>Total Students: ${studentData.totalStudents}</p>`;
+                if (studentResponse.ok) {
+                    const students = studentData.students || [];
+                    const totalStudents = students.length;
+                    const studentsByAge = groupStudentsByAge(students);
+                    html += `<p>Total Students: ${totalStudents}</p>`;
                     html += '<h6>Students by Age:</h6><ul>';
-                    studentData.studentsByAge.forEach(group => {
+                    studentsByAge.forEach(group => {
                         html += `<li>Age ${group._id}: ${group.count}</li>`;
                     });
                     html += '</ul>';
@@ -491,9 +509,12 @@
                 }
 
                 html += '<h6>Course Report:</h6>';
-                if (courseReportResponse.ok) {
-                    html += `<p>Total Courses: ${courseData.totalCourses}</p>`;
-                    html += `<p>Active Courses: ${courseData.activeCourses}</p>`;
+                if (courseResponse.ok) {
+                    const courses = courseData.courses || [];
+                    const totalCourses = courses.length;
+                    const activeCourses = courses.length; // Assuming all courses are active
+                    html += `<p>Total Courses: ${totalCourses}</p>`;
+                    html += `<p>Active Courses: ${activeCourses}</p>`;
                 } else {
                     html += `<p class="text-danger">Error: ${courseData.message}</p>`;
                 }
