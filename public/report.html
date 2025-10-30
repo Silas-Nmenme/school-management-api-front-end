@@ -329,7 +329,7 @@
                     let html = `<h6>Total Courses: ${totalCourses}</h6>`;
                     html += '<table class="table table-striped"><thead><tr><th>ID</th><th>Name</th><th>Instructor</th><th>Max Students</th><th>Duration</th></tr></thead><tbody>';
                     courses.forEach(course => {
-                        html += `<tr><td>${course.courseId}</td><td>${course.name}</td><td>${course.instructor}</td><td>${course.maxStudents}</td><td>${course.duration}</td></tr>`;
+                        html += `<tr><td>${course.courseId}</td><td>${course.name}</td><td>${course.instructor.name || course.instructor}</td><td>${course.maxStudents}</td><td>${course.duration}</td></tr>`;
                     });
                     html += '</tbody></table>';
                     
