@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Bethel College</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .dashboard-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin: 20px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        .dashboard-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .dashboard-header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        .dashboard-header p {
+            margin: 10px 0 0;
+            opacity: 0.9;
+        }
+        .dashboard-body {
+            padding: 40px;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 20px;
+        }
+        .card-body {
+            padding: 30px;
+        }
+        .btn-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+        .logout-btn {
+            background: #dc3545;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .logout-btn:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            color: white;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 0 0 20px 20px;
+            padding: 15px 30px;
+        }
+        .navbar-brand {
+            color: white !important;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        .navbar-nav .nav-link {
+            color: white !important;
+            margin: 0 15px;
+            font-weight: 500;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #f8f9fa !important;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .icon-large {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        .text-muted {
+            color: #6c757d !important;
+        }
+        .report-section {
+            display: none;
+        }
+        .report-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="admin_dashboard.html"><i class="fas fa-graduation-cap me-2"></i>Bethel College</a>
+        <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="admin_users.html"><i class="fas fa-users me-1"></i>Manage Users</a>
+                <a class="nav-link" href="admin_courses.html"><i class="fas fa-book me-1"></i>Manage Courses</a>
+                <a class="nav-link active" href="report.html"><i class="fas fa-chart-bar me-1"></i>Reports</a>
+                <button class="btn logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt me-1"></i>Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1><i class="fas fa-chart-bar me-2"></i>Reports & Analytics</h1>
+            <p>Generate and view detailed reports for the school system</p>
+        </div>
+        <div class="dashboard-body">
+            <!-- Report Type Selection -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-list me-2"></i>Select Report Type</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <button class="btn btn-custom w-100 mb-3" onclick="showReport('student')">
+                                <i class="fas fa-users icon-large d-block"></i>
+                                Student Reports
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-custom w-100 mb-3" onclick="showReport('course')">
+                                <i class="fas fa-book icon-large d-block"></i>
+                                Course Reports
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-custom w-100 mb-3" onclick="showReport('staff')">
+                                <i class="fas fa-user-tie icon-large d-block"></i>
+                                Staff Reports
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-custom w-100 mb-3" onclick="showReport('overview')">
+                                <i class="fas fa-chart-pie icon-large d-block"></i>
+                                System Overview
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Reports -->
+            <div class="card report-section" id="studentReport">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-users me-2"></i>Student Reports</h5>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-custom mb-3" onclick="generateStudentReport()"><i class="fas fa-sync-alt me-2"></i>Generate Student Report</button>
+                    <div id="studentReportData">Click to generate student report.</div>
+                </div>
+            </div>
+
+            <!-- Course Reports -->
+            <div class="card report-section" id="courseReport">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-book me-2"></i>Course Reports</h5>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-custom mb-3" onclick="generateCourseReport()"><i class="fas fa-sync-alt me-2"></i>Generate Course Report</button>
+                    <div id="courseReportData">Click to generate course report.</div>
+                </div>
+            </div>
+
+            <!-- Staff Reports -->
+            <div class="card report-section" id="staffReport">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-user-tie me-2"></i>Staff Reports</h5>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-custom mb-3" onclick="generateStaffReport()"><i class="fas fa-sync-alt me-2"></i>Generate Staff Report</button>
+                    <div id="staffReportData">Click to generate staff report.</div>
+                </div>
+            </div>
+
+            <!-- System Overview Reports -->
+            <div class="card report-section" id="overviewReport">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>System Overview</h5>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-custom mb-3" onclick="generateOverviewReport()"><i class="fas fa-sync-alt me-2"></i>Generate Overview Report</button>
+                    <div id="overviewReportData">Click to generate overview report.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        const API_BASE_URL = 'https://school-management-api-nu0b.onrender.com/api/admin'; // Adjust based on your backend URL
+        const token = localStorage.getItem('token');
+
+        // Role-based access check
+        document.addEventListener('DOMContentLoaded', function() {
+            const userRole = localStorage.getItem('userRole');
+            
+            if (!token || userRole !== 'admin') {
+                alert('Access denied. Please log in as an admin.');
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userRole');
+            window.location.href = 'login.html';
+        });
+
+        // Function to show specific report section
+        function showReport(type) {
+            // Hide all report sections
+            document.querySelectorAll('.report-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            // Show selected report section
+            document.getElementById(type + 'Report').classList.add('active');
+        }
+
+        // Function to generate student report
+        async function generateStudentReport() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/get-all-students`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    const students = data.students || [];
+                    const totalStudents = students.length;
+                    const studentsByAge = groupStudentsByAge(students);
+                    
+                    let html = `<h6>Total Students: ${totalStudents}</h6>`;
+                    html += '<h6>Students by Age:</h6><ul class="list-group mb-3">';
+                    studentsByAge.forEach(group => {
+                        html += `<li class="list-group-item">Age ${group._id}: ${group.count}</li>`;
+                    });
+                    html += '</ul>';
+                    
+                    html += '<h6>Student List:</h6><table class="table table-striped"><thead><tr><th>Name</th><th>Email</th><th>Age</th></tr></thead><tbody>';
+                    students.forEach(student => {
+                        html += `<tr><td>${student.Fistname} ${student.Lastname}</td><td>${student.email}</td><td>${student.age || 'N/A'}</td></tr>`;
+                    });
+                    html += '</tbody></table>';
+                    
+                    document.getElementById('studentReportData').innerHTML = html;
+                } else {
+                    document.getElementById('studentReportData').innerHTML = `<p class="text-danger">Error: ${data.message}</p>`;
+                }
+            } catch (error) {
+                document.getElementById('studentReportData').innerHTML = '<p class="text-danger">Error generating student report.</p>';
+                console.error('Error fetching students:', error);
+            }
+        }
+
+        // Function to generate course report
+        async function generateCourseReport() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/get-all-courses`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    const courses = data.courses || [];
+                    const totalCourses = courses.length;
+                    
+                    let html = `<h6>Total Courses: ${totalCourses}</h6>`;
+                    html += '<table class="table table-striped"><thead><tr><th>ID</th><th>Name</th><th>Instructor</th><th>Max Students</th><th>Duration</th></tr></thead><tbody>';
+                    courses.forEach(course => {
+                        html += `<tr><td>${course.courseId}</td><td>${course.name}</td><td>${course.instructor}</td><td>${course.maxStudents}</td><td>${course.duration}</td></tr>`;
+                    });
+                    html += '</tbody></table>';
+                    
+                    document.getElementById('courseReportData').innerHTML = html;
+                } else {
+                    document.getElementById('courseReportData').innerHTML = `<p class="text-danger">Error: ${data.message}</p>`;
+                }
+            } catch (error) {
+                document.getElementById('courseReportData').innerHTML = '<p class="text-danger">Error generating course report.</p>';
+                console.error('Error fetching courses:', error);
+            }
+        }
+
+        // Function to generate staff report
+        async function generateStaffReport() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/get-all-staff`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    const staff = data.staff || [];
+                    const totalStaff = staff.length;
+                    
+                    let html = `<h6>Total Staff: ${totalStaff}</h6>`;
+                    html += '<table class="table table-striped"><thead><tr><th>Name</th><th>Email</th><th>Role</th></tr></thead><tbody>';
+                    staff.forEach(member => {
+                        html += `<tr><td>${member.name}</td><td>${member.email}</td><td>${member.role}</td></tr>`;
+                    });
+                    html += '</tbody></table>';
+                    
+                    document.getElementById('staffReportData').innerHTML = html;
+                } else {
+                    document.getElementById('staffReportData').innerHTML = `<p class="text-danger">Error: ${data.message}</p>`;
+                }
+            } catch (error) {
+                document.getElementById('staffReportData').innerHTML = '<p class="text-danger">Error generating staff report.</p>';
+                console.error('Error fetching staff:', error);
+            }
+        }
+
+        // Function to generate overview report
+        async function generateOverviewReport() {
+            try {
+                const [studentResponse, courseResponse, staffResponse] = await Promise.all([
+                    fetch(`${API_BASE_URL}/get-all-students`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }),
+                    fetch(`${API_BASE_URL}/get-all-courses`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }),
+                    fetch(`${API_BASE_URL}/get-all-staff`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                ]);
+
+                const studentData = await studentResponse.json();
+                const courseData = await courseResponse.json();
+                const staffData = await staffResponse.json();
+
+                let html = '<h6>System Overview:</h6><ul class="list-group">';
+                if (studentResponse.ok) {
+                    const totalStudents = studentData.students ? studentData.students.length : 0;
+                    html += `<li class="list-group-item">Total Students: ${totalStudents}</li>`;
+                } else {
+                    html += '<li class="list-group-item text-danger">Error loading student data</li>';
+                }
+
+                if (courseResponse.ok) {
+                    const totalCourses = courseData.courses ? courseData.courses.length : 0;
+                    html += `<li class="list-group-item">Total Courses: ${totalCourses}</li>`;
+                } else {
+                    html += '<li class="list-group-item text-danger">Error loading course data</li>';
+                }
+
+                if (staffResponse.ok) {
+                    const totalStaff = staffData.staff ? staffData.staff.length : 0;
+                    html += `<li class="list-group-item">Total Staff: ${totalStaff}</li>`;
+                } else {
+                    html += '<li class="list-group-item text-danger">Error loading staff data</li>';
+                }
+                html += '</ul>';
+
+                document.getElementById('overviewReportData').innerHTML = html;
+            } catch (error) {
+                document.getElementById('overviewReportData').innerHTML = '<p class="text-danger">Error generating overview report.</p>';
+                console.error('Error fetching overview data:', error);
+            }
+        }
+
+        // Helper function to group students by age
+        function groupStudentsByAge(students) {
+            const ageGroups = {};
+            students.forEach(student => {
+                const age = student.age || 'Unknown';
+                if (!ageGroups[age]) {
+                    ageGroups[age] = 0;
+                }
+                ageGroups[age]++;
+            });
+            return Object.keys(ageGroups).map(age => ({ _id: age, count: ageGroups[age] }));
+        }
+    </script>
+</body>
+</html>
