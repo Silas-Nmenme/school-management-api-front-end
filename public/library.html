@@ -323,7 +323,7 @@
 
             // Fetch student profile
             try {
-                const profileResponse = await fetch('https://school-management-api-nu0b.onrender.com/api/students/profile', {
+                const profileResponse = await fetch('https://school-management-api-zeta-two.vercel.app/api/students/profile', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -350,7 +350,7 @@
 
         async function loadLibraryResources() {
             try {
-                const response = await fetch('https://school-management-api-nu0b.onrender.com/api/students/library', {
+                const response = await fetch('https://school-management-api-zeta-two.vercel.app/api/students/library', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`,
