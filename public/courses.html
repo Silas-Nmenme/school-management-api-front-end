@@ -612,21 +612,40 @@
         }
 
         // Register for exam
-        function registerForExam() {
-            const registeredCourses = window.registeredCourses || [];
+        async function registerForExam() {
+            const token = localStorage.getItem('token');
+            let registeredCourses = [];
+
+            try {
+                const response = await fetch('https://school-management-api-zeta-two.vercel.app/api/students/courses', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    registeredCourses = data.courses || [];
+                }
+            } catch (error) {
+                console.error('Error loading registered courses:', error);
+                showAlert('Failed to load registered courses.', 'danger');
+                return;
+            }
+
+            if (registeredCourses.length === 0) {
+                showAlert('No registered courses available for exam registration.', 'warning');
+                return;
+            }
+
             const examCoursesList = document.getElementById('examCoursesList');
             examCoursesList.innerHTML = '';
 
             registeredCourses.forEach(course => {
-                const courseId = getCourseId(course);
+                const courseId = course._id;
                 const courseName = course.name || 'Course Name';
-                
-                // Skip courses without valid IDs
-                if (!courseId) {
-                    console.warn('Skipping course without valid ID:', course);
-                    return;
-                }
-                
                 const div = document.createElement('div');
                 div.className = 'form-check mb-2';
                 div.innerHTML = `
@@ -636,7 +655,6 @@
                     </label>
                 `;
                 examCoursesList.appendChild(div);
-                console.log('Added exam course:', { courseId, courseName });
             });
 
             const modal = new bootstrap.Modal(document.getElementById('examRegistrationModal'));
@@ -651,7 +669,6 @@
                     e.preventDefault();
 
                     const selectedCourses = Array.from(this.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
-                    console.log('Selected courses for exam registration:', selectedCourses);
                     if (selectedCourses.length === 0) {
                         showAlert('Please select at least one course for exam registration.', 'warning');
                         return;
@@ -665,16 +682,13 @@
                     const token = localStorage.getItem('token');
 
                     try {
-                        const payload = { courseIds: selectedCourses };
-                        console.log('Sending exam registration payload:', JSON.stringify(payload));
-                        
                         const response = await fetch('https://school-management-api-zeta-two.vercel.app/api/students/exams/register', {
                             method: 'POST',
                             headers: {
                                 'Authorization': `Bearer ${token}`,
                                 'Content-Type': 'application/json'
                             },
-                            body: JSON.stringify(payload)
+                            body: JSON.stringify({ courseIds: selectedCourses })
                         });
 
                         if (response.ok) {
@@ -685,11 +699,8 @@
                             }
                             const modal = bootstrap.Modal.getInstance(document.getElementById('examRegistrationModal'));
                             modal.hide();
-                            // Clear and reload registered courses
-                            loadRegisteredCourses();
                         } else {
                             const errorData = await response.json();
-                            console.error('API Error Response:', errorData);
                             throw new Error(errorData.message || 'Failed to register for exams');
                         }
                     } catch (error) {
@@ -704,36 +715,6 @@
         });
 
         // Utility functions
-        
-        // Helper function to extract course ID properly, handling MongoDB $oid format
-        // For exam registration, we need the MongoDB ObjectId (_id), NOT the course code (courseId)
-        function getCourseId(course) {
-            // First priority: MongoDB ObjectId (_id) - this is what the API expects for exam registration
-            if (course._id) {
-                if (typeof course._id === 'string') {
-                    return course._id;
-                }
-                if (course._id.$oid) {
-                    return course._id.$oid;
-                }
-                if (typeof course._id.toString === 'function') {
-                    return course._id.toString();
-                }
-            }
-            
-            // Fallback to id
-            if (course.id) {
-                return typeof course.id === 'string' ? course.id : course.id.toString();
-            }
-            
-            // Last resort: courseId (course code) - but this won't work for exam registration
-            if (course.courseId) {
-                return typeof course.courseId === 'string' ? course.courseId : course.courseId.toString();
-            }
-            
-            return null;
-        }
-
         function showAlert(message, type) {
             const alertDiv = document.getElementById('alertMessage');
             alertDiv.className = `alert alert-${type}`;
