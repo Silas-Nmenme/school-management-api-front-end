@@ -644,8 +644,15 @@
             examCoursesList.innerHTML = '';
 
             registeredCourses.forEach(course => {
-                const courseId = course._id;
+                const courseId = course.courseId || course._id || course.id;
                 const courseName = course.name || 'Course Name';
+                
+                // Skip courses without valid IDs
+                if (!courseId) {
+                    console.warn('Skipping course without valid ID:', course);
+                    return;
+                }
+                
                 const div = document.createElement('div');
                 div.className = 'form-check mb-2';
                 div.innerHTML = `
