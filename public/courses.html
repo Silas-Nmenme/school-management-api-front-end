@@ -644,7 +644,7 @@
             examCoursesList.innerHTML = '';
 
             registeredCourses.forEach(course => {
-                const courseId = course.courseId || course._id || course.id;
+                const courseId = getCourseId(course);
                 const courseName = course.name || 'Course Name';
                 
                 // Skip courses without valid IDs
@@ -662,6 +662,7 @@
                     </label>
                 `;
                 examCoursesList.appendChild(div);
+                console.log('Added exam course:', { courseId, courseName });
             });
 
             const modal = new bootstrap.Modal(document.getElementById('examRegistrationModal'));
@@ -676,6 +677,7 @@
                     e.preventDefault();
 
                     const selectedCourses = Array.from(this.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+                    console.log('Selected courses for exam registration:', selectedCourses);
                     if (selectedCourses.length === 0) {
                         showAlert('Please select at least one course for exam registration.', 'warning');
                         return;
@@ -689,13 +691,16 @@
                     const token = localStorage.getItem('token');
 
                     try {
+                        const payload = { courseIds: selectedCourses };
+                        console.log('Sending exam registration payload:', JSON.stringify(payload));
+                        
                         const response = await fetch('https://school-management-api-zeta-two.vercel.app/api/students/exams/register', {
                             method: 'POST',
                             headers: {
                                 'Authorization': `Bearer ${token}`,
                                 'Content-Type': 'application/json'
                             },
-                            body: JSON.stringify({ courseIds: selectedCourses })
+                            body: JSON.stringify(payload)
                         });
 
                         if (response.ok) {
