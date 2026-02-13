@@ -627,7 +627,9 @@
 
                 if (response.ok) {
                     const data = await response.json();
-                    registeredCourses = data.courses || [];
+                    // Filter to only include courses with valid MongoDB ObjectId (_id)
+                    // This is required for exam registration
+                    registeredCourses = (data.courses || []).filter(course => course && course._id);
                 }
             } catch (error) {
                 console.error('Error loading registered courses:', error);
@@ -636,7 +638,7 @@
             }
 
             if (registeredCourses.length === 0) {
-                showAlert('No registered courses available for exam registration.', 'warning');
+                showAlert('No registered courses available for exam registration. Please register for courses first.', 'warning');
                 return;
             }
 
@@ -732,14 +734,9 @@
         // Utility functions
         
         // Helper function to extract course ID properly, handling MongoDB $oid format
-        // For exam registration, we need the courseId (course code), not the MongoDB ObjectId
+        // For exam registration, we need the MongoDB ObjectId (_id), NOT the course code (courseId)
         function getCourseId(course) {
-            // For exam registration, prioritize courseId (the course code)
-            if (course.courseId) {
-                return typeof course.courseId === 'string' ? course.courseId : course.courseId.toString();
-            }
-            
-            // Fallback to MongoDB _id if courseId is not available
+            // First priority: MongoDB ObjectId (_id) - this is what the API expects for exam registration
             if (course._id) {
                 if (typeof course._id === 'string') {
                     return course._id;
@@ -755,6 +752,11 @@
             // Fallback to id
             if (course.id) {
                 return typeof course.id === 'string' ? course.id : course.id.toString();
+            }
+            
+            // Last resort: courseId (course code) - but this won't work for exam registration
+            if (course.courseId) {
+                return typeof course.courseId === 'string' ? course.courseId : course.courseId.toString();
             }
             
             return null;
