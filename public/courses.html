@@ -699,6 +699,8 @@
                             }
                             const modal = bootstrap.Modal.getInstance(document.getElementById('examRegistrationModal'));
                             modal.hide();
+                            // Clear and reload registered courses
+                            loadRegisteredCourses();
                         } else {
                             const errorData = await response.json();
                             throw new Error(errorData.message || 'Failed to register for exams');
