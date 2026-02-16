@@ -510,19 +510,19 @@
 
         // Save user (add or edit)
         async function saveUser() {
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
+            const Firstname = document.getElementById('firstName').value;
+            const Lastname = document.getElementById('lastName').value;
             const email = document.getElementById('email').value;
             const phone = document.getElementById('phone').value;
             const type = document.getElementById('userTypeHidden').value;
             const hiddenId = document.getElementById('userIdHidden').value;
 
-            if (!firstName || !lastName || !email) {
+            if (!Firstname || !Lastname || !email) {
                 alert('First Name, Last Name, and Email are required.');
                 return;
             }
 
-            let userData = { firstName, lastName, email, phone };
+            let userData = { Firstname, Lastname, email, phone };
 
             if (type === 'student') {
                 userData.studentId = document.getElementById('studentId').value;
