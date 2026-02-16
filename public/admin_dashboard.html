@@ -555,7 +555,7 @@
                     const students = data.students;
                     let html = '<h6>Students List:</h6><ul class="list-group">';
                     students.forEach(student => {
-                        html += `<li class="list-group-item">${student.Fistname} ${student.Lastname} - ${student.email}</li>`;
+                        html += `<li class="list-group-item">${student.Firstname} ${student.Lastname} - ${student.email}</li>`;
                     });
                     html += '</ul>';
                     document.getElementById('studentsList').innerHTML = html;

@@ -160,7 +160,7 @@
             .then(data => {
                 const profile = data.profile;
                 if (profile) {
-                    studentNameInput.value = `${profile.Fistname || ''} ${profile.Lastname || ''}`.trim();
+                    studentNameInput.value = `${profile.Firstname || ''} ${profile.Lastname || ''}`.trim();
                     studentEmailInput.value = profile.email || '';
                 }
             })

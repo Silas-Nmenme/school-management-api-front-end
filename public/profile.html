@@ -234,7 +234,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="editFirstName" class="form-label">First Name</label>
-                                    <input type="text" class="form-control" id="editFirstName" name="Fistname" required>
+                                    <input type="text" class="form-control" id="editFirstName" name="Firstname" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -322,14 +322,14 @@
         function displayProfile(profile) {
             currentProfileData = profile;
             
-            document.getElementById('studentName').textContent = `${profile.Fistname} ${profile.Lastname}`;
+            document.getElementById('studentName').textContent = `${profile.Firstname} ${profile.Lastname}`;
             document.getElementById('studentId').textContent = `Student ID: ${profile.studentId}`;
             document.getElementById('studentEmail').textContent = profile.email;
             document.getElementById('studentAge').textContent = profile.age;
             document.getElementById('studentPhone').textContent = profile.phone;
             
             // Populate edit form
-            document.getElementById('editFirstName').value = profile.Fistname;
+            document.getElementById('editFirstName').value = profile.Firstname;
             document.getElementById('editLastName').value = profile.Lastname;
             document.getElementById('editAge').value = profile.age;
             document.getElementById('editPhone').value = profile.phone;
@@ -361,7 +361,7 @@
             
             const formData = new FormData(this);
             const updateData = {
-                Fistname: formData.get('Fistname'),
+                Firstname: formData.get('Firstname'),
                 Lastname: formData.get('Lastname'),
                 age: formData.get('age'),
                 phone: formData.get('phone')

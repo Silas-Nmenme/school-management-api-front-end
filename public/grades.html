@@ -309,7 +309,7 @@
                 if (profileResponse.ok) {
                     const profileData = await profileResponse.json();
                     const profile = profileData.profile;
-                    const studentName = `${profile.Fistname || ''} ${profile.Lastname || ''}`.trim() || 'Student';
+                    const studentName = `${profile.Firstname || ''} ${profile.Lastname || ''}`.trim() || 'Student';
                     const studentId = profile.studentId || 'N/A';
 
                     document.getElementById('studentName').textContent = studentName;
