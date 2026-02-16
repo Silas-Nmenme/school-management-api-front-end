@@ -629,6 +629,8 @@
                     const data = await response.json();
                     registeredCourses = data.courses || [];
                     console.log('Registered courses for exam:', registeredCourses);
+                } else {
+                    throw new Error('Failed to fetch registered courses');
                 }
             } catch (error) {
                 console.error('Error loading registered courses:', error);
@@ -644,28 +646,38 @@
             const examCoursesList = document.getElementById('examCoursesList');
             examCoursesList.innerHTML = '';
 
+            let validCoursesCount = 0;
+
             registeredCourses.forEach(course => {
-                // Use the course's courseId property which is stored in student's enrollment
-                // The backend checks enrollment using course.courseId
-                const courseId = course.courseId || course._id || course.id;
+                // Send either the MongoDB _id or courseId to the backend
+                // Backend accepts both and validates enrollment using courseId
+                const courseIdentifier = course._id || course.courseId;
                 const courseName = course.name || 'Course Name';
+                const courseCode = course.courseId || 'N/A';
                 
-                // Skip if no valid courseId
-                if (!courseId) {
-                    console.warn('Course missing courseId:', course);
+                // Only add if we have a valid identifier
+                if (!courseIdentifier) {
+                    console.warn('Course missing both _id and courseId:', course);
                     return;
                 }
+                
+                validCoursesCount++;
                 
                 const div = document.createElement('div');
                 div.className = 'form-check mb-2';
                 div.innerHTML = `
-                    <input class="form-check-input exam-course-checkbox" type="checkbox" value="${courseId}" data-course-id="${courseId}" id="examCourse_${courseId}" checked>
-                    <label class="form-check-label" for="examCourse_${courseId}">
-                        ${courseName} (${courseId})
+                    <input class="form-check-input exam-course-checkbox" type="checkbox" value="${courseIdentifier}" data-course-id="${courseIdentifier}" id="examCourse_${courseIdentifier}" checked>
+                    <label class="form-check-label" for="examCourse_${courseIdentifier}">
+                        ${courseName} (${courseCode})
                     </label>
                 `;
                 examCoursesList.appendChild(div);
             });
+
+            if (validCoursesCount === 0) {
+                showAlert('None of your registered courses have valid identifiers. Please try again later.', 'warning');
+                return;
+            }
 
             const modal = new bootstrap.Modal(document.getElementById('examRegistrationModal'));
             modal.show();
