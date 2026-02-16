@@ -139,6 +139,7 @@
         <div class="navbar-nav ms-auto">
                 <a class="nav-link" href="admin_users.html"><i class="fas fa-users me-1"></i>Manage Users</a>
                 <a class="nav-link" href="admin_courses.html"><i class="fas fa-book me-1"></i>Manage Courses</a>
+                <a class="nav-link" href="#applications" id="navApplicationsLink"><i class="fas fa-file-alt me-1"></i>Manage Applications</a>
                 <a class="nav-link" href="report.html"><i class="fas fa-chart-bar me-1"></i>Reports</a>
                 <button class="btn logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt me-1"></i>Logout</button>
             </div>
@@ -273,6 +274,84 @@
                     <div id="coursesList">Click to load courses data.</div>
                 </div>
             </div>
+                <!-- Manage Applications Section -->
+                <div class="card" id="applications" style="display: none;">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-file-alt me-2"></i>Applications</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <div>
+                                <select id="applicationStatusFilter" class="form-select form-select-sm" style="width:220px">
+                                    <option value="all">All statuses</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Under Review">Under Review</option>
+                                    <option value="Approved">Approved</option>
+                                    <option value="Rejected">Rejected</option>
+                                    <option value="Accepted">Accepted</option>
+                                </select>
+                            </div>
+                            <div>
+                                <button class="btn btn-custom btn-sm" id="refreshApplicationsBtn"><i class="fas fa-sync me-1"></i>Refresh</button>
+                            </div>
+                        </div>
+
+                        <div id="applicationsContainer">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="applicationsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Applicant</th>
+                                            <th>Email</th>
+                                            <th>Course</th>
+                                            <th>Status</th>
+                                            <th>Submitted</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="applicationsTbody">
+                                        <!-- Applications will be rendered here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Application Details / Status Modal -->
+                <div class="modal fade" id="applicationModal" tabindex="-1" aria-labelledby="applicationModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="applicationModalLabel">Application Details</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body" id="applicationModalBody">
+                                <!-- Details populated by JS -->
+                                <div id="applicationDetails"></div>
+                                <hr>
+                                <div class="mb-3">
+                                    <label for="adminStatusSelect" class="form-label">Update Status</label>
+                                    <select id="adminStatusSelect" class="form-select">
+                                        <option value="Pending">Pending</option>
+                                        <option value="Under Review">Under Review</option>
+                                        <option value="Approved">Approved</option>
+                                        <option value="Rejected">Rejected</option>
+                                        <option value="Accepted">Accepted</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="adminRemarks" class="form-label">Remarks (optional)</label>
+                                    <textarea id="adminRemarks" class="form-control" rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-custom" id="saveApplicationStatusBtn">Save Status</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
         </div>
     </div>
 
@@ -422,6 +501,12 @@
                 document.getElementById('totalStudents').textContent = 'Error';
                 document.getElementById('activeCourses').textContent = 'Error';
                 document.getElementById('staffMembers').textContent = 'Error';
+            }
+            // Load recent applications for admin quick view
+            try {
+                loadRecentApplications(5);
+            } catch (e) {
+                console.warn('Unable to load recent applications:', e);
             }
         }
 
@@ -621,6 +706,155 @@
                 document.getElementById('coursesList').innerHTML = '<p class="text-danger">Error loading courses.</p>';
                 console.error('Error fetching courses:', error);
             }
+        }
+        }
+
+        // Applications management functions
+        async function loadApplications(status = 'all') {
+            if (!token) return;
+            const tbody = document.getElementById('applicationsTbody');
+            if (!tbody) return;
+            tbody.innerHTML = '<tr><td colspan="6">Loading...</td></tr>';
+
+            try {
+                let url = `${API_BASE_URL}/applications`;
+                if (status && status !== 'all') url = `${API_BASE_URL}/applications/filter/${encodeURIComponent(status)}`;
+
+                const res = await fetch(url, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!res.ok) throw new Error('Failed to fetch applications');
+                const data = await res.json();
+                const apps = data.applications || [];
+
+                if (apps.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6">No applications found.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                apps.forEach(app => {
+                    const tr = document.createElement('tr');
+                    const submitted = app.submissionDate ? new Date(app.submissionDate).toLocaleString() : '';
+                    tr.innerHTML = `
+                        <td>${app.firstName} ${app.lastName}</td>
+                        <td>${app.email}</td>
+                        <td>${app.course || ''}</td>
+                        <td>${app.status}</td>
+                        <td>${submitted}</td>
+                        <td>
+                            <button class="btn btn-sm btn-secondary me-1" onclick="viewApplicationDetails('${app._id}')">View</button>
+                            <button class="btn btn-sm btn-custom" onclick="openStatusModal('${app._id}')">Update</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error('Error loading applications:', error);
+                tbody.innerHTML = '<tr><td colspan="6" class="text-danger">Error loading applications.</td></tr>';
+            }
+        }
+
+        async function loadRecentApplications(limit = 5) {
+            if (!token) return;
+            try {
+                const res = await fetch(`${API_BASE_URL}/applications/recent?limit=${limit}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!res.ok) return;
+                const data = await res.json();
+                console.log('Recent applications:', data.applications || []);
+            } catch (error) {
+                console.warn('Could not load recent applications', error);
+            }
+        }
+
+        async function viewApplicationDetails(applicationId) {
+            if (!token) return;
+            try {
+                const res = await fetch(`${API_BASE_URL}/applications/${applicationId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!res.ok) throw new Error('Failed to fetch application');
+                const data = await res.json();
+                const app = data.application;
+                const details = document.getElementById('applicationDetails');
+                details.innerHTML = `
+                    <p><strong>Name:</strong> ${app.firstName} ${app.lastName}</p>
+                    <p><strong>Email:</strong> ${app.email}</p>
+                    <p><strong>Phone:</strong> ${app.phone || ''}</p>
+                    <p><strong>Faculty / Department / Course:</strong> ${app.faculty} / ${app.department} / ${app.course}</p>
+                    <p><strong>GPA / SAT / ACT:</strong> ${app.gpa || 'N/A'} / ${app.satScore || 'N/A'} / ${app.actScore || 'N/A'}</p>
+                    <p><strong>Essay:</strong><br>${app.essay ? app.essay.replace(/\n/g, '<br>') : 'N/A'}</p>
+                    <p><strong>Status:</strong> <span id="currentAppStatus">${app.status}</span></p>
+                `;
+
+                document.getElementById('adminStatusSelect').value = app.status || 'Pending';
+                document.getElementById('adminRemarks').value = app.remarks || '';
+                document.getElementById('saveApplicationStatusBtn').dataset.applicationId = applicationId;
+
+                const modal = new bootstrap.Modal(document.getElementById('applicationModal'));
+                modal.show();
+            } catch (error) {
+                console.error('Error fetching application details:', error);
+                showAlert('Failed to load application details.', 'danger');
+            }
+        }
+
+        function openStatusModal(applicationId) {
+            viewApplicationDetails(applicationId);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hook up filter and refresh button for applications
+            const filter = document.getElementById('applicationStatusFilter');
+            if (filter) filter.addEventListener('change', function() { loadApplications(this.value || 'all'); });
+            const refreshBtn = document.getElementById('refreshApplicationsBtn');
+            if (refreshBtn) refreshBtn.addEventListener('click', function() { loadApplications(document.getElementById('applicationStatusFilter').value || 'all'); });
+            const saveBtn = document.getElementById('saveApplicationStatusBtn');
+            if (saveBtn) {
+                saveBtn.addEventListener('click', async function() {
+                    const applicationId = this.dataset.applicationId;
+                    if (!applicationId) return;
+                    const status = document.getElementById('adminStatusSelect').value;
+                    const remarks = document.getElementById('adminRemarks').value;
+
+                    try {
+                        const res = await fetch(`${API_BASE_URL}/applications/${applicationId}/status`, {
+                            method: 'PUT',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ status, remarks })
+                        });
+
+                        const data = await res.json();
+                        if (!res.ok) throw new Error(data.message || 'Failed to update status');
+
+                        showAlert('Application status updated successfully.', 'success');
+                        loadApplications(document.getElementById('applicationStatusFilter').value || 'all');
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('applicationModal'));
+                        if (modal) modal.hide();
+                    } catch (error) {
+                        console.error('Error updating application status:', error);
+                        showAlert('Failed to update application status.', 'danger');
+                    }
+                });
+            }
+        });
+
+        // Nav link to show applications section
+        const navAppLink = document.getElementById('navApplicationsLink');
+        if (navAppLink) {
+            navAppLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.card').forEach(c => c.style.display = 'none');
+                const appsCard = document.getElementById('applications');
+                if (appsCard) appsCard.style.display = 'block';
+                loadApplications('all');
+            });
         }
 
         // Function to show add course form

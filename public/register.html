@@ -293,6 +293,10 @@
                     <form id="registerForm">
                         <div class="form-row">
                             <div class="form-group">
+                                <label for="studentId" class="form-label"><i class="fas fa-id-badge"></i>Student ID</label>
+                                <input type="text" class="form-control" id="studentId" name="studentId" placeholder="e.g. STU123456" required>
+                            </div>
+                            <div class="form-group">
                                 <label for="firstName" class="form-label"><i class="fas fa-user"></i>First Name</label>
                                 <input type="text" class="form-control" id="firstName" name="Firstname" required>
                             </div>
@@ -519,6 +523,7 @@
             try {
                 const formData = new FormData(this);
                 const registrationData = {
+                    studentId: formData.get('studentId'),
                     Firstname: formData.get('Firstname'),
                     Lastname: formData.get('Lastname'),
                     email: formData.get('email'),
@@ -527,7 +532,17 @@
                     password: formData.get('password'),
                     confirmpassword: formData.get('confirmpassword')
                 };
-                
+
+                // Client-side validation: ensure studentId present
+                if (!registrationData.studentId || !registrationData.studentId.toString().trim()) {
+                    alertMessage.className = 'alert alert-danger';
+                    alertMessage.textContent = 'Student ID is required to register.';
+                    alertMessage.style.display = 'block';
+                    registerBtn.disabled = false;
+                    loadingSpinner.style.display = 'none';
+                    return;
+                }
+
                 const response = await fetch('https://school-management-api-zeta-two.vercel.app/api/students/register', {
                     method: 'POST',
                     headers: {
@@ -540,11 +555,13 @@
                 
                 if (response.ok) {
                     // Show success message
+                    const resp = data.registrationDetails || {};
                     alertMessage.className = 'alert alert-success';
                     alertMessage.innerHTML = `
                         <strong>Registration successful!</strong><br>
                         Welcome ${registrationData.Firstname}! Your account has been created.<br>
                         <small>You will be redirected to login in a few seconds...</small>
+                        ${resp.studentId ? `<div style="margin-top:8px"><strong>Your Student ID:</strong> ${resp.studentId}</div>` : ''}
                     `;
                     alertMessage.style.display = 'block';
                     
