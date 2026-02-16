@@ -22,47 +22,6 @@
             align-items: center;
             justify-content: center;
         }
-
-        // Copy application id to clipboard
-        function copyApplicationId(id) {
-            if (!id) return;
-            navigator.clipboard.writeText(id).then(() => {
-                showTempMessage('Copied ID to clipboard', 'success', 2500);
-            }).catch(err => {
-                showTempMessage('Failed to copy ID', 'danger', 2500);
-            });
-        }
-
-        // Query application status from backend and display a short preview
-        async function checkApplicationStatus(applicationId) {
-            if (!applicationId) return;
-            const statusPreview = document.getElementById('statusPreview');
-            statusPreview.textContent = 'Checking...';
-            try {
-                const res = await fetch(`https://school-management-api-zeta-two.vercel.app/api/applications/${applicationId}/status`, {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                const data = await res.json();
-                if (res.ok) {
-                    statusPreview.innerHTML = `<strong>${data.status}</strong>` + (data.remarks ? ` - ${data.remarks}` : '');
-                } else {
-                    statusPreview.innerHTML = `<span class="text-danger">${data.message || 'Not found'}</span>`;
-                }
-            } catch (error) {
-                console.error('Error fetching application status:', error);
-                statusPreview.innerHTML = '<span class="text-danger">Error</span>';
-            }
-        }
-
-        // Small helper to show temporary messages in the main alert area
-        function showTempMessage(message, type = 'info', timeout = 3000) {
-            const alertMessage = document.getElementById('alertMessage');
-            alertMessage.className = `alert alert-${type}`;
-            alertMessage.textContent = message;
-            alertMessage.style.display = 'block';
-            setTimeout(() => { alertMessage.style.display = 'none'; }, timeout);
-        }
         .apply-container {
             background: white;
             border-radius: 20px;
@@ -334,6 +293,60 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
     <script>
+        // Helper functions moved from CSS block
+        function copyApplicationId(id) {
+            if (!id) return;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(id).then(() => {
+                    showTempMessage('Copied ID to clipboard', 'success', 2500);
+                }).catch(() => {
+                    showTempMessage('Failed to copy ID', 'danger', 2500);
+                });
+            } else {
+                // fallback
+                const ta = document.createElement('textarea');
+                ta.value = id;
+                document.body.appendChild(ta);
+                ta.select();
+                try { document.execCommand('copy'); showTempMessage('Copied ID to clipboard', 'success', 2500); } catch (e) { showTempMessage('Failed to copy ID', 'danger', 2500); }
+                ta.remove();
+            }
+        }
+
+        async function checkApplicationStatus(applicationId) {
+            if (!applicationId) return;
+            const statusPreview = document.getElementById('statusPreview');
+            if (!statusPreview) return;
+            statusPreview.textContent = 'Checking...';
+            try {
+                const res = await fetch(`https://school-management-api-zeta-two.vercel.app/api/applications/${encodeURIComponent(applicationId)}/status`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    statusPreview.innerHTML = `<strong>${data.status}</strong>` + (data.remarks ? ` - ${data.remarks}` : '');
+                } else {
+                    statusPreview.innerHTML = `<span class="text-danger">${data.message || 'Not found'}</span>`;
+                }
+            } catch (error) {
+                console.error('Error fetching application status:', error);
+                statusPreview.innerHTML = '<span class="text-danger">Error</span>';
+            }
+        }
+
+        function showTempMessage(message, type = 'info', timeout = 3000) {
+            const alertMessage = document.getElementById('alertMessage');
+            if (!alertMessage) {
+                alert(message);
+                return;
+            }
+            alertMessage.className = `alert alert-${type}`;
+            alertMessage.textContent = message;
+            alertMessage.style.display = 'block';
+            if (timeout > 0) setTimeout(() => { alertMessage.style.display = 'none'; }, timeout);
+        }
+
         // Program data structure
         const programs = {
             Science: {
