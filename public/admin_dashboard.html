@@ -411,6 +411,36 @@
         const API_BASE_URL = 'https://school-management-api-zeta-two.vercel.app/api/admin'; // Adjust based on your backend URL
         const token = localStorage.getItem('token');
 
+        // Small helper to show alert messages inside the dashboard
+        function showAlert(message, type = 'info', timeout = 4500) {
+            const body = document.querySelector('.dashboard-body');
+            if (!body) {
+                // fallback to window alert if dashboard body is missing
+                alert(message);
+                return;
+            }
+
+            // remove any existing custom alert
+            const existing = document.getElementById('globalAdminAlert');
+            if (existing) existing.remove();
+
+            const wrapper = document.createElement('div');
+            wrapper.id = 'globalAdminAlert';
+            wrapper.className = `alert alert-${type} animate__animated animate__fadeInDown`;
+            wrapper.style.marginBottom = '18px';
+            wrapper.innerHTML = message;
+
+            body.insertBefore(wrapper, body.firstChild);
+
+            if (timeout > 0) {
+                setTimeout(() => {
+                    wrapper.classList.remove('animate__fadeInDown');
+                    wrapper.classList.add('animate__fadeOutUp');
+                    setTimeout(() => wrapper.remove(), 500);
+                }, timeout);
+            }
+        }
+
         // Role-based access check
         document.addEventListener('DOMContentLoaded', function() {
             const userRole = localStorage.getItem('userRole');
