@@ -628,6 +628,7 @@
                 if (response.ok) {
                     const data = await response.json();
                     registeredCourses = data.courses || [];
+                    console.log('Registered courses for exam:', registeredCourses);
                 }
             } catch (error) {
                 console.error('Error loading registered courses:', error);
@@ -644,15 +645,23 @@
             examCoursesList.innerHTML = '';
 
             registeredCourses.forEach(course => {
-                // Use courseId (string) instead of _id to match backend enrollment check
-                const courseId = course.courseId || course._id;
+                // Use the course's courseId property which is stored in student's enrollment
+                // The backend checks enrollment using course.courseId
+                const courseId = course.courseId || course._id || course.id;
                 const courseName = course.name || 'Course Name';
+                
+                // Skip if no valid courseId
+                if (!courseId) {
+                    console.warn('Course missing courseId:', course);
+                    return;
+                }
+                
                 const div = document.createElement('div');
                 div.className = 'form-check mb-2';
                 div.innerHTML = `
-                    <input class="form-check-input" type="checkbox" value="${courseId}" id="examCourse_${courseId}" checked>
+                    <input class="form-check-input exam-course-checkbox" type="checkbox" value="${courseId}" data-course-id="${courseId}" id="examCourse_${courseId}" checked>
                     <label class="form-check-label" for="examCourse_${courseId}">
-                        ${courseName} (${course.courseId || 'N/A'})
+                        ${courseName} (${courseId})
                     </label>
                 `;
                 examCoursesList.appendChild(div);
@@ -675,6 +684,8 @@
                         return;
                     }
 
+                    console.log('Submitting courseIds:', selectedCourses);
+
                     const submitBtn = this.querySelector('button[type="submit"]');
                     const originalText = submitBtn.innerHTML;
                     submitBtn.disabled = true;
@@ -692,8 +703,10 @@
                             body: JSON.stringify({ courseIds: selectedCourses })
                         });
 
+                        const data = await response.json();
+                        console.log('Exam registration response:', response.status, data);
+
                         if (response.ok) {
-                            const data = await response.json();
                             showAlert(data.message, 'success');
                             if (data.errors && data.errors.length > 0) {
                                 showAlert('Some errors occurred: ' + data.errors.join(', '), 'warning');
@@ -701,8 +714,12 @@
                             const modal = bootstrap.Modal.getInstance(document.getElementById('examRegistrationModal'));
                             modal.hide();
                         } else {
-                            const errorData = await response.json();
-                            throw new Error(errorData.message || 'Failed to register for exams');
+                            // Show more detailed error message
+                            let errorMessage = data.message || 'Failed to register for exams';
+                            if (data.errors && data.errors.length > 0) {
+                                errorMessage += ' - ' + data.errors.join(', ');
+                            }
+                            showAlert(errorMessage, 'danger');
                         }
                     } catch (error) {
                         console.error('Error registering for exams:', error);
