@@ -311,6 +311,22 @@
             loadStaff();
         });
 
+        // Helper to safely read response body as JSON or text
+        async function readResponse(response) {
+            let data = null;
+            try {
+                data = await response.json();
+            } catch (e) {
+                try {
+                    const text = await response.text();
+                    data = { __raw: text };
+                } catch (e2) {
+                    data = { __raw: 'Unable to read response body' };
+                }
+            }
+            return data;
+        }
+
         // Load students data
         async function loadStudents() {
             try {
@@ -324,13 +340,14 @@
                 });
 
                 if (response.ok) {
-                    const data = await response.json();
+                    const data = await readResponse(response);
                     studentsData = data.students || [];
                     displayStudents(studentsData);
                     hideAlert();
                 } else {
-                    const errorData = await response.json();
-                    throw new Error(errorData.message || 'Failed to load students');
+                    const errorData = await readResponse(response);
+                    const msg = (errorData && errorData.message) || errorData.__raw || 'Failed to load students';
+                    throw new Error(msg);
                 }
             } catch (error) {
                 console.error('Error loading students:', error);
@@ -352,13 +369,14 @@
                 });
 
                 if (response.ok) {
-                    const data = await response.json();
+                    const data = await readResponse(response);
                     staffData = data.staff || [];
                     displayStaff(staffData);
                     hideAlert();
                 } else {
-                    const errorData = await response.json();
-                    throw new Error(errorData.message || 'Failed to load staff');
+                    const errorData = await readResponse(response);
+                    const msg = (errorData && errorData.message) || errorData.__raw || 'Failed to load staff';
+                    throw new Error(msg);
                 }
             } catch (error) {
                 console.error('Error loading staff:', error);
@@ -530,13 +548,14 @@
                     },
                     body: JSON.stringify(userData)
                 });
-                const data = await response.json();
+                const data = await readResponse(response);
                 if (response.ok) {
                     alert(hiddenId ? `${type.charAt(0).toUpperCase() + type.slice(1)} updated successfully` : `${type.charAt(0).toUpperCase() + type.slice(1)} added successfully`);
                     bootstrap.Modal.getInstance(document.getElementById('userModal')).hide();
                     if (type === 'student') loadStudents(); else loadStaff();
                 } else {
-                    alert(`Error: ${data.message}`);
+                    const msg = (data && data.message) || data.__raw || 'Unknown server error';
+                    alert(`Error: ${msg}`);
                 }
             } catch (error) {
                 alert('Error saving user.');
@@ -560,12 +579,13 @@
                     }
                 });
 
-                const data = await response.json();
+                const data = await readResponse(response);
                 if (response.ok) {
                     showAlert(`${type.charAt(0).toUpperCase() + type.slice(1)} deleted successfully`, 'success');
                     if (type === 'student') loadStudents(); else loadStaff();
                 } else {
-                    throw new Error(data.message || `Failed to delete ${type}`);
+                    const msg = (data && data.message) || data.__raw || `Failed to delete ${type}`;
+                    throw new Error(msg);
                 }
             } catch (error) {
                 console.error(`Error deleting ${type}:`, error);
