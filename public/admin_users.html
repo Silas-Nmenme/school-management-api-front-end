@@ -563,15 +563,21 @@
             }
         }
 
-        // Delete user
+        // Delete user - aligned with backend deleteStudent function
         async function deleteUser(userId, type) {
+            if (type !== 'student') {
+                showAlert('Only students can be deleted through this function', 'danger');
+                return;
+            }
+
             if (!confirm(`Are you sure you want to delete this ${type}? This action cannot be undone.`)) {
                 return;
             }
 
             try {
-                showAlert(`Deleting ${type}...`, 'info');
-                const response = await fetch(`${API_BASE_URL}/delete-${type}/${userId}`, {
+                showAlert('Deleting student...', 'info');
+                
+                const response = await fetch(`${API_BASE_URL}/delete-student/${userId}`, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -580,16 +586,27 @@
                 });
 
                 const data = await readResponse(response);
+                
+                // Handle successful deletion
                 if (response.ok) {
-                    showAlert(`${type.charAt(0).toUpperCase() + type.slice(1)} deleted successfully`, 'success');
-                    if (type === 'student') loadStudents(); else loadStaff();
+                    showAlert(data.message || 'Student deleted successfully', 'success');
+                    loadStudents();
                 } else {
-                    const msg = (data && data.message) || data.__raw || `Failed to delete ${type}`;
-                    throw new Error(msg);
+                    // Handle specific error cases from backend
+                    const msg = (data && data.message) || data.__raw || 'Failed to delete student';
+                    
+                    // Check for permission errors (403 Forbidden)
+                    if (response.status === 403) {
+                        showAlert('Access denied: Only admins can delete students', 'danger');
+                    } else if (response.status === 404) {
+                        showAlert('Student not found', 'warning');
+                    } else {
+                        throw new Error(msg);
+                    }
                 }
             } catch (error) {
-                console.error(`Error deleting ${type}:`, error);
-                showAlert(`Failed to delete ${type}: ` + error.message, 'danger');
+                console.error('Error deleting student:', error);
+                showAlert('Failed to delete student: ' + error.message, 'danger');
             }
         }
 
