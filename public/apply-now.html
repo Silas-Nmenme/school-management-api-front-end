@@ -174,6 +174,282 @@
                 transform: translateY(0);
             }
         }
+
+        /* ============================================
+           RESPONSIVE STYLES - Mobile First
+           ============================================ */
+
+        /* Tablet Styles (max-width: 768px) */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+                align-items: flex-start;
+                padding-top: 60px;
+            }
+
+            .apply-container {
+                max-width: 100%;
+                border-radius: 15px;
+            }
+
+            .apply-header {
+                padding: 30px 20px;
+            }
+
+            .apply-header h2 {
+                font-size: 1.75rem;
+            }
+
+            .apply-header p {
+                font-size: 1rem;
+            }
+
+            .apply-body {
+                padding: 25px 20px;
+            }
+
+            .form-section {
+                padding: 20px 15px;
+            }
+
+            .form-section h5 {
+                font-size: 1.1rem;
+                margin-bottom: 15px;
+            }
+
+            /* Make form rows stack on tablet */
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .form-row .form-group {
+                flex: none;
+                width: 100%;
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            .form-label {
+                font-size: 0.95rem;
+            }
+
+            .form-control {
+                padding: 10px 12px;
+                font-size: 0.95rem;
+            }
+
+            .btn-apply {
+                padding: 14px;
+                font-size: 1rem;
+            }
+
+            /* Back to home button - tablet */
+            .back-to-home {
+                top: 15px;
+                left: 15px;
+            }
+
+            .back-to-home a {
+                font-size: 1rem;
+            }
+        }
+
+        /* Mobile Phone Styles (max-width: 480px) */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+                padding-top: 50px;
+                min-height: auto;
+            }
+
+            .apply-container {
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            }
+
+            .apply-header {
+                padding: 25px 15px;
+            }
+
+            .apply-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .apply-header p {
+                font-size: 0.9rem;
+            }
+
+            .apply-body {
+                padding: 20px 15px;
+            }
+
+            .form-section {
+                padding: 15px 12px;
+                border-radius: 12px;
+                margin-bottom: 15px;
+            }
+
+            .form-section h5 {
+                font-size: 1rem;
+                margin-bottom: 12px;
+            }
+
+            /* Form groups - full width stacking */
+            .form-group {
+                margin-bottom: 15px;
+            }
+
+            .form-label {
+                font-size: 0.9rem;
+                margin-bottom: 6px;
+            }
+
+            .form-label i {
+                margin-right: 6px;
+                font-size: 0.85rem;
+            }
+
+            .form-control {
+                padding: 10px 12px;
+                font-size: 0.9rem;
+                border-radius: 8px;
+            }
+
+            textarea.form-control {
+                rows: 4;
+            }
+
+            .btn-apply {
+                padding: 14px 12px;
+                font-size: 0.95rem;
+                border-radius: 8px;
+            }
+
+            .btn-apply i {
+                margin-right: 6px;
+            }
+
+            /* Back to home - smaller on mobile */
+            .back-to-home {
+                top: 10px;
+                left: 10px;
+                position: relative;
+                margin-bottom: 10px;
+            }
+
+            .back-to-home a {
+                font-size: 0.9rem;
+                display: inline-flex;
+                align-items: center;
+                background: rgba(255, 255, 255, 0.2);
+                padding: 8px 12px;
+                border-radius: 20px;
+                backdrop-filter: blur(5px);
+            }
+
+            /* Character counter */
+            .text-muted {
+                font-size: 0.8rem;
+            }
+
+            /* Alert messages */
+            .alert {
+                font-size: 0.9rem;
+                padding: 12px 15px;
+            }
+
+            /* Application result buttons - stack on mobile */
+            #applicationResult .alert-info > div {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            #applicationResult .btn {
+                width: 100%;
+                margin-right: 0 !important;
+                margin-bottom: 5px;
+                font-size: 0.85rem;
+                padding: 10px 12px;
+            }
+
+            #applicationResult .btn:last-child {
+                margin-bottom: 0;
+            }
+
+            #statusPreview {
+                margin-left: 0 !important;
+                margin-top: 8px;
+                display: block;
+            }
+        }
+
+        /* Extra small devices (max-width: 360px) */
+        @media (max-width: 360px) {
+            .apply-header h2 {
+                font-size: 1.3rem;
+            }
+
+            .apply-header p {
+                font-size: 0.85rem;
+            }
+
+            .apply-body {
+                padding: 15px 12px;
+            }
+
+            .form-section {
+                padding: 12px 10px;
+            }
+        }
+
+        /* Landscape orientation adjustments */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body {
+                padding-top: 20px;
+                align-items: flex-start;
+            }
+
+            .apply-container {
+                margin: 10px 0;
+            }
+
+            .apply-header {
+                padding: 20px;
+            }
+
+            .apply-header h2 {
+                font-size: 1.4rem;
+            }
+
+            .apply-body {
+                padding: 20px;
+            }
+
+            .form-section {
+                padding: 15px;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+            }
+
+            .back-to-home,
+            .btn-apply {
+                display: none;
+            }
+
+            .apply-container {
+                box-shadow: none;
+                max-width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
