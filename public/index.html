@@ -628,6 +628,324 @@
                 font-size: var(--font-size-xs);
             }
         }
+
+        /* ============================================
+           PROGRAMS PREVIEW SECTION - CARD LAYOUT
+           ============================================ */
+        
+        .programs-filter {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: var(--spacing-sm) var(--spacing-xl);
+            border-radius: var(--radius-full);
+            font-weight: var(--font-weight-semibold);
+            transition: var(--transition-all);
+            cursor: pointer;
+            font-size: var(--font-size-base);
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--gradient-primary);
+            border-color: transparent;
+            color: white;
+            box-shadow: var(--shadow-primary);
+        }
+
+        .programs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-xl);
+        }
+
+        .program-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition-all);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .program-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-2xl);
+        }
+
+        .program-card .program-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            transition: var(--transition-all);
+        }
+
+        .program-card:hover .program-image {
+            transform: scale(1.05);
+        }
+
+        .program-card .program-image-container {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .program-card .program-category-badge {
+            position: absolute;
+            top: var(--spacing-md);
+            left: var(--spacing-md);
+            background: var(--gradient-primary);
+            color: white;
+            padding: var(--spacing-xs) var(--spacing-md);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .program-card .program-content {
+            padding: var(--spacing-xl);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .program-card .program-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            color: var(--neutral-900);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .program-card .program-description {
+            color: var(--neutral-600);
+            font-size: var(--font-size-sm);
+            line-height: var(--line-height-relaxed);
+            margin-bottom: var(--spacing-md);
+            flex: 1;
+        }
+
+        .program-card .program-meta {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--neutral-200);
+        }
+
+        .program-card .program-meta-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            color: var(--neutral-600);
+            font-size: var(--font-size-sm);
+        }
+
+        .program-card .program-meta-item i {
+            color: var(--primary-color);
+        }
+
+        .program-card .program-cta {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border-radius: var(--radius-full);
+            font-weight: var(--font-weight-semibold);
+            font-size: var(--font-size-sm);
+            cursor: pointer;
+            transition: var(--transition-all);
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .program-card .program-cta:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-primary);
+            color: white;
+        }
+
+        /* ============================================
+           TESTIMONIALS SECTION
+           ============================================ */
+        
+        .testimonials-section {
+            padding: var(--spacing-3xl) 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition-all);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .testimonial-card .testimonial-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .testimonial-card .testimonial-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+        }
+
+        .testimonial-card .testimonial-author {
+            flex: 1;
+        }
+
+        .testimonial-card .testimonial-name {
+            font-weight: var(--font-weight-bold);
+            color: var(--neutral-900);
+            font-size: var(--font-size-base);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .testimonial-card .testimonial-role {
+            color: var(--neutral-600);
+            font-size: var(--font-size-sm);
+        }
+
+        .testimonial-card .testimonial-stars {
+            color: var(--accent-warning);
+            font-size: var(--font-size-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .testimonial-card .testimonial-quote {
+            color: var(--neutral-700);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height-relaxed);
+            font-style: italic;
+            flex: 1;
+            position: relative;
+        }
+
+        .testimonial-card .testimonial-quote::before {
+            content: '"';
+            font-size: 4rem;
+            color: var(--primary-color);
+            opacity: 0.2;
+            position: absolute;
+            top: -20px;
+            left: -10px;
+            font-family: Georgia, serif;
+        }
+
+        .testimonial-card .testimonial-graduation {
+            margin-top: var(--spacing-lg);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--neutral-200);
+            font-size: var(--font-size-sm);
+            color: var(--accent-success);
+            font-weight: var(--font-weight-medium);
+        }
+
+        /* Alumni Success Cards */
+        .alumni-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition-all);
+        }
+
+        .alumni-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .alumni-card .alumni-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .alumni-card .alumni-content {
+            padding: var(--spacing-xl);
+        }
+
+        .alumni-card .alumni-name {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            color: var(--neutral-900);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .alumni-card .alumni-position {
+            color: var(--primary-color);
+            font-weight: var(--font-weight-medium);
+            font-size: var(--font-size-sm);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .alumni-card .alumni-company {
+            color: var(--neutral-600);
+            font-size: var(--font-size-sm);
+        }
+
+        /* Filter animation */
+        .program-card.hide {
+            display: none;
+        }
+
+        .program-card.show {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .programs-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+            
+            .filter-btn {
+                padding: var(--spacing-xs) var(--spacing-lg);
+                font-size: var(--font-size-sm);
+            }
+            
+            .testimonial-card {
+                margin-bottom: var(--spacing-lg);
+            }
+        }
     </style>
 </head>
 <body>
