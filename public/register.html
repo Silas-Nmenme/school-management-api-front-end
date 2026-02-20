@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="width=device-width="viewport" content, initial-scale=1.0">
     <title>Register - Bethel College</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -10,160 +10,559 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <!-- Animate.css -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <!-- Custom CSS -->
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary-color: #667eea;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --input-bg: #f9fafb;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             min-height: 100vh;
             margin: 0;
             padding: 0;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 40px 20px;
         }
+
         .register-container {
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
             overflow: hidden;
-            max-width: 550px;
+            max-width: 600px;
             width: 100%;
-            animation: fadeInUp 0.8s ease-out;
+            animation: fadeInUp 0.6s ease-out;
         }
+
         .register-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             color: white;
-            padding: 40px 30px;
+            padding: 32px 40px;
             text-align: center;
         }
+
         .register-header h2 {
             margin: 0;
-            font-size: 2.2rem;
-            font-weight: bold;
+            font-size: 2rem;
+            font-weight: 700;
         }
+
         .register-header p {
-            margin: 10px 0 0;
-            opacity: 0.9;
-            font-size: 1.1rem;
+            margin: 8px 0 0;
+            opacity: 0.95;
+            font-size: 1rem;
         }
+
         .register-body {
-            padding: 40px 30px;
+            padding: 32px 40px;
         }
-        .form-row {
+
+        /* Progress Steps */
+        .progress-steps {
             display: flex;
-            gap: 15px;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            position: relative;
         }
-        .form-row .form-group {
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: #e5e7eb;
+            z-index: 0;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
             flex: 1;
         }
-        .form-group {
-            margin-bottom: 25px;
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            margin-bottom: 8px;
         }
+
+        .progress-step.active .step-number {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .progress-step.completed .step-number {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .progress-step.active .step-label,
+        .progress-step.completed .step-label {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* Form Steps */
+        .form-step {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Form Elements */
+        .form-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            flex: 1;
+        }
+
         .form-label {
             font-weight: 600;
-            color: #333;
+            color: #374151;
             margin-bottom: 8px;
             display: flex;
             align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
         }
+
         .form-label i {
-            margin-right: 8px;
-            color: #667eea;
+            color: var(--primary-color);
+            font-size: 0.85rem;
         }
+
+        .form-label .required {
+            color: var(--danger-color);
+            font-size: 0.8rem;
+        }
+
         .form-control {
-            border: 2px solid #e1e5e9;
-            border-radius: 10px;
-            padding: 12px 15px;
-            font-size: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: var(--input-bg);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            background: #fff;
+            outline: none;
+        }
+
+        .form-control.is-invalid {
+            border-color: var(--danger-color);
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+        }
+
+        .form-control.is-valid {
+            border-color: var(--success-color);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+
+        .invalid-feedback {
+            display: none;
+            color: var(--danger-color);
+            font-size: 0.8rem;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        .form-control.is-invalid + .invalid-feedback {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Validation Icons */
+        .validation-icon {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.9rem;
             transition: all 0.3s ease;
         }
-        .form-control:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+
+        .input-group-validate {
+            position: relative;
         }
-        .form-control.is-invalid {
-            border-color: #dc3545;
+
+        .input-group-validate .form-control {
+            padding-right: 40px;
         }
-        .invalid-feedback {
-            display: block;
-            color: #dc3545;
-            font-size: 0.875rem;
-            margin-top: 5px;
+
+        .validation-icon.valid {
+            color: var(--success-color);
         }
-        .btn-register {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
+
+        .validation-icon.invalid {
+            color: var(--danger-color);
+        }
+
+        /* Password Strength */
+        .password-strength-container {
+            margin-top: 8px;
+        }
+
+        .password-strength-bar {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .password-strength-fill {
+            height: 100%;
+            width: 0;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .password-strength-fill.weak {
+            width: 25%;
+            background: var(--danger-color);
+        }
+
+        .password-strength-fill.medium {
+            width: 50%;
+            background: var(--warning-color);
+        }
+
+        .password-strength-fill.strong {
+            width: 75%;
+            background: #22c55e;
+        }
+
+        .password-strength-fill.very-strong {
+            width: 100%;
+            background: var(--success-color);
+        }
+
+        .password-strength-text {
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .password-strength-text.weak { color: var(--danger-color); }
+        .password-strength-text.medium { color: var(--warning-color); }
+        .password-strength-text.strong { color: #22c55e; }
+        .password-strength-text.very-strong { color: var(--success-color); }
+
+        .password-requirements {
+            background: #f9fafb;
             border-radius: 10px;
             padding: 12px;
-            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+
+        .password-requirements-title {
+            font-size: 0.75rem;
             font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .password-requirement {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .password-requirement met {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            background: #e5e7eb;
             color: white;
-            width: 100%;
             transition: all 0.3s ease;
         }
+
+        .password-requirement.met met {
+            background: var(--success-color);
+        }
+
+        .password-requirement.met {
+            color: var(--success-color);
+        }
+
+        /* Password Match */
+        .password-match {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            margin-top: 6px;
+            color: var(--text-muted);
+        }
+
+        .password-match.match {
+            color: var(--success-color);
+        }
+
+        .password-match.no-match {
+            color: var(--danger-color);
+        }
+
+        /* Navigation Buttons */
+        .form-navigation {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .btn-navigate {
+            flex: 1;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-prev {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-prev:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-next,
+        .btn-register {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.35);
+        }
+
+        .btn-next:hover,
         .btn-register:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.45);
         }
-        .btn-register:disabled {
-            opacity: 0.7;
+
+        .btn-navigate:disabled {
+            opacity: 0.6;
             cursor: not-allowed;
             transform: none;
         }
-        .login-link {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e1e5e9;
+
+        /* Privacy Checkbox */
+        .privacy-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-top: 20px;
+            padding: 16px;
+            background: #f9fafb;
+            border-radius: 12px;
         }
-        .login-link a {
-            color: #667eea;
+
+        .privacy-checkbox input {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+            margin-top: 2px;
+        }
+
+        .privacy-checkbox label {
+            font-size: 0.85rem;
+            color: #4b5563;
+            cursor: pointer;
+            line-height: 1.5;
+        }
+
+        .privacy-checkbox label a {
+            color: var(--primary-color);
             text-decoration: none;
             font-weight: 600;
         }
-        .login-link a:hover {
+
+        .privacy-checkbox label a:hover {
             text-decoration: underline;
         }
-        .alert {
-            border-radius: 10px;
+
+        /* Registration Type */
+        .registration-type-selector {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 28px;
+            border: 1px solid var(--border-color);
+        }
+
+        .registration-type-selector h5 {
+            margin-bottom: 16px;
+            color: #333;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .type-buttons {
+            display: flex;
+            gap: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .type-btn {
+            flex: 1;
+            padding: 14px;
             border: none;
+            background: white;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
+
+        .type-btn.active {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .type-btn:hover:not(.active) {
+            background: #f3f4f6;
+        }
+
+        /* Form Section */
+        .form-section {
+            background: #f8f9fa;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .form-section h6 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Alert Messages */
+        .alert {
+            border-radius: 14px;
+            border: none;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .alert i {
+            font-size: 1.1rem;
+        }
+
         .alert-danger {
-            background-color: #fee;
-            color: #c33;
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            color: #dc2626;
+            border-left: 4px solid #ef4444;
         }
+
+        .alert-danger i {
+            color: #ef4444;
+        }
+
         .alert-success {
-            background-color: #efe;
-            color: #363;
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            color: #059669;
+            border-left: 4px solid #10b981;
         }
+
+        .alert-success i {
+            color: #10b981;
+        }
+
+        /* Loading */
         .loading-spinner {
             display: none;
             width: 20px;
             height: 20px;
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #667eea;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid #fff;
             border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 10px;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
         }
-        .password-strength {
-            margin-top: 5px;
-            font-size: 0.875rem;
-        }
-        .password-strength.weak {
-            color: #dc3545;
-        }
-        .password-strength.medium {
-            color: #ffc107;
-        }
-        .password-strength.strong {
-            color: #28a745;
-        }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -174,94 +573,162 @@
                 transform: translateY(0);
             }
         }
+
+        /* Back to Home */
         .back-to-home {
             position: absolute;
-            top: 20px;
-            left: 20px;
+            top: 24px;
+            left: 24px;
             z-index: 10;
         }
+
         .back-to-home a {
             color: white;
             text-decoration: none;
-            font-size: 1.1rem;
-            transition: color 0.3s ease;
-        }
-        .back-to-home a:hover {
-            color: #e1e5e9;
-        }
-        .registration-type-selector {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            border: 1px solid #dee2e6;
-        }
-        .registration-type-selector h5 {
-            margin-bottom: 20px;
-            color: #333;
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-        .type-buttons {
-            display: flex;
-            gap: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .type-btn {
-            flex: 1;
-            padding: 15px;
-            border: none;
-            background: white;
-            color: #667eea;
-            border-radius: 0;
-            transition: all 0.3s ease;
-            font-weight: 600;
             font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
         }
-        .type-btn.active {
-            background: #667eea;
+
+        .back-to-home a:hover {
+            background: rgba(255, 255, 255, 0.25);
             color: white;
         }
-        .type-btn:hover {
-            background: #667eea;
-            color: white;
-        }
-        .form-container {
+
+        /* Success Animation */
+        .success-overlay {
             display: none;
-            animation: fadeIn 0.5s ease-in-out;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            animation: fadeIn 0.5s ease;
         }
-        .form-container.active {
-            display: block;
+
+        .success-overlay.active {
+            display: flex;
         }
-        @keyframes fadeIn {
+
+        .success-icon {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            box-shadow: 0 20px 60px rgba(16, 185, 129, 0.4);
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
             from {
+                transform: scale(0);
                 opacity: 0;
-                transform: translateY(20px);
             }
             to {
+                transform: scale(1);
                 opacity: 1;
-                transform: translateY(0);
             }
         }
-        .form-section {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            border: 1px solid #dee2e6;
+
+        .success-text {
+            margin-top: 24px;
+            text-align: center;
         }
-        .form-section h6 {
-            color: #667eea;
-            margin-bottom: 20px;
+
+        .success-text h3 {
+            color: #10b981;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .success-text p {
+            color: #6b7280;
+            font-size: 1rem;
+        }
+
+        /* Login Link */
+        .login-link {
+            text-align: center;
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .login-link a {
+            color: var(--primary-color);
+            text-decoration: none;
             font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 576px) {
+            .register-body {
+                padding: 24px 20px;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .progress-steps::before {
+                left: 5%;
+                right: 5%;
+            }
+
+            .step-label {
+                font-size: 0.65rem;
+            }
+
+            .back-to-home {
+                top: 12px;
+                left: 12px;
+            }
+
+            .back-to-home a {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="back-to-home">
-        <a href="index.html"><i class="fas fa-arrow-left me-2"></i>Back to Home</a>
+        <a href="index.html"><i class="fas fa-arrow-left"></i>Back to Home</a>
+    </div>
+
+    <!-- Success Overlay -->
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-icon animate__animated animate__bounceIn">
+            <i class="fas fa-check"></i>
+        </div>
+        <div class="success-text">
+            <h3>Welcome to Bethel College!</h3>
+            <p>Your account has been created successfully.</p>
+            <p style="margin-top: 12px; font-size: 0.9rem; color: #9ca3af;">Redirecting to login page...</p>
+        </div>
     </div>
 
     <div class="register-container">
@@ -275,10 +742,10 @@
 
             <!-- Registration Type Selector -->
             <div class="registration-type-selector">
-                <h5>Register as:</h5>
+                <h5><i class="fas fa-user-plus me-2"></i>Register as:</h5>
                 <div class="type-buttons">
                     <button type="button" class="type-btn active" data-type="student">
-                        <i class="fas fa-user me-1"></i>Student
+                        <i class="fas fa-user-graduate me-1"></i>Student
                     </button>
                     <button type="button" class="type-btn" data-type="admin">
                         <i class="fas fa-crown me-1"></i>Admin
@@ -287,96 +754,378 @@
             </div>
 
             <!-- Student Registration Form -->
-            <div class="form-container active" id="studentForm">
-                <div class="form-section">
-                    <h6><i class="fas fa-user-graduate me-2"></i>Student Information</h6>
-                    <form id="registerForm">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="studentId" class="form-label"><i class="fas fa-id-badge"></i>Student ID</label>
-                                <input type="text" class="form-control" id="studentId" name="studentId" placeholder="e.g. STU123456" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="firstName" class="form-label"><i class="fas fa-user"></i>First Name</label>
-                                <input type="text" class="form-control" id="firstName" name="Firstname" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="lastName" class="form-label"><i class="fas fa-user"></i>Last Name</label>
-                                <input type="text" class="form-control" id="lastName" name="Lastname" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="email" class="form-label"><i class="fas fa-envelope"></i>Email Address</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="age" class="form-label"><i class="fas fa-birthday-cake"></i>Age</label>
-                                <input type="number" class="form-control" id="age" name="age" min="1" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="phone" class="form-label"><i class="fas fa-phone"></i>Phone Number</label>
-                                <input type="tel" class="form-control" id="phone" name="phone" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="password" class="form-label"><i class="fas fa-lock"></i>Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
-                            <div class="password-strength" id="passwordStrength"></div>
-                        </div>
-                        <div class="form-group">
-                            <label for="confirmPassword" class="form-label"><i class="fas fa-lock"></i>Confirm Password</label>
-                            <input type="password" class="form-control" id="confirmPassword" name="confirmpassword" required>
-                            <div class="invalid-feedback" id="passwordMatch" style="display: none;">Passwords do not match</div>
-                        </div>
-                        <button type="submit" class="btn btn-register" id="registerBtn">
-                            <span class="loading-spinner" id="loadingSpinner"></span>
-                            <i class="fas fa-user-plus me-2"></i>Create Student Account
-                        </button>
-                    </form>
+            <div id="studentForm">
+                <!-- Progress Steps -->
+                <div class="progress-steps" id="studentProgressSteps">
+                    <div class="progress-step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Personal</div>
+                    </div>
+                    <div class="progress-step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Contact</div>
+                    </div>
+                    <div class="progress-step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Account</div>
+                    </div>
                 </div>
+
+                <form id="registerForm">
+                    <!-- Step 1: Personal Information -->
+                    <div class="form-step active" data-step="1">
+                        <div class="form-section">
+                            <h6><i class="fas fa-user-graduate"></i>Personal Information</h6>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="studentId" class="form-label">
+                                        <i class="fas fa-id-badge"></i>Student ID <span class="required">*</span>
+                                    </label>
+                                    <div class="input-group-validate">
+                                        <input type="text" class="form-control" id="studentId" name="studentId" placeholder="e.g. STU123456" required>
+                                        <span class="validation-icon" id="studentIdIcon"></span>
+                                    </div>
+                                    <div class="invalid-feedback" id="studentIdError">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName" class="form-label">
+                                        <i class="fas fa-user"></i>First Name <span class="required">*</span>
+                                    </label>
+                                    <div class="input-group-validate">
+                                        <input type="text" class="form-control" id="firstName" name="Firstname" placeholder="Enter your first name" required>
+                                        <span class="validation-icon" id="firstNameIcon"></span>
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <span>First name is required</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName" class="form-label">
+                                        <i class="fas fa-user"></i>Last Name <span class="required">*</span>
+                                    </label>
+                                    <div class="input-group-validate">
+                                        <input type="text" class="form-control" id="lastName" name="Lastname" placeholder="Enter your last name" required>
+                                        <span class="validation-icon" id="lastNameIcon"></span>
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <span>Last name is required</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="age" class="form-label">
+                                    <i class="fas fa-birthday-cake"></i>Age <span class="required">*</span>
+                                </label>
+                                <div class="input-group-validate">
+                                    <input type="number" class="form-control" id="age" name="age" min="1" max="150" placeholder="Enter your age" required>
+                                    <span class="validation-icon" id="ageIcon"></span>
+                                </div>
+                                <div class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>Please enter a valid age</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-navigation">
+                            <button type="button" class="btn btn-next" onclick="nextStep('student')">
+                                Next Step <i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Contact Information -->
+                    <div class="form-step" data-step="2">
+                        <div class="form-section">
+                            <h6><i class="fas fa-address-book"></i>Contact Information</h6>
+                            <div class="form-group">
+                                <label for="email" class="form-label">
+                                    <i class="fas fa-envelope"></i>Email Address <span class="required">*</span>
+                                </label>
+                                <div class="input-group-validate">
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="your.email@example.com" required>
+                                    <span class="validation-icon" id="emailIcon"></span>
+                                </div>
+                                <div class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>Please enter a valid email address</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone" class="form-label">
+                                    <i class="fas fa-phone"></i>Phone Number <span class="required">*</span>
+                                </label>
+                                <div class="input-group-validate">
+                                    <input type="tel" class="form-control" id="phone" name="phone" placeholder="e.g. +1 234 567 8900" required>
+                                    <span class="validation-icon" id="phoneIcon"></span>
+                                </div>
+                                <div class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>Phone number is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-navigation">
+                            <button type="button" class="btn btn-prev" onclick="prevStep('student')">
+                                <i class="fas fa-arrow-left me-2"></i>Previous
+                            </button>
+                            <button type="button" class="btn btn-next" onclick="nextStep('student')">
+                                Next Step <i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Account Setup -->
+                    <div class="form-step" data-step="3">
+                        <div class="form-section">
+                            <h6><i class="fas fa-lock"></i>Account Setup</h6>
+                            <div class="form-group">
+                                <label for="password" class="form-label">
+                                    <i class="fas fa-lock"></i>Password <span class="required">*</span>
+                                </label>
+                                <div class="input-group-validate">
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Create a strong password" required>
+                                    <span class="validation-icon" id="passwordIcon"></span>
+                                </div>
+                                <div class="password-strength-container">
+                                    <div class="password-strength-bar">
+                                        <div class="password-strength-fill" id="passwordStrengthFill"></div>
+                                    </div>
+                                    <div class="password-strength-text" id="passwordStrengthText"></div>
+                                </div>
+                                <div class="password-requirements">
+                                    <div class="password-requirements-title">Password must contain:</div>
+                                    <div class="password-requirement" id="req-length">
+                                        <met><i class="fas fa-check"></i></met>
+                                        <span>At least 8 characters</span>
+                                    </div>
+                                    <div class="password-requirement" id="req-lower">
+                                        <met><i class="fas fa-check"></i></met>
+                                        <span>Lowercase letter (a-z)</span>
+                                    </div>
+                                    <div class="password-requirement" id="req-upper">
+                                        <met><i class="fas fa-check"></i></met>
+                                        <span>Uppercase letter (A-Z)</span>
+                                    </div>
+                                    <div class="password-requirement" id="req-number">
+                                        <met><i class="fas fa-check"></i></met>
+                                        <span>Number (0-9)</span>
+                                    </div>
+                                    <div class="password-requirement" id="req-special">
+                                        <met><i class="fas fa-check"></i></met>
+                                        <span>Special character (!@#$%^&*)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmPassword" class="form-label">
+                                    <i class="fas fa-lock"></i>Confirm Password <span class="required">*</span>
+                                </label>
+                                <div class="input-group-validate">
+                                    <input type="password" class="form-control" id="confirmPassword" name="confirmpassword" placeholder="Confirm your password" required>
+                                    <span class="validation-icon" id="confirmPasswordIcon"></span>
+                                </div>
+                                <div class="password-match" id="passwordMatch">
+                                    <i class="fas fa-circle"></i>
+                                    <span>Passwords do not match</span>
+                                </div>
+                            </div>
+
+                            <!-- Privacy Policy Checkbox -->
+                            <div class="privacy-checkbox">
+                                <input type="checkbox" id="privacyPolicy" name="privacyPolicy" required>
+                                <label for="privacyPolicy">
+                                    I agree to the <a href="privacy.html" target="_blank">Privacy Policy</a> and <a href="terms.html" target="_blank">Terms of Service</a>. I understand that my personal information will be processed securely.
+                                </label>
+                            </div>
+                            <div class="invalid-feedback" id="privacyError" style="display: none; margin-top: 10px;">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>You must agree to the privacy policy</span>
+                            </div>
+                        </div>
+                        <div class="form-navigation">
+                            <button type="button" class="btn btn-prev" onclick="prevStep('student')">
+                                <i class="fas fa-arrow-left me-2"></i>Previous
+                            </button>
+                            <button type="submit" class="btn btn-register" id="registerBtn">
+                                <span class="loading-spinner" id="loadingSpinner"></span>
+                                <i class="fas fa-user-plus me-2"></i>Create Account
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
 
             <!-- Admin Registration Form -->
-            <div class="form-container" id="adminForm">
-                <div class="form-section">
-                    <h6><i class="fas fa-crown me-2"></i>Administrator Information</h6>
-                    <form id="adminRegisterForm">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="adminName" class="form-label"><i class="fas fa-user-tie"></i>Full Name</label>
-                                <input type="text" class="form-control" id="adminName" name="name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="adminEmail" class="form-label"><i class="fas fa-envelope"></i>Email Address</label>
-                                <input type="email" class="form-control" id="adminEmail" name="email" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="adminPassword" class="form-label"><i class="fas fa-lock"></i>Password</label>
-                            <input type="password" class="form-control" id="adminPassword" name="password" required>
-                            <div class="password-strength" id="adminPasswordStrength"></div>
-                        </div>
-                        <div class="form-group">
-                            <label for="adminConfirmPassword" class="form-label"><i class="fas fa-lock"></i>Confirm Password</label>
-                            <input type="password" class="form-control" id="adminConfirmPassword" name="confirmpassword" required>
-                            <div class="invalid-feedback" id="adminPasswordMatch" style="display: none;">Passwords do not match</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="adminRole" class="form-label"><i class="fas fa-user-shield"></i>Role</label>
-                            <select class="form-control" id="adminRole" name="role" required>
-                                <option value="">Select Role</option>
-                                <option value="superadmin">Super Admin</option>
-                                <option value="admin">Admin</option>
-                                <option value="moderator">Moderator</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-register" id="adminRegisterBtn">
-                            <span class="loading-spinner" id="adminLoadingSpinner"></span>
-                            <i class="fas fa-crown me-2"></i>Create Admin Account
-                        </button>
-                    </form>
+            <div id="adminForm" style="display: none;">
+                <!-- Progress Steps -->
+                <div class="progress-steps" id="adminProgressSteps">
+                    <div class="progress-step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Personal</div>
+                    </div>
+                    <div class="progress-step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Security</div>
+                    </div>
+                    <div class="progress-step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Confirm</div>
+                    </div>
                 </div>
+
+                <form id="adminRegisterForm">
+                    <!-- Step 1: Personal Information -->
+                    <div class="form-step active" data-step="1">
+                        <div class="form-section">
+                            <h6><i class="fas fa-user-tie"></i>Administrator Information</h6>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="adminName" class="form-label">
+                                        <i class="fas fa-user"></i>Full Name <span class="required">*</span>
+                                    </label>
+                                    <div class="input-group-validate">
+                                        <input type="text" class="form-control" id="adminName" name="name" placeholder="Enter your full name" required>
+                                        <span class="validation-icon" id="adminNameIcon"></span>
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <span>Full name is required</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="adminEmail" class="form-label">
+                                    <i class="fas fa-envelope"></i>Email Address <span class="required">*</span>
+                                </label>
+                                <div class="input-group-validate">
+                                    <input type="email" class="form-control" id="adminEmail" name="email" placeholder="your.email@example.com" required>
+                                    <span class="validation-icon" id="adminEmailIcon"></span>
+                                </div>
+                                <div class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>Please enter a valid email address</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="adminRole" class="form-label">
+                                    <i class="fas fa-user-shield"></i>Role <span class="required">*</span>
+                                </label>
+                                <select class="form-control" id="adminRole" name="role" required>
+                                    <option value="">Select Role</option>
+                                    <option value="superadmin">Super Admin</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="moderator">Moderator</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-navigation">
+                            <button type="button" class="btn btn-next" onclick="nextStep('admin')">
+                                Next Step <i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Security -->
+                    <div class="form-step" data-step="2">
+                        <div class="form-section">
+                            <h6><i class="fas fa-shield-alt"></i>Security</h6>
+                            <div class="form-group">
+                                <label for="adminPassword" class="form-label">
+                                    <i class="fas fa-lock"></i>Password <span class="required">*</span>
+                                </label>
+                                <div class="input-group-validate">
+                                    <input type="password" class="form-control" id="adminPassword" name="password" placeholder="Create a strong password" required>
+                                    <span class="validation-icon" id="adminPasswordIcon"></span>
+                                </div>
+                                <div class="password-strength-container">
+                                    <div class="password-strength-bar">
+                                        <div class="password-strength-fill" id="adminPasswordStrengthFill"></div>
+                                    </div>
+                                    <div class="password-strength-text" id="adminPasswordStrengthText"></div>
+                                </div>
+                                <div class="password-requirements">
+                                    <div class="password-requirements-title">Password must contain:</div>
+                                    <div class="password-requirement" id="admin-req-length">
+                                        <met><i class="fas fa-check"></i></met>
+                                        <span>At least 8 characters</span>
+                                    </div>
+                                    <div class="password-requirement" id="admin-req-lower">
+                                        <met><i class="fas fa-check"></i></met>
+                                        <span>Lowercase letter (a-z)</span>
+                                    </div>
+                                    <div class="password-requirement" id="admin-req-upper">
+                                        <met><i class="fas fa-check"></i></met>
+                                        <span>Uppercase letter (A-Z)</span>
+                                    </div>
+                                    <div class="password-requirement" id="admin-req-number">
+                                        <met><i class="fas fa-check"></i></met>
+                                        <span>Number (0-9)</span>
+                                    </div>
+                                    <div class="password-requirement" id="admin-req-special">
+                                        <met><i class="fas fa-check"></i></met>
+                                        <span>Special character (!@#$%^&*)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="adminConfirmPassword" class="form-label">
+                                    <i class="fas fa-lock"></i>Confirm Password <span class="required">*</span>
+                                </label>
+                                <div class="input-group-validate">
+                                    <input type="password" class="form-control" id="adminConfirmPassword" name="confirmpassword" placeholder="Confirm your password" required>
+                                    <span class="validation-icon" id="adminConfirmPasswordIcon"></span>
+                                </div>
+                                <div class="password-match" id="adminPasswordMatch">
+                                    <i class="fas fa-circle"></i>
+                                    <span>Passwords do not match</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-navigation">
+                            <button type="button" class="btn btn-prev" onclick="prevStep('admin')">
+                                <i class="fas fa-arrow-left me-2"></i>Previous
+                            </button>
+                            <button type="button" class="btn btn-next" onclick="nextStep('admin')">
+                                Next Step <i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Confirm -->
+                    <div class="form-step" data-step="3">
+                        <div class="form-section">
+                            <h6><i class="fas fa-check-circle"></i>Confirm Registration</h6>
+                            
+                            <!-- Privacy Policy Checkbox -->
+                            <div class="privacy-checkbox">
+                                <input type="checkbox" id="adminPrivacyPolicy" name="privacyPolicy" required>
+                                <label for="adminPrivacyPolicy">
+                                    I agree to the <a href="privacy.html" target="_blank">Privacy Policy</a> and <a href="terms.html" target="_blank">Terms of Service</a>. I understand that my personal information will be processed securely.
+                                </label>
+                            </div>
+                            <div class="invalid-feedback" id="adminPrivacyError" style="display: none; margin-top: 10px;">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>You must agree to the privacy policy</span>
+                            </div>
+                        </div>
+                        <div class="form-navigation">
+                            <button type="button" class="btn btn-prev" onclick="prevStep('admin')">
+                                <i class="fas fa-arrow-left me-2"></i>Previous
+                            </button>
+                            <button type="submit" class="btn btn-register" id="adminRegisterBtn">
+                                <span class="loading-spinner" id="adminLoadingSpinner"></span>
+                                <i class="fas fa-crown me-2"></i>Create Admin Account
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
 
             <div class="login-link">
@@ -389,87 +1138,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
     <script>
-        // Password strength checker
-        function checkPasswordStrength(password) {
-            let strength = 0;
-            const feedback = document.getElementById('passwordStrength');
-            
-            if (password.length >= 6) strength++;
-            if (password.match(/[a-z]/)) strength++;
-            if (password.match(/[A-Z]/)) strength++;
-            if (password.match(/[0-9]/)) strength++;
-            if (password.match(/[^a-zA-Z0-9]/)) strength++;
-
-            feedback.style.display = 'block';
-            if (strength < 2) {
-                feedback.textContent = 'Weak password';
-                feedback.className = 'password-strength weak';
-            } else if (strength < 4) {
-                feedback.textContent = 'Medium strength password';
-                feedback.className = 'password-strength medium';
-            } else {
-                feedback.textContent = 'Strong password';
-                feedback.className = 'password-strength strong';
-            }
-        }
-
-        // Password confirmation validation
-        function validatePasswordMatch() {
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const matchFeedback = document.getElementById('passwordMatch');
-
-            if (confirmPassword && password !== confirmPassword) {
-                document.getElementById('confirmPassword').classList.add('is-invalid');
-                matchFeedback.style.display = 'block';
-                return false;
-            } else {
-                document.getElementById('confirmPassword').classList.remove('is-invalid');
-                matchFeedback.style.display = 'none';
-                return true;
-            }
-        }
-
-        // Admin password strength checker
-        function checkAdminPasswordStrength(password) {
-            let strength = 0;
-            const feedback = document.getElementById('adminPasswordStrength');
-
-            if (password.length >= 6) strength++;
-            if (password.match(/[a-z]/)) strength++;
-            if (password.match(/[A-Z]/)) strength++;
-            if (password.match(/[0-9]/)) strength++;
-            if (password.match(/[^a-zA-Z0-9]/)) strength++;
-
-            feedback.style.display = 'block';
-            if (strength < 2) {
-                feedback.textContent = 'Weak password';
-                feedback.className = 'password-strength weak';
-            } else if (strength < 4) {
-                feedback.textContent = 'Medium strength password';
-                feedback.className = 'password-strength medium';
-            } else {
-                feedback.textContent = 'Strong password';
-                feedback.className = 'password-strength strong';
-            }
-        }
-
-        // Admin password confirmation validation
-        function validateAdminPasswordMatch() {
-            const password = document.getElementById('adminPassword').value;
-            const confirmPassword = document.getElementById('adminConfirmPassword').value;
-            const matchFeedback = document.getElementById('adminPasswordMatch');
-
-            if (confirmPassword && password !== confirmPassword) {
-                document.getElementById('adminConfirmPassword').classList.add('is-invalid');
-                matchFeedback.style.display = 'block';
-                return false;
-            } else {
-                document.getElementById('adminConfirmPassword').classList.remove('is-invalid');
-                matchFeedback.style.display = 'none';
-                return true;
-            }
-        }
+        // Current step tracker
+        let currentStudentStep = 1;
+        let currentAdminStep = 1;
+        const totalSteps = 3;
 
         // Registration type switching
         document.querySelectorAll('.type-btn').forEach(btn => {
@@ -481,26 +1153,430 @@
                 this.classList.add('active');
 
                 // Show/hide forms
-                document.querySelectorAll('.form-container').forEach(form => form.classList.remove('active'));
-                document.getElementById(`${type}Form`).classList.add('active');
+                if (type === 'student') {
+                    document.getElementById('studentForm').style.display = 'block';
+                    document.getElementById('adminForm').style.display = 'none';
+                } else {
+                    document.getElementById('studentForm').style.display = 'none';
+                    document.getElementById('adminForm').style.display = 'block';
+                }
             });
         });
 
-        // Student form event listeners
-        document.getElementById('password').addEventListener('input', function() {
+        // Multi-step navigation functions
+        function updateProgressSteps(type, step) {
+            const progressSteps = document.querySelectorAll(`#${type}ProgressSteps .progress-step`);
+            progressSteps.forEach((progressStep, index) => {
+                const stepNum = index + 1;
+                progressStep.classList.remove('active', 'completed');
+                if (stepNum < step) {
+                    progressStep.classList.add('completed');
+                } else if (stepNum === step) {
+                    progressStep.classList.add('active');
+                }
+            });
+        }
+
+        function updateFormSteps(type, step) {
+            const formSteps = document.querySelectorAll(`#${type}Form .form-step`);
+            formSteps.forEach(formStep => {
+                formStep.classList.remove('active');
+                if (parseInt(formStep.dataset.step) === step) {
+                    formStep.classList.add('active');
+                }
+            });
+        }
+
+        function validateStep(type, step) {
+            let isValid = true;
+            const formId = type === 'student' ? 'registerForm' : 'adminRegisterForm';
+            const form = document.getElementById(formId);
+            
+            // Get fields for current step
+            const stepFields = [];
+            if (type === 'student') {
+                if (step === 1) {
+                    stepFields.push({ id: 'studentId', name: 'Student ID' },
+                                    { id: 'firstName', name: 'First Name' },
+                                    { id: 'lastName', name: 'Last Name' },
+                                    { id: 'age', name: 'Age' });
+                } else if (step === 2) {
+                    stepFields.push({ id: 'email', name: 'Email' },
+                                    { id: 'phone', name: 'Phone' });
+                }
+            } else {
+                if (step === 1) {
+                    stepFields.push({ id: 'adminName', name: 'Full Name' },
+                                    { id: 'adminEmail', name: 'Email' },
+                                    { id: 'adminRole', name: 'Role' });
+                } else if (step === 2) {
+                    stepFields.push({ id: 'adminPassword', name: 'Password' },
+                                    { id: 'adminConfirmPassword', name: 'Confirm Password' });
+                }
+            }
+
+            // Validate each field
+            stepFields.forEach(field => {
+                const input = document.getElementById(field.id);
+                if (input && !input.value.trim()) {
+                    setFieldInvalid(input, field.name + ' is required');
+                    isValid = false;
+                } else if (input && input.id.includes('email') && input.value) {
+                    if (!validateEmail(input.value)) {
+                        setFieldInvalid(input, 'Please enter a valid email');
+                        isValid = false;
+                    }
+                }
+            });
+
+            return isValid;
+        }
+
+        function nextStep(type) {
+            const currentStep = type === 'student' ? currentStudentStep : currentAdminStep;
+            
+            if (!validateStep(type, currentStep)) {
+                return;
+            }
+
+            if (currentStep < totalSteps) {
+                const newStep = currentStep + 1;
+                if (type === 'student') {
+                    currentStudentStep = newStep;
+                } else {
+                    currentAdminStep = newStep;
+                }
+                updateProgressSteps(type, newStep);
+                updateFormSteps(type, newStep);
+            }
+        }
+
+        function prevStep(type) {
+            const currentStep = type === 'student' ? currentStudentStep : currentAdminStep;
+            
+            if (currentStep > 1) {
+                const newStep = currentStep - 1;
+                if (type === 'student') {
+                    currentStudentStep = newStep;
+                } else {
+                    currentAdminStep = newStep;
+                }
+                updateProgressSteps(type, newStep);
+                updateFormSteps(type, newStep);
+            }
+        }
+
+        // Field validation functions
+        function setFieldInvalid(input, message) {
+            input.classList.add('is-invalid');
+            input.classList.remove('is-valid');
+            const icon = input.parentElement.querySelector('.validation-icon');
+            if (icon) {
+                icon.className = 'validation-icon invalid';
+                icon.innerHTML = '<i class="fas fa-times"></i>';
+            }
+            const errorDiv = input.parentElement.nextElementSibling;
+            if (errorDiv && errorDiv.classList.contains('invalid-feedback')) {
+                errorDiv.style.display = 'flex';
+                errorDiv.querySelector('span').textContent = message;
+            }
+        }
+
+        function setFieldValid(input) {
+            input.classList.remove('is-invalid');
+            input.classList.add('is-valid');
+            const icon = input.parentElement.querySelector('.validation-icon');
+            if (icon) {
+                icon.className = 'validation-icon valid';
+                icon.innerHTML = '<i class="fas fa-check"></i>';
+            }
+        }
+
+        function clearValidation(input) {
+            input.classList.remove('is-invalid', 'is-valid');
+            const icon = input.parentElement.querySelector('.validation-icon');
+            if (icon) {
+                icon.className = 'validation-icon';
+                icon.innerHTML = '';
+            }
+        }
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // Real-time validation listeners
+        function setupRealTimeValidation() {
+            // Student form fields
+            const studentFields = ['studentId', 'firstName', 'lastName', 'age', 'email', 'phone'];
+            
+            studentFields.forEach(fieldId => {
+                const input = document.getElementById(fieldId);
+                if (input) {
+                    input.addEventListener('blur', function() {
+                        if (this.value.trim()) {
+                            if (fieldId === 'email' && !validateEmail(this.value)) {
+                                setFieldInvalid(this, 'Please enter a valid email address');
+                            } else if (fieldId === 'age' && (this.value < 1 || this.value > 150)) {
+                                setFieldInvalid(this, 'Please enter a valid age');
+                            } else {
+                                setFieldValid(this);
+                            }
+                        }
+                    });
+                    
+                    input.addEventListener('input', function() {
+                        if (this.classList.contains('is-invalid') || this.classList.contains('is-valid')) {
+                            if (this.value.trim()) {
+                                if (fieldId === 'email' && !validateEmail(this.value)) {
+                                    setFieldInvalid(this, 'Please enter a valid email address');
+                                } else if (fieldId === 'age' && (this.value < 1 || this.value > 150)) {
+                                    setFieldInvalid(this, 'Please enter a valid age');
+                                } else {
+                                    setFieldValid(this);
+                                }
+                            } else {
+                                clearValidation(this);
+                            }
+                        }
+                    });
+                }
+            });
+
+            // Admin form fields
+            const adminFields = ['adminName', 'adminEmail', 'adminRole'];
+            
+            adminFields.forEach(fieldId => {
+                const input = document.getElementById(fieldId);
+                if (input) {
+                    input.addEventListener('blur', function() {
+                        if (this.value.trim()) {
+                            if (fieldId === 'adminEmail' && !validateEmail(this.value)) {
+                                setFieldInvalid(this, 'Please enter a valid email address');
+                            } else if (fieldId === 'adminRole' && !this.value) {
+                                setFieldInvalid(this, 'Please select a role');
+                            } else {
+                                setFieldValid(this);
+                            }
+                        }
+                    });
+                    
+                    input.addEventListener('input', function() {
+                        if (this.classList.contains('is-invalid') || this.classList.contains('is-valid')) {
+                            if (this.value.trim()) {
+                                if (fieldId === 'adminEmail' && !validateEmail(this.value)) {
+                                    setFieldInvalid(this, 'Please enter a valid email address');
+                                } else if (fieldId === 'adminRole' && !this.value) {
+                                    setFieldInvalid(this, 'Please select a role');
+                                } else {
+                                    setFieldValid(this);
+                                }
+                            } else {
+                                clearValidation(this);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        // Enhanced Password Strength Checker
+        function checkPasswordStrength(password) {
+            const requirements = {
+                length: password.length >= 8,
+                lower: /[a-z]/.test(password),
+                upper: /[A-Z]/.test(password),
+                number: /[0-9]/.test(password),
+                special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+            };
+
+            const metCount = Object.values(requirements).filter(Boolean).length;
+            
+            // Update requirement indicators
+            document.getElementById('req-length').classList.toggle('met', requirements.length);
+            document.getElementById('req-lower').classList.toggle('met', requirements.lower);
+            document.getElementById('req-upper').classList.toggle('met', requirements.upper);
+            document.getElementById('req-number').classList.toggle('met', requirements.number);
+            document.getElementById('req-special').classList.toggle('met', requirements.special);
+
+            // Update strength bar and text
+            const fill = document.getElementById('passwordStrengthFill');
+            const text = document.getElementById('passwordStrengthText');
+            
+            fill.className = 'password-strength-fill';
+            text.className = 'password-strength-text';
+            
+            if (metCount === 0) {
+                text.textContent = '';
+            } else if (metCount <= 2) {
+                fill.classList.add('weak');
+                text.classList.add('weak');
+                text.textContent = 'Weak password';
+            } else if (metCount === 3) {
+                fill.classList.add('medium');
+                text.classList.add('medium');
+                text.textContent = 'Medium strength';
+            } else if (metCount === 4) {
+                fill.classList.add('strong');
+                text.classList.add('strong');
+                text.textContent = 'Strong password';
+            } else {
+                fill.classList.add('very-strong');
+                text.classList.add('very-strong');
+                text.textContent = 'Very strong password';
+            }
+
+            return metCount >= 4;
+        }
+
+        // Admin Password Strength
+        function checkAdminPasswordStrength(password) {
+            const requirements = {
+                length: password.length >= 8,
+                lower: /[a-z]/.test(password),
+                upper: /[A-Z]/.test(password),
+                number: /[0-9]/.test(password),
+                special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+            };
+
+            const metCount = Object.values(requirements).filter(Boolean).length;
+            
+            document.getElementById('admin-req-length').classList.toggle('met', requirements.length);
+            document.getElementById('admin-req-lower').classList.toggle('met', requirements.lower);
+            document.getElementById('admin-req-upper').classList.toggle('met', requirements.upper);
+            document.getElementById('admin-req-number').classList.toggle('met', requirements.number);
+            document.getElementById('admin-req-special').classList.toggle('met', requirements.special);
+
+            const fill = document.getElementById('adminPasswordStrengthFill');
+            const text = document.getElementById('adminPasswordStrengthText');
+            
+            fill.className = 'password-strength-fill';
+            text.className = 'password-strength-text';
+            
+            if (metCount === 0) {
+                text.textContent = '';
+            } else if (metCount <= 2) {
+                fill.classList.add('weak');
+                text.classList.add('weak');
+                text.textContent = 'Weak password';
+            } else if (metCount === 3) {
+                fill.classList.add('medium');
+                text.classList.add('medium');
+                text.textContent = 'Medium strength';
+            } else if (metCount === 4) {
+                fill.classList.add('strong');
+                text.classList.add('strong');
+                text.textContent = 'Strong password';
+            } else {
+                fill.classList.add('very-strong');
+                text.classList.add('very-strong');
+                text.textContent = 'Very strong password';
+            }
+
+            return metCount >= 4;
+        }
+
+        // Password Match Validation
+        function validatePasswordMatch(passwordId, confirmId, matchId, iconId) {
+            const password = document.getElementById(passwordId).value;
+            const confirm = document.getElementById(confirmId).value;
+            const matchDiv = document.getElementById(matchId);
+            const icon = document.getElementById(iconId);
+
+            if (confirm) {
+                if (password === confirm) {
+                    matchDiv.className = 'password-match match';
+                    matchDiv.innerHTML = '<i class="fas fa-check-circle"></i><span>Passwords match</span>';
+                    if (icon) {
+                        icon.className = 'validation-icon valid';
+                        icon.innerHTML = '<i class="fas fa-check"></i>';
+                    }
+                    return true;
+                } else {
+                    matchDiv.className = 'password-match no-match';
+                    matchDiv.innerHTML = '<i class="fas fa-times-circle"></i><span>Passwords do not match</span>';
+                    if (icon) {
+                        icon.className = 'validation-icon invalid';
+                        icon.innerHTML = '<i class="fas fa-times"></i>';
+                    }
+                    return false;
+                }
+            } else {
+                matchDiv.className = 'password-match';
+                matchDiv.innerHTML = '<i class="fas fa-circle"></i><span>Please confirm your password</span>';
+                if (icon) {
+                    icon.className = 'validation-icon';
+                    icon.innerHTML = '';
+                }
+                return false;
+            }
+        }
+
+        // Event Listeners for Password
+        document.getElementById('password')?.addEventListener('input', function() {
             checkPasswordStrength(this.value);
+            if (document.getElementById('confirmPassword').value) {
+                validatePasswordMatch('password', 'confirmPassword', 'passwordMatch', 'confirmPasswordIcon');
+            }
         });
 
-        document.getElementById('confirmPassword').addEventListener('input', validatePasswordMatch);
+        document.getElementById('confirmPassword')?.addEventListener('input', function() {
+            validatePasswordMatch('password', 'confirmPassword', 'passwordMatch', 'confirmPasswordIcon');
+        });
 
-        // Admin form event listeners
-        document.getElementById('adminPassword').addEventListener('input', function() {
+        document.getElementById('adminPassword')?.addEventListener('input', function() {
             checkAdminPasswordStrength(this.value);
+            if (document.getElementById('adminConfirmPassword').value) {
+                validatePasswordMatch('adminPassword', 'adminConfirmPassword', 'adminPasswordMatch', 'adminConfirmPasswordIcon');
+            }
         });
 
-        document.getElementById('adminConfirmPassword').addEventListener('input', validateAdminPasswordMatch);
+        document.getElementById('adminConfirmPassword')?.addEventListener('input', function() {
+            validatePasswordMatch('adminPassword', 'adminConfirmPassword', 'adminPasswordMatch', 'adminConfirmPasswordIcon');
+        });
 
-        // Form submission
+        // Initialize real-time validation
+        setupRealTimeValidation();
+
+        // Success Animation
+        function showSuccessAnimation() {
+            const overlay = document.getElementById('successOverlay');
+            overlay.classList.add('active');
+            
+            // Trigger confetti
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#667eea', '#764ba2', '#10b981', '#f59e0b']
+            });
+
+            // More confetti after delay
+            setTimeout(() => {
+                confetti({
+                    particleCount: 100,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#667eea', '#764ba2', '#10b981']
+                });
+                confetti({
+                    particleCount: 100,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#667eea', '#764ba2', '#10b981']
+                });
+            }, 500);
+
+            // Redirect after animation
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 3000);
+        }
+
+        // Student Form Submission
         document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -508,8 +1584,31 @@
             const loadingSpinner = document.getElementById('loadingSpinner');
             const alertMessage = document.getElementById('alertMessage');
             
+            // Validate privacy policy
+            const privacyCheckbox = document.getElementById('privacyPolicy');
+            const privacyError = document.getElementById('privacyError');
+            if (!privacyCheckbox.checked) {
+                privacyError.style.display = 'flex';
+                return;
+            } else {
+                privacyError.style.display = 'none';
+            }
+            
+            // Validate password strength
+            const password = document.getElementById('password').value;
+            const isStrongPassword = checkPasswordStrength(password);
+            if (!isStrongPassword) {
+                alertMessage.className = 'alert alert-danger';
+                alertMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>Please create a stronger password that meets all requirements.</span>';
+                alertMessage.style.display = 'flex';
+                return;
+            }
+            
             // Validate password match
-            if (!validatePasswordMatch()) {
+            if (!validatePasswordMatch('password', 'confirmPassword', 'passwordMatch', 'confirmPasswordIcon')) {
+                alertMessage.className = 'alert alert-danger';
+                alertMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>Passwords do not match. Please try again.</span>';
+                alertMessage.style.display = 'flex';
                 return;
             }
             
@@ -533,11 +1632,11 @@
                     confirmpassword: formData.get('confirmpassword')
                 };
 
-                // Client-side validation: ensure studentId present
+                // Client-side validation
                 if (!registrationData.studentId || !registrationData.studentId.toString().trim()) {
                     alertMessage.className = 'alert alert-danger';
-                    alertMessage.textContent = 'Student ID is required to register.';
-                    alertMessage.style.display = 'block';
+                    alertMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i><span>Student ID is required to register.</span>';
+                    alertMessage.style.display = 'flex';
                     registerBtn.disabled = false;
                     loadingSpinner.style.display = 'none';
                     return;
@@ -554,44 +1653,29 @@
                 const data = await response.json();
                 
                 if (response.ok) {
-                    // Show success message
-                    const resp = data.registrationDetails || {};
-                    alertMessage.className = 'alert alert-success';
-                    alertMessage.innerHTML = `
-                        <strong>Registration successful!</strong><br>
-                        Welcome ${registrationData.Firstname}! Your account has been created.<br>
-                        <small>You will be redirected to login in a few seconds...</small>
-                        ${resp.studentId ? `<div style="margin-top:8px"><strong>Your Student ID:</strong> ${resp.studentId}</div>` : ''}
-                    `;
-                    alertMessage.style.display = 'block';
+                    // Show success animation
+                    showSuccessAnimation();
                     
-                    // Store registration details in localStorage for potential use
+                    // Store for login page
                     localStorage.setItem('registrationSuccess', 'true');
                     localStorage.setItem('registeredEmail', registrationData.email);
-                    
-                    // Redirect to login after delay
-                    setTimeout(() => {
-                        window.location.href = 'login.html';
-                    }, 3000);
                 } else {
-                    // Show error message
                     alertMessage.className = 'alert alert-danger';
-                    alertMessage.textContent = data.message || 'Registration failed. Please try again.';
-                    alertMessage.style.display = 'block';
+                    alertMessage.innerHTML = `<i class="fas fa-exclamation-circle"></i><span>${data.message || 'Registration failed. Please try again.'}</span>`;
+                    alertMessage.style.display = 'flex';
                 }
             } catch (error) {
                 console.error('Registration error:', error);
                 alertMessage.className = 'alert alert-danger';
-                alertMessage.textContent = 'Network error. Please check your connection and try again.';
-                alertMessage.style.display = 'block';
+                alertMessage.innerHTML = '<i class="fas fa-wifi"></i><span>Network error. Please check your connection and try again.</span>';
+                alertMessage.style.display = 'flex';
             } finally {
-                // Hide loading state
                 registerBtn.disabled = false;
                 loadingSpinner.style.display = 'none';
             }
         });
 
-        // Admin form submission
+        // Admin Form Submission
         document.getElementById('adminRegisterForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -599,8 +1683,31 @@
             const loadingSpinner = document.getElementById('adminLoadingSpinner');
             const alertMessage = document.getElementById('alertMessage');
 
+            // Validate privacy policy
+            const privacyCheckbox = document.getElementById('adminPrivacyPolicy');
+            const privacyError = document.getElementById('adminPrivacyError');
+            if (!privacyCheckbox.checked) {
+                privacyError.style.display = 'flex';
+                return;
+            } else {
+                privacyError.style.display = 'none';
+            }
+            
+            // Validate password strength
+            const password = document.getElementById('adminPassword').value;
+            const isStrongPassword = checkAdminPasswordStrength(password);
+            if (!isStrongPassword) {
+                alertMessage.className = 'alert alert-danger';
+                alertMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>Please create a stronger password that meets all requirements.</span>';
+                alertMessage.style.display = 'flex';
+                return;
+            }
+            
             // Validate password match
-            if (!validateAdminPasswordMatch()) {
+            if (!validatePasswordMatch('adminPassword', 'adminConfirmPassword', 'adminPasswordMatch', 'adminConfirmPasswordIcon')) {
+                alertMessage.className = 'alert alert-danger';
+                alertMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>Passwords do not match. Please try again.</span>';
+                alertMessage.style.display = 'flex';
                 return;
             }
 
@@ -609,8 +1716,8 @@
             for (let field of requiredFields) {
                 if (!document.getElementById(field).value) {
                     alertMessage.className = 'alert alert-danger';
-                    alertMessage.textContent = 'Please fill in all required fields.';
-                    alertMessage.style.display = 'block';
+                    alertMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i><span>Please fill in all required fields.</span>';
+                    alertMessage.style.display = 'flex';
                     return;
                 }
             }
@@ -642,42 +1749,28 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Show success message
-                    alertMessage.className = 'alert alert-success';
-                    alertMessage.innerHTML = `
-                        <strong>Admin registration successful!</strong><br>
-                        Welcome ${registrationData.name}! Your admin account has been created.<br>
-                        <small>You will be redirected to login in a few seconds...</small>
-                    `;
-                    alertMessage.style.display = 'block';
-
-                    // Store registration details in localStorage for potential use
+                    // Show success animation
+                    showSuccessAnimation();
+                    
                     localStorage.setItem('registrationSuccess', 'true');
                     localStorage.setItem('registeredEmail', registrationData.email);
-
-                    // Redirect to login after delay
-                    setTimeout(() => {
-                        window.location.href = 'login.html';
-                    }, 3000);
                 } else {
-                    // Show error message
                     alertMessage.className = 'alert alert-danger';
-                    alertMessage.textContent = data.message || 'Admin registration failed. Please try again.';
-                    alertMessage.style.display = 'block';
+                    alertMessage.innerHTML = `<i class="fas fa-exclamation-circle"></i><span>${data.message || 'Admin registration failed. Please try again.'}</span>`;
+                    alertMessage.style.display = 'flex';
                 }
             } catch (error) {
                 console.error('Admin registration error:', error);
                 alertMessage.className = 'alert alert-danger';
-                alertMessage.textContent = 'Network error. Please check your connection and try again.';
-                alertMessage.style.display = 'block';
+                alertMessage.innerHTML = '<i class="fas fa-wifi"></i><span>Network error. Please check your connection and try again.</span>';
+                alertMessage.style.display = 'flex';
             } finally {
-                // Hide loading state
                 registerBtn.disabled = false;
                 loadingSpinner.style.display = 'none';
             }
         });
 
-        // Check if user came from successful registration
+        // Pre-fill email from localStorage if registration was successful
         document.addEventListener('DOMContentLoaded', function() {
             const registrationSuccess = localStorage.getItem('registrationSuccess');
             const registeredEmail = localStorage.getItem('registeredEmail');
