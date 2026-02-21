@@ -287,15 +287,20 @@
             if (password.match(/[0-9]/)) strength++;
             if (password.match(/[^a-zA-Z0-9]/)) strength++;
 
+            if (!password) {
+                feedback.style.display = 'none';
+                return;
+            }
+
             feedback.style.display = 'block';
             if (strength < 2) {
-                feedback.textContent = 'Weak password';
+                feedback.textContent = '⚠️ Weak password';
                 feedback.className = 'password-strength weak';
             } else if (strength < 4) {
-                feedback.textContent = 'Medium strength password';
+                feedback.textContent = '⚠️ Medium strength password';
                 feedback.className = 'password-strength medium';
             } else {
-                feedback.textContent = 'Strong password';
+                feedback.textContent = '✓ Strong password';
                 feedback.className = 'password-strength strong';
             }
         }
@@ -305,13 +310,20 @@
             const password = document.getElementById('staffPassword').value;
             const confirmPassword = document.getElementById('staffConfirmPassword').value;
             const matchFeedback = document.getElementById('staffPasswordMatch');
+            const confirmField = document.getElementById('staffConfirmPassword');
 
-            if (confirmPassword && password !== confirmPassword) {
-                document.getElementById('staffConfirmPassword').classList.add('is-invalid');
+            if (!confirmPassword) {
+                confirmField.classList.remove('is-invalid');
+                matchFeedback.style.display = 'none';
+                return true;
+            }
+
+            if (password !== confirmPassword) {
+                confirmField.classList.add('is-invalid');
                 matchFeedback.style.display = 'block';
                 return false;
             } else {
-                document.getElementById('staffConfirmPassword').classList.remove('is-invalid');
+                confirmField.classList.remove('is-invalid');
                 matchFeedback.style.display = 'none';
                 return true;
             }
@@ -320,6 +332,10 @@
         // Event listeners
         document.getElementById('staffPassword').addEventListener('input', function() {
             checkStaffPasswordStrength(this.value);
+            // Also check password match if confirm password has value
+            if (document.getElementById('staffConfirmPassword').value) {
+                validateStaffPasswordMatch();
+            }
         });
 
         document.getElementById('staffConfirmPassword').addEventListener('input', validateStaffPasswordMatch);
@@ -332,20 +348,46 @@
             const loadingSpinner = document.getElementById('staffLoadingSpinner');
             const alertMessage = document.getElementById('alertMessage');
 
-            // Validate password match
+            // Validate password match first
             if (!validateStaffPasswordMatch()) {
+                alertMessage.className = 'alert alert-danger';
+                alertMessage.textContent = 'Passwords do not match. Please try again.';
+                alertMessage.style.display = 'block';
                 return;
             }
 
-            // Validate required fields
-            const requiredFields = ['staffFirstName', 'staffLastName', 'staffEmail', 'staffPhone', 'staffRole', 'staffDepartment', 'staffPassword', 'staffConfirmPassword'];
-            for (let field of requiredFields) {
-                if (!document.getElementById(field).value) {
-                    alertMessage.className = 'alert alert-danger';
-                    alertMessage.textContent = 'Please fill in all required fields.';
-                    alertMessage.style.display = 'block';
-                    return;
-                }
+            const firstName = document.getElementById('staffFirstName').value.trim();
+            const lastName = document.getElementById('staffLastName').value.trim();
+            const email = document.getElementById('staffEmail').value.trim();
+            const phone = document.getElementById('staffPhone').value.trim();
+            const role = document.getElementById('staffRole').value.trim();
+            const department = document.getElementById('staffDepartment').value.trim();
+            const salary = document.getElementById('staffSalary').value;
+            const password = document.getElementById('staffPassword').value;
+
+            // Validate all required fields
+            if (!firstName || !lastName || !email || !phone || !password || !role || !department) {
+                alertMessage.className = 'alert alert-danger';
+                alertMessage.textContent = 'Please fill in all required fields (marked with *)';
+                alertMessage.style.display = 'block';
+                return;
+            }
+
+            // Validate password length
+            if (password.length < 6) {
+                alertMessage.className = 'alert alert-danger';
+                alertMessage.textContent = 'Password must be at least 6 characters long.';
+                alertMessage.style.display = 'block';
+                return;
+            }
+
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alertMessage.className = 'alert alert-danger';
+                alertMessage.textContent = 'Please enter a valid email address.';
+                alertMessage.style.display = 'block';
+                return;
             }
 
             // Show loading state
@@ -356,26 +398,32 @@
             alertMessage.style.display = 'none';
 
             try {
-                const formData = new FormData(this);
+                // Build registration data - only send fields that backend expects
                 const registrationData = {
-                    firstName: formData.get('firstName'),
-                    lastName: formData.get('lastName'),
-                    email: formData.get('email'),
-                    phone: formData.get('phone'),
-                    role: formData.get('role'),
-                    department: formData.get('department'),
-                    salary: formData.get('salary') ? parseFloat(formData.get('salary')) : null,
-                    password: formData.get('password')
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    phone: phone,
+                    password: password,
+                    role: role,
+                    department: department
                 };
+
+                // Only add salary if it has a value
+                if (salary) {
+                    registrationData.salary = parseFloat(salary);
+                }
 
                 console.log('Sending staff registration data:', registrationData);
 
-                const token = localStorage.getItem('token'); // Get admin token from storage
+                const token = localStorage.getItem('token');
 
                 if (!token) {
                     alertMessage.className = 'alert alert-danger';
-                    alertMessage.textContent = 'Authentication token not found. Please log in again.';
+                    alertMessage.innerHTML = '<strong>Error:</strong> Authentication token not found. Please log in again.';
                     alertMessage.style.display = 'block';
+                    registerBtn.disabled = false;
+                    loadingSpinner.style.display = 'none';
                     return;
                 }
 
@@ -383,26 +431,29 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}` // Add token here
+                        'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify(registrationData)
                 });
 
                 const data = await response.json();
-                
+
                 console.log('Response status:', response.status);
                 console.log('Response data:', data);
 
-                if (response.ok) {
-                    // Show success message
+                if (response.ok && response.status === 201) {
+                    // Success - Staff member created
+                    const staffId = data.staffId;
+                    
                     alertMessage.className = 'alert alert-success';
                     alertMessage.innerHTML = `
                         <strong><i class="fas fa-check-circle me-2"></i>Staff Member Added Successfully!</strong><br>
-                        <strong>${registrationData.firstName} ${registrationData.lastName}</strong> has been created as a staff member.<br>
+                        <strong>${firstName} ${lastName}</strong> has been created as a staff member.<br>
                         <small style="display: block; margin-top: 10px;">
                             <i class="fas fa-envelope me-2"></i><strong>Next Steps:</strong><br>
-                            • A welcome email with temporary login credentials has been sent to <strong>${registrationData.email}</strong><br>
-                            • Staff member must log in and change their password on first login
+                            • A welcome email with temporary login credentials has been sent to <strong>${email}</strong><br>
+                            • Staff member must log in and change their password on first login<br>
+                            • Staff ID: <code>${staffId}</code>
                         </small><br>
                         <small style="margin-top: 10px; display: block;">You will be redirected to dashboard in 5 seconds...</small>
                     `;
@@ -413,15 +464,18 @@
                         window.location.href = 'admin_dashboard.html';
                     }, 5000);
                 } else {
-                    // Show error message
+                    // Error response
+                    const errorMessage = data.message || 'Staff registration failed. Please try again.';
                     alertMessage.className = 'alert alert-danger';
-                    alertMessage.textContent = data.message || 'Staff registration failed. Please try again.';
+                    alertMessage.innerHTML = `<strong>Error:</strong> ${errorMessage}`;
                     alertMessage.style.display = 'block';
+                    
+                    console.error('Backend error:', data);
                 }
             } catch (error) {
                 console.error('Staff registration error:', error);
                 alertMessage.className = 'alert alert-danger';
-                alertMessage.textContent = 'Network error. Please check your connection and try again.';
+                alertMessage.innerHTML = `<strong>Network Error:</strong> ${error.message}. Please check your connection and try again.`;
                 alertMessage.style.display = 'block';
             } finally {
                 // Hide loading state
