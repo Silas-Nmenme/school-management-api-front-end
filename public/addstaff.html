@@ -364,12 +364,20 @@
                     phone: formData.get('phone'),
                     role: formData.get('role'),
                     department: formData.get('department'),
-                    salary: formData.get('salary') || null,
-                    password: formData.get('password'),
-                    confirmpassword: formData.get('confirmpassword')
+                    salary: formData.get('salary') ? parseFloat(formData.get('salary')) : null,
+                    password: formData.get('password')
                 };
 
+                console.log('Sending staff registration data:', registrationData);
+
                 const token = localStorage.getItem('token'); // Get admin token from storage
+
+                if (!token) {
+                    alertMessage.className = 'alert alert-danger';
+                    alertMessage.textContent = 'Authentication token not found. Please log in again.';
+                    alertMessage.style.display = 'block';
+                    return;
+                }
 
                 const response = await fetch('https://school-management-api-zeta-two.vercel.app/api/admin/add-staff', {
                     method: 'POST',
@@ -381,6 +389,9 @@
                 });
 
                 const data = await response.json();
+                
+                console.log('Response status:', response.status);
+                console.log('Response data:', data);
 
                 if (response.ok) {
                     // Show success message
