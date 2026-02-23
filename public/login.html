@@ -361,6 +361,9 @@
                     <button type="button" class="role-btn active" data-role="student">
                         <i class="fas fa-user me-1"></i>Student
                     </button>
+                    <button type="button" class="role-btn" data-role="staff">
+                        <i class="fas fa-user-tie me-1"></i>Staff
+                    </button>
                     <button type="button" class="role-btn" data-role="admin">
                         <i class="fas fa-crown me-1"></i>Admin
                     </button>
@@ -451,10 +454,11 @@
                 const email = formData.get('email');
                 const password = formData.get('password');
                 
-                // Determine API endpoint based on role
-                const apiEndpoint = selectedRole === 'admin' 
-                    ? 'https://school-management-api-zeta-two.vercel.app/api/admin/login'
-                    : 'https://school-management-api-zeta-two.vercel.app/api/students/login';
+                // Determine API endpoint based on role (use relative endpoints)
+                let apiEndpoint;
+                if (selectedRole === 'admin') apiEndpoint = '/api/admin/login';
+                else if (selectedRole === 'staff') apiEndpoint = '/api/staff/login';
+                else apiEndpoint = '/api/students/login';
                 
                 const response = await fetch(apiEndpoint, {
                     method: 'POST',
@@ -504,9 +508,10 @@
 
                 // Proceed with successful login
                 if (data.token) {
-                    // Store token in localStorage
+                    // Store token in localStorage (keep `token` for compatibility)
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('userRole', selectedRole);
+                    if (selectedRole === 'staff') localStorage.setItem('staffToken', data.token);
 
                     // Show success message
                     alertMessage.className = 'alert alert-success';
@@ -516,9 +521,11 @@
                     // Redirect after delay
                     setTimeout(() => {
                         if (selectedRole === 'admin') {
-                            window.location.href = 'admin_dashboard.html'; // Redirect to admin dashboard
+                            window.location.href = 'admin_dashboard.html';
+                        } else if (selectedRole === 'staff') {
+                            window.location.href = 'staff_dashboard.html';
                         } else {
-                            window.location.href = 'student_dashboard.html'; // Redirect to student dashboard
+                            window.location.href = 'student_dashboard.html';
                         }
                     }, 1500);
                 } else {
