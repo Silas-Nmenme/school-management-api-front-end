@@ -12,112 +12,183 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary-color: #667eea;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --card-shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             min-height: 100vh;
             margin: 0;
             padding: 0;
         }
+        
+        /* Dashboard Container */
         .dashboard-container {
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            margin: 20px;
+            margin: 15px;
             animation: fadeInUp 0.8s ease-out;
         }
+        
+        /* Dashboard Header */
         .dashboard-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             color: white;
-            padding: 30px;
+            padding: 25px;
             text-align: center;
             position: relative;
         }
+        
         .dashboard-header h1 {
             margin: 0;
-            font-size: 2.5rem;
+            font-size: 1.75rem;
             font-weight: bold;
         }
+        
         .dashboard-header p {
-            margin: 10px 0 0;
+            margin: 8px 0 0;
             opacity: 0.9;
-        }
-        .student-info {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            text-align: right;
             font-size: 0.9rem;
         }
-        .dashboard-body {
-            padding: 40px;
+        
+        .student-info {
+            position: static;
+            text-align: center;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.2);
         }
+        
+        /* Dashboard Body */
+        .dashboard-body {
+            padding: 20px;
+        }
+        
+        /* Cards */
         .card {
             border: none;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--card-shadow);
             transition: all 0.3s ease;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
+        
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--card-shadow-hover);
         }
+        
         .card-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             color: white;
             border-radius: 15px 15px 0 0 !important;
+            padding: 15px;
+        }
+        
+        .card-header h5 {
+            margin: 0;
+            font-size: 1rem;
+        }
+        
+        .card-body {
             padding: 20px;
         }
-        .card-body {
-            padding: 30px;
-        }
+        
+        /* Buttons */
         .btn-custom {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             border: none;
             border-radius: 10px;
-            padding: 12px 20px;
+            padding: 10px 16px;
             color: white;
             font-weight: 600;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
         }
+        
         .btn-custom:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
             color: white;
         }
+        
         .logout-btn {
             background: #dc3545;
             border: none;
             border-radius: 10px;
-            padding: 10px 20px;
+            padding: 8px 16px;
             color: white;
             font-weight: 600;
+            font-size: 0.85rem;
             transition: all 0.3s ease;
+            margin-left: 10px;
         }
+        
         .logout-btn:hover {
             background: #c82333;
             transform: translateY(-2px);
             color: white;
         }
+        
+        /* Navbar */
         .navbar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 15px 30px;
+            background: var(--primary-gradient);
+            padding: 12px 15px;
         }
+        
         .navbar-brand {
             color: white !important;
             font-weight: bold;
-            font-size: 1.5rem;
+            font-size: 1.25rem;
         }
+        
+        .navbar-toggler {
+            border: none;
+            padding: 8px 12px;
+        }
+        
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+        
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+        
         .navbar-nav .nav-link {
             color: white !important;
-            margin: 0 15px;
+            margin: 5px 0;
             font-weight: 500;
+            font-size: 0.9rem;
+            padding: 8px 0;
         }
+        
         .navbar-nav .nav-link:hover {
             color: #f8f9fa !important;
         }
+        
+        .navbar-collapse {
+            text-align: center;
+            padding-top: 10px;
+        }
+        
+        .nav-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        /* Animations */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -128,42 +199,272 @@
                 transform: translateY(0);
             }
         }
+        
+        /* Icons */
         .icon-large {
-            font-size: 3rem;
-            color: #667eea;
-            margin-bottom: 15px;
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
         }
+        
         .text-muted {
             color: #6c757d !important;
+            font-size: 0.85rem;
         }
+        
+        /* Stat Cards */
         .stat-card {
             text-align: center;
-            padding: 20px;
+            padding: 15px;
         }
+        
         .stat-number {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: bold;
-            color: #667eea;
+            color: var(--primary-color);
         }
+        
+        .stat-card h5 {
+            font-size: 0.9rem;
+            margin: 5px 0 0;
+        }
+        
+        /* Footer */
         .footer {
             background: #f8f9fa;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
             width: 100%;
+            font-size: 0.85rem;
         }
+        
+        .footer p {
+            margin: 5px 0;
+        }
+        
+        /* Announcements & Deadlines */
         .announcement {
             background: #e9ecef;
-            border-left: 5px solid #667eea;
-            padding: 15px;
+            border-left: 5px solid var(--primary-color);
+            padding: 12px;
             margin-bottom: 10px;
             border-radius: 5px;
         }
+        
         .deadline {
             background: #fff3cd;
             border-left: 5px solid #ffc107;
-            padding: 15px;
+            padding: 12px;
             margin-bottom: 10px;
             border-radius: 5px;
+        }
+        
+        /* Quick Action Cards */
+        .quick-action-card {
+            text-align: center;
+            padding: 15px 10px;
+        }
+        
+        .quick-action-card h5 {
+            font-size: 0.9rem;
+            margin: 8px 0 5px;
+        }
+        
+        .quick-action-card p {
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+        
+        /* Recent Activity */
+        .recent-activity li {
+            font-size: 0.85rem;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .recent-activity li:last-child {
+            border-bottom: none;
+        }
+        
+        /* Medium devices (tablets, 768px and up) */
+        @media (min-width: 768px) {
+            .dashboard-container {
+                margin: 20px;
+            }
+            
+            .dashboard-header {
+                padding: 30px;
+            }
+            
+            .dashboard-header h1 {
+                font-size: 2rem;
+            }
+            
+            .student-info {
+                position: absolute;
+                top: 20px;
+                right: 30px;
+                text-align: right;
+                margin-top: 0;
+                padding-top: 0;
+                border-top: none;
+            }
+            
+            .dashboard-body {
+                padding: 30px;
+            }
+            
+            .card-body {
+                padding: 25px;
+            }
+            
+            .card-header {
+                padding: 18px;
+            }
+            
+            .card-header h5 {
+                font-size: 1.1rem;
+            }
+            
+            .icon-large {
+                font-size: 2.5rem;
+            }
+            
+            .stat-number {
+                font-size: 1.75rem;
+            }
+            
+            .stat-card h5 {
+                font-size: 1rem;
+            }
+            
+            .navbar {
+                padding: 15px 30px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.5rem;
+            }
+            
+            .navbar-nav .nav-link {
+                margin: 0 15px;
+                padding: 0;
+            }
+            
+            .nav-actions {
+                flex-direction: row;
+                margin-top: 0;
+            }
+            
+            .footer {
+                padding: 20px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* Large devices (desktops, 992px and up) */
+        @media (min-width: 992px) {
+            .dashboard-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .dashboard-body {
+                padding: 40px;
+            }
+            
+            .card-body {
+                padding: 30px;
+            }
+            
+            .icon-large {
+                font-size: 3rem;
+                margin-bottom: 15px;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+            
+            .stat-card {
+                padding: 20px;
+            }
+            
+            .btn-custom {
+                padding: 12px 20px;
+            }
+        }
+        
+        /* Extra small devices (portrait phones, less than 576px) */
+        @media (max-width: 575.98px) {
+            .dashboard-container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .dashboard-header {
+                padding: 20px 15px;
+            }
+            
+            .dashboard-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .dashboard-body {
+                padding: 15px;
+            }
+            
+            .card {
+                margin-bottom: 15px;
+                border-radius: 12px;
+            }
+            
+            .card-header {
+                padding: 12px 15px;
+                border-radius: 12px 12px 0 0;
+            }
+            
+            .card-header h5 {
+                font-size: 0.95rem;
+            }
+            
+            .card-body {
+                padding: 15px;
+            }
+            
+            .icon-large {
+                font-size: 1.75rem;
+            }
+            
+            .stat-number {
+                font-size: 1.25rem;
+            }
+            
+            .stat-card h5 {
+                font-size: 0.85rem;
+            }
+            
+            .btn-custom {
+                padding: 8px 14px;
+                font-size: 0.85rem;
+            }
+            
+            .logout-btn {
+                padding: 8px 14px;
+                font-size: 0.8rem;
+            }
+            
+            .announcement, .deadline {
+                padding: 10px;
+            }
+            
+            .announcement strong, .deadline strong {
+                font-size: 0.9rem;
+            }
+            
+            .footer {
+                padding: 12px 10px;
+                font-size: 0.75rem;
+            }
         }
     </style>
 </head>
@@ -172,11 +473,24 @@
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <a class="navbar-brand" href="#"><i class="fas fa-graduation-cap me-2"></i>Bethel College</a>
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="profile.html"><i class="fas fa-user me-1"></i>Profile</a>
-                <a class="nav-link" href="courses.html"><i class="fas fa-book me-1"></i>Courses</a>
-                <a class="nav-link" href="grades.html"><i class="fas fa-chart-line me-1"></i>Grades</a>
-                <button class="btn logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt me-1"></i>Logout</button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile.html"><i class="fas fa-user me-1"></i>Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="courses.html"><i class="fas fa-book me-1"></i>Courses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="grades.html"><i class="fas fa-chart-line me-1"></i>Grades</a>
+                    </li>
+                </ul>
+                <div class="nav-actions">
+                    <button class="btn logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt me-1"></i>Logout</button>
+                </div>
             </div>
         </div>
     </nav>
@@ -192,29 +506,29 @@
         </div>
         <div class="dashboard-body">
             <!-- Academic Summary -->
-            <div class="row mb-4">
-                <div class="col-md-4">
+            <div class="row mb-4 g-3">
+                <div class="col-12 col-sm-4">
                     <div class="card stat-card text-center">
                         <div class="card-body">
-                            <i class="fas fa-chart-bar icon-large"></i>
+                            <i class="fas fa-chart-bar icon-large d-block"></i>
                             <div class="stat-number">3.75</div>
                             <h5>Current GPA</h5>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-sm-4">
                     <div class="card stat-card text-center">
                         <div class="card-body">
-                            <i class="fas fa-graduation-cap icon-large"></i>
+                            <i class="fas fa-graduation-cap icon-large d-block"></i>
                             <div class="stat-number">60</div>
                             <h5>Completed Credits</h5>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-sm-4">
                     <div class="card stat-card text-center">
                         <div class="card-body">
-                            <i class="fas fa-calendar-alt icon-large"></i>
+                            <i class="fas fa-calendar-alt icon-large d-block"></i>
                             <div class="stat-number">Fall 2025</div>
                             <h5>Current Semester</h5>
                         </div>
@@ -228,90 +542,90 @@
                     <h5 class="mb-0"><i class="fas fa-home me-2"></i>Welcome, John Doe!</h5>
                 </div>
                 <div class="card-body">
-                    <p class="lead">Stay on top of your academics with easy access to courses, grades, and university resources.</p>
+                    <p class="lead mb-3">Stay on top of your academics with easy access to courses, grades, and university resources.</p>
                     <a href="#quick-actions" class="btn btn-custom"><i class="fas fa-arrow-down me-2"></i>Explore Dashboard</a>
                 </div>
             </div>
 
             <!-- Quick Actions -->
-            <div class="row" id="quick-actions">
-                <div class="col-md-3">
-                    <div class="card text-center">
+            <div class="row g-3" id="quick-actions">
+                <div class="col-6 col-md-3">
+                    <div class="card quick-action-card">
                         <div class="card-body">
-                            <i class="fas fa-user icon-large"></i>
+                            <i class="fas fa-user icon-large d-block"></i>
                             <h5>Profile</h5>
-                            <p class="text-muted">Update personal info</p>
-                            <a href="profile.html" class="btn btn-custom">Go</a>
+                            <p class="text-muted mb-2">Update personal info</p>
+                            <a href="profile.html" class="btn btn-custom btn-sm">Go</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card text-center">
+                <div class="col-6 col-md-3">
+                    <div class="card quick-action-card">
                         <div class="card-body">
-                            <i class="fas fa-book icon-large"></i>
+                            <i class="fas fa-book icon-large d-block"></i>
                             <h5>Courses</h5>
-                            <p class="text-muted">Enrolled classes</p>
-                            <a href="courses.html" class="btn btn-custom">Go</a>
+                            <p class="text-muted mb-2">Enrolled classes</p>
+                            <a href="courses.html" class="btn btn-custom btn-sm">Go</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card text-center">
+                <div class="col-6 col-md-3">
+                    <div class="card quick-action-card">
                         <div class="card-body">
-                            <i class="fas fa-chart-line icon-large"></i>
+                            <i class="fas fa-chart-line icon-large d-block"></i>
                             <h5>Grades</h5>
-                            <p class="text-muted">Performance overview</p>
-                            <a href="grades.html" class="btn btn-custom">Go</a>
+                            <p class="text-muted mb-2">Performance overview</p>
+                            <a href="grades.html" class="btn btn-custom btn-sm">Go</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card text-center">
+                <div class="col-6 col-md-3">
+                    <div class="card quick-action-card">
                         <div class="card-body">
-                            <i class="fas fa-calendar icon-large"></i>
+                            <i class="fas fa-calendar icon-large d-block"></i>
                             <h5>Schedule</h5>
-                            <p class="text-muted">Class timetable</p>
-                            <a href="schedule.html" class="btn btn-custom">Go</a>
+                            <p class="text-muted mb-2">Class timetable</p>
+                            <a href="schedule.html" class="btn btn-custom btn-sm">Go</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card text-center">
+                <div class="col-6 col-md-3">
+                    <div class="card quick-action-card">
                         <div class="card-body">
-                            <i class="fas fa-dollar-sign icon-large"></i>
+                            <i class="fas fa-dollar-sign icon-large d-block"></i>
                             <h5>Financial Aid</h5>
-                            <p class="text-muted">Aid and payments</p>
-                            <a href="financial-aid.html" class="btn btn-custom">Go</a>
+                            <p class="text-muted mb-2">Aid and payments</p>
+                            <a href="financial-aid.html" class="btn btn-custom btn-sm">Go</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card text-center">
+                <div class="col-6 col-md-3">
+                    <div class="card quick-action-card">
                         <div class="card-body">
-                            <i class="fas fa-book-open icon-large"></i>
+                            <i class="fas fa-book-open icon-large d-block"></i>
                             <h5>Library</h5>
-                            <p class="text-muted">Resources access</p>
-                            <a href="library.html" class="btn btn-custom">Go</a>
+                            <p class="text-muted mb-2">Resources access</p>
+                            <a href="library.html" class="btn btn-custom btn-sm">Go</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card text-center">
+                <div class="col-6 col-md-3">
+                    <div class="card quick-action-card">
                         <div class="card-body">
-                            <i class="fas fa-users icon-large"></i>
+                            <i class="fas fa-users icon-large d-block"></i>
                             <h5>Student Life</h5>
-                            <p class="text-muted">Clubs and events</p>
-                            <a href="student-life.html" class="btn btn-custom">Go</a>
+                            <p class="text-muted mb-2">Clubs and events</p>
+                            <a href="student-life.html" class="btn btn-custom btn-sm">Go</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card text-center">
+                <div class="col-6 col-md-3">
+                    <div class="card quick-action-card">
                         <div class="card-body">
-                            <i class="fas fa-exclamation-triangle icon-large"></i>
+                            <i class="fas fa-exclamation-triangle icon-large d-block"></i>
                             <h5>Support</h5>
-                            <p class="text-muted">Help desk</p>
-                            <a href="support.html" class="btn btn-custom">Go</a>
+                            <p class="text-muted mb-2">Help desk</p>
+                            <a href="support.html" class="btn btn-custom btn-sm">Go</a>
                         </div>
                     </div>
                 </div>
@@ -359,10 +673,10 @@
                     <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Activity</h5>
                 </div>
                 <div class="card-body">
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Enrolled in Biology 102 - October 10, 2025</li>
-                        <li class="mb-2"><i class="fas fa-chart-line text-primary me-2"></i>Grades updated for History 101 - October 8, 2025</li>
-                        <li class="mb-2"><i class="fas fa-download text-info me-2"></i>Downloaded syllabus for Physics 201 - October 5, 2025</li>
+                    <ul class="list-unstyled recent-activity">
+                        <li><i class="fas fa-check-circle text-success me-2"></i>Enrolled in Biology 102 - October 10, 2025</li>
+                        <li><i class="fas fa-chart-line text-primary me-2"></i>Grades updated for History 101 - October 8, 2025</li>
+                        <li><i class="fas fa-download text-info me-2"></i>Downloaded syllabus for Physics 201 - October 5, 2025</li>
                     </ul>
                     <a href="activity.html" class="btn btn-custom">View Full Log</a>
                 </div>
@@ -372,7 +686,10 @@
 
     <!-- Footer -->
     <div class="footer">
-        <p>&copy; 2026 Bethel College. All rights reserved. | <a href="contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a></p>
+        <p class="mb-1">&copy; 2026 Bethel College. All rights reserved.</p>
+        <p class="mb-1">
+            <a href="contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a>
+        </p>
         <p class="text-muted mb-0">123 College Ave, Bethel, IN 46501 | (555) 123-4567</p>
     </div>
 
