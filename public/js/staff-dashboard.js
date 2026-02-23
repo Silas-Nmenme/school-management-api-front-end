@@ -1,5 +1,6 @@
 // Staff dashboard client-side logic
 (function(){
+  // Configuration: set apiBase to your API base path
   const apiBase = 'https://school-management-api-zeta-two.vercel.app/api/staff';
   const tokenKeyCandidates = ['staffToken','token'];
 
@@ -14,22 +15,33 @@
   }
 
   function redirectToLogin(){
+    console.warn('Token missing or auth failed; redirecting to login.');
     localStorage.removeItem('staffToken');
+    localStorage.removeItem('token');
+    localStorage.removeItem('userRole');
     window.location.href = 'login.html';
   }
 
-  async function handleResponse(res){
-    if (res.status === 401 || res.status === 403) { redirectToLogin(); throw new Error('Unauthorized'); }
+  async function handleResponse(res, endpoint){
+    if (res.status === 401 || res.status === 403) { 
+      console.error(`Auth failed (${res.status}) at ${endpoint}`); 
+      redirectToLogin(); 
+      throw new Error('Unauthorized'); 
+    }
     const data = await res.json().catch(()=>({}));
-    if (!res.ok) throw data;
+    if (!res.ok) {
+      console.error(`Request failed: ${endpoint} (${res.status})`, data);
+      throw data;
+    }
     return data;
   }
 
   async function fetchDashboard(){
     const el = document.getElementById('staffInfo');
     try{
-      const res = await fetch(apiBase+'/dashboard',{ headers: authHeaders() });
-      const data = await handleResponse(res);
+      const endpoint = apiBase+'/dashboard';
+      const res = await fetch(endpoint,{ headers: authHeaders() });
+      const data = await handleResponse(res, endpoint);
       document.getElementById('totalStudents').textContent = data.metrics.totalStudents ?? '—';
       document.getElementById('activeCourses').textContent = data.metrics.activeCourses ?? '—';
       document.getElementById('pendingApps').textContent = data.metrics.pendingApplications ?? '—';
@@ -42,8 +54,9 @@
     const tbody = document.querySelector('#studentsTable tbody');
     tbody.innerHTML = '<tr><td colspan="7">Loading…</td></tr>';
     try{
-      const res = await fetch(apiBase+'/students',{ headers: authHeaders() });
-      const data = await handleResponse(res);
+      const endpoint = apiBase+'/students';
+      const res = await fetch(endpoint,{ headers: authHeaders() });
+      const data = await handleResponse(res, endpoint);
       const rows = (data.students||[]).map(s => renderStudentRow(s));
       tbody.innerHTML = rows.join('') || '<tr><td colspan="7">No students found</td></tr>';
       attachStudentRowHandlers();
@@ -84,8 +97,9 @@
     if (phoneVal) payload.phone = phoneVal;
     if (!Object.keys(payload).length) { cancelEditRow(tr); return; }
     try{
-      const res = await fetch(apiBase+`/students/${id}`,{ method:'PUT', headers: authHeaders(), body: JSON.stringify(payload) });
-      const data = await handleResponse(res);
+      const endpoint = apiBase+`/students/${id}`;
+      const res = await fetch(endpoint,{ method:'PUT', headers: authHeaders(), body: JSON.stringify(payload) });
+      const data = await handleResponse(res, endpoint);
       tr.querySelector('.age').textContent = data.student.age ?? '';
       tr.querySelector('.phone').textContent = data.student.phone ?? '';
       tr.classList.remove('editing');
@@ -102,8 +116,9 @@
   async function fetchTeam(){
     const ul = document.getElementById('teamList'); ul.innerHTML='Loading...';
     try{
-      const res = await fetch(apiBase+'/team',{ headers: authHeaders() });
-      const data = await handleResponse(res);
+      const endpoint = apiBase+'/team';
+      const res = await fetch(endpoint,{ headers: authHeaders() });
+      const data = await handleResponse(res, endpoint);
       ul.innerHTML = (data.staff||[]).map(s=>`<li><div><strong>${escapeHtml(s.firstName||'')} ${escapeHtml(s.lastName||'')}</strong><div class="muted-small">${escapeHtml(s.role||'')} • ${escapeHtml(s.department||'')}</div></div><div class="muted-small">${escapeHtml(s.email||'')}</div></li>`).join('') || '<li>No team members</li>';
     }catch(e){ console.error(e); ul.innerHTML='Failed to load'; }
   }
@@ -113,8 +128,9 @@
   // Change password
   async function changePassword(currentPassword, newPassword){
     try{
-      const res = await fetch(apiBase+'/change-password',{ method:'POST', headers: authHeaders(), body: JSON.stringify({ currentPassword, newPassword }) });
-      await handleResponse(res);
+      const endpoint = apiBase+'/change-password';
+      const res = await fetch(endpoint,{ method:'POST', headers: authHeaders(), body: JSON.stringify({ currentPassword, newPassword }) });
+      await handleResponse(res, endpoint);
       alert('Password changed'); closeModal();
     }catch(err){ alert(err.message || 'Failed to change password'); }
   }
@@ -138,7 +154,13 @@
     });
   }
 
-  function ensureAuth(){ if (!getToken()) redirectToLogin(); }
+  function ensureAuth(){ 
+    const token = getToken();
+    if (!token) {
+      console.warn('No token found on page load; redirecting to login.');
+      redirectToLogin(); 
+    }
+  }
 
   async function fetchAll(){ ensureAuth(); await Promise.allSettled([fetchDashboard(), fetchStudents(), fetchTeam()]); }
 
