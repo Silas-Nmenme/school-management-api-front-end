@@ -407,18 +407,44 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
     <script>
-        // Configuration: set `apiBase` if your API is served from a sub-path (e.g. '/api' or '/student-api')
-        const apiBase = '';
+        // ==========================================
+        // LOGIN FUNCTIONALITY
+        // Supports Student, Admin, and Staff login
+        // ==========================================
 
-
-        // Set these base paths to where those routers are mounted, the frontend will append `/login`.
-        const roleBases = {
-            admin: `${apiBase}/api/admin`,
-            staff: `${apiBase}/api/staff`,
-            student: `${apiBase}/api/students`
+        // API Configuration
+        const API_CONFIG = {
+            // Set this to your API base URL if served from a sub-path
+            // e.g., const apiBase = '/api' or const apiBase = '/student-api'
+            base: '',
+            
+            // Endpoint base paths for each role (each router mounts a '/login' endpoint)
+            endpoints: {
+                student: '/api/students',
+                admin: '/api/admin',
+                staff: '/api/staff'
+            },
+            
+            // Dashboard redirects for each role
+            dashboards: {
+                student: 'student_dashboard.html',
+                admin: 'admin_dashboard.html',
+                staff: 'staff_dashboard.html'
+            }
         };
 
-        // Role selection
+        // Build full API URL for login
+        function getLoginEndpoint(role) {
+            const endpoint = API_CONFIG.endpoints[role] || API_CONFIG.endpoints.student;
+            return `${API_CONFIG.base}${endpoint}/login`;
+        }
+
+        // Get redirect URL based on role
+        function getRedirectUrl(role) {
+            return API_CONFIG.dashboards[role] || API_CONFIG.dashboards.student;
+        }
+
+        // Role selection functionality
         document.querySelectorAll('.role-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
@@ -426,7 +452,7 @@
             });
         });
 
-        // Password toggle
+        // Password visibility toggle
         document.getElementById('togglePassword').addEventListener('click', function() {
             const passwordField = document.getElementById('password');
             const icon = this.querySelector('i');
@@ -442,7 +468,7 @@
             }
         });
 
-        // Form submission
+        // Main login form submission handler
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -450,8 +476,14 @@
             const loadingSpinner = document.getElementById('loadingSpinner');
             const alertMessage = document.getElementById('alertMessage');
             
-            // Get selected role
+            // Get selected role from active button
             const selectedRole = document.querySelector('.role-btn.active').dataset.role;
+            
+            // Validate role
+            if (!selectedRole || !API_CONFIG.endpoints[selectedRole]) {
+                showAlert('alert-danger', 'Invalid role selected. Please refresh and try again.');
+                return;
+            }
             
             // Show loading state
             loginBtn.disabled = true;
@@ -461,14 +493,22 @@
             alertMessage.style.display = 'none';
             
             try {
+                // Get form data
                 const formData = new FormData(this);
                 const email = formData.get('email');
                 const password = formData.get('password');
                 
-                // Determine API endpoint based on role using configured roleBases (each router mounts a '/login')
-                const base = roleBases[selectedRole] || roleBases.student;
-                const apiEndpoint = `${base}/login`;
+                // Validate input
+                if (!email || !password) {
+                    showAlert('alert-danger', 'Please enter both email and password.');
+                    return;
+                }
                 
+                // Get the appropriate API endpoint for the selected role
+                const apiEndpoint = getLoginEndpoint(selectedRole);
+                console.log('Attempting login to:', apiEndpoint, 'for role:', selectedRole);
+                
+                // Make the login request
                 const response = await fetch(apiEndpoint, {
                     method: 'POST',
                     headers: {
@@ -480,77 +520,105 @@
                     })
                 });
 
-                // Check if the response is ok (status 200-299)
+                // Handle non-OK responses
                 if (!response.ok) {
-                    let errorMessage = `Login failed: ${response.status} ${response.statusText} (endpoint: ${apiEndpoint})`;
-                    // Try to get error message from response if possible
+                    let errorMessage = `Login failed: ${response.status} ${response.statusText}`;
+                    
                     try {
                         const errorData = await response.json();
                         if (errorData && errorData.message) {
-                            errorMessage = errorData.message + ` (endpoint: ${apiEndpoint})`;
+                            errorMessage = errorData.message;
                         }
                     } catch (jsonError) {
-                        // ignore JSON parse errors
+                        // Response wasn't JSON, use default error message
+                        console.log('Non-JSON error response');
                     }
 
-                    alertMessage.className = 'alert alert-danger';
-                    alertMessage.textContent = errorMessage;
-                    alertMessage.style.display = 'block';
-                    console.error('Login error response', { endpoint: apiEndpoint, status: response.status, statusText: response.statusText });
-                    return; // Exit early on error
+                    showAlert('alert-danger', errorMessage);
+                    console.error('Login error:', { endpoint: apiEndpoint, status: response.status, statusText: response.statusText });
+                    return;
                 }
 
-                // Parse JSON response for successful requests
+                // Parse successful response
                 let data;
                 try {
                     data = await response.json();
                 } catch (jsonError) {
                     console.error('Failed to parse response as JSON:', jsonError);
-                    alertMessage.className = 'alert alert-danger';
-                    alertMessage.textContent = 'Invalid response from server. Please try again.';
-                    alertMessage.style.display = 'block';
+                    showAlert('alert-danger', 'Invalid response from server. Please try again.');
                     return;
                 }
 
-                // Proceed with successful login
+                // Handle successful login with token
                 if (data.token) {
-                    // Store token in localStorage (keep `token` for compatibility)
+                    // Store authentication data
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('userRole', selectedRole);
-                    if (selectedRole === 'staff') localStorage.setItem('staffToken', data.token);
+                    localStorage.setItem('userEmail', email);
+                    
+                    // Store additional user data if provided
+                    if (data.user) {
+                        localStorage.setItem('userData', JSON.stringify(data.user));
+                    }
+                    
+                    // Store role-specific tokens
+                    if (selectedRole === 'staff') {
+                        localStorage.setItem('staffToken', data.token);
+                    } else if (selectedRole === 'admin') {
+                        localStorage.setItem('adminToken', data.token);
+                    }
 
                     // Show success message
-                    alertMessage.className = 'alert alert-success';
-                    alertMessage.textContent = 'Login successful! Redirecting...';
-                    alertMessage.style.display = 'block';
+                    showAlert('alert-success', 'Login successful! Redirecting...');
 
-                    // Redirect after delay
+                    // Redirect after short delay
                     setTimeout(() => {
-                        if (selectedRole === 'admin') {
-                            window.location.href = 'admin_dashboard.html';
-                        } else if (selectedRole === 'staff') {
-                            window.location.href = 'staff_dashboard.html';
-                        } else {
-                            window.location.href = 'student_dashboard.html';
-                        }
+                        const redirectUrl = getRedirectUrl(selectedRole);
+                        window.location.href = redirectUrl;
                     }, 800);
                 } else {
-                    // Show error message if no token
-                    alertMessage.className = 'alert alert-danger';
-                    alertMessage.textContent = (data && data.message) ? data.message : 'Login failed. Please try again.';
-                    alertMessage.style.display = 'block';
+                    // No token in response
+                    showAlert('alert-danger', (data && data.message) ? data.message : 'Login failed. No authentication token received.');
                 }
+                
             } catch (error) {
                 console.error('Login error:', error);
-                alertMessage.className = 'alert alert-danger';
-                alertMessage.textContent = `Network error. Please check your connection and try again. (${error.message})`;
-                alertMessage.style.display = 'block';
+                
+                // Provide more helpful error messages
+                let errorMessage = 'Network error. Please check your connection and try again.';
+                
+                if (error.message && error.message.includes('Failed to fetch')) {
+                    errorMessage = 'Unable to connect to server. Please check if the backend API is running.';
+                }
+                
+                showAlert('alert-danger', errorMessage);
             } finally {
                 // Hide loading state
                 loginBtn.disabled = false;
                 loadingSpinner.style.display = 'none';
             }
+            
+            // Helper function to show alerts
+            function showAlert(className, message) {
+                alertMessage.className = `alert ${className}`;
+                alertMessage.innerHTML = `<i class="fas fa-${className.includes('success') ? 'check' : 'exclamation'}-circle"></i> ${message}`;
+                alertMessage.style.display = 'block';
+            }
         });
+
+        // Check if user is already logged in
+        function checkExistingSession() {
+            const token = localStorage.getItem('token');
+            const role = localStorage.getItem('userRole');
+            
+            if (token && role && API_CONFIG.dashboards[role]) {
+                // Optionally redirect to dashboard if already logged in
+                // window.location.href = API_CONFIG.dashboards[role];
+            }
+        }
+        
+        // Initialize session check
+        checkExistingSession();
     </script>
 </body>
 </html>
