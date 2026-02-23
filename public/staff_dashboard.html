@@ -4,77 +4,147 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Staff Dashboard — School</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- Animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  
   <link rel="stylesheet" href="css/design-system.css">
   <link rel="stylesheet" href="css/staff-dashboard.css">
 </head>
 <body>
   <header class="sd-header">
-    <div class="sd-brand">School Admin</div>
+    <div class="sd-brand">
+      <i class="fas fa-graduation-cap"></i>
+      <span>School Admin</span>
+    </div>
     <nav class="sd-nav">
-      <button id="btnRefresh" class="btn">Refresh</button>
-      <button id="btnLogout" class="btn btn-ghost">Logout</button>
+      <button id="btnRefresh" class="btn btn-animate">
+        <i class="fas fa-sync-alt"></i>
+        <span>Refresh</span>
+      </button>
+      <button id="btnLogout" class="btn btn-ghost btn-animate">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+      </button>
     </nav>
   </header>
 
   <main class="container sd-main">
-    <section class="sd-intro">
-      <h1>Staff Dashboard</h1>
+    <section class="sd-intro animate__animated animate__fadeInUp">
+      <h1><i class="fas fa-tachometer-alt"></i> Staff Dashboard</h1>
       <p class="muted">Welcome back — manage students, view team members, and handle routine tasks.</p>
     </section>
 
     <section class="sd-cards" aria-label="key-metrics">
-      <div class="card">
+      <div class="card animate__animated animate__fadeInUp" style="animation-delay: 0.1s">
+        <div class="card-icon">
+          <i class="fas fa-users"></i>
+        </div>
         <div class="card-title">Total Students</div>
         <div id="totalStudents" class="card-value">—</div>
       </div>
-      <div class="card">
+      <div class="card animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
+        <div class="card-icon">
+          <i class="fas fa-book-open"></i>
+        </div>
         <div class="card-title">Active Courses</div>
         <div id="activeCourses" class="card-value">—</div>
       </div>
-      <div class="card">
+      <div class="card animate__animated animate__fadeInUp" style="animation-delay: 0.3s">
+        <div class="card-icon">
+          <i class="fas fa-clock"></i>
+        </div>
         <div class="card-title">Pending Applications</div>
         <div id="pendingApps" class="card-value">—</div>
       </div>
     </section>
 
-    <section class="sd-section">
-      <h2>Students</h2>
-      <div class="table-controls">
-        <input id="searchStudents" placeholder="Search by name or ID" />
+    <section class="sd-section animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
+      <div class="section-header">
+        <h2><i class="fas fa-user-graduate"></i> Students</h2>
       </div>
-      <table class="sd-table" id="studentsTable">
-        <thead>
-          <tr><th>Student ID</th><th>Name</th><th>Email</th><th>Age</th><th>Phone</th><th>Joined</th><th>Actions</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+      <div class="table-controls">
+        <div class="search-wrapper">
+          <i class="fas fa-search"></i>
+          <input id="searchStudents" placeholder="Search by name or ID" />
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table class="sd-table" id="studentsTable">
+          <thead>
+            <tr><th>Student ID</th><th>Name</th><th>Email</th><th>Age</th><th>Phone</th><th>Joined</th><th>Actions</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
     </section>
 
-    <section class="sd-section">
-      <h2>Team Members</h2>
+    <section class="sd-section animate__animated animate__fadeInUp" style="animation-delay: 0.5s">
+      <div class="section-header">
+        <h2><i class="fas fa-user-tie"></i> Team Members</h2>
+      </div>
       <ul id="teamList" class="team-list"></ul>
     </section>
 
-    <section class="sd-section sd-side">
-      <h3>Account</h3>
+    <section class="sd-section sd-side animate__animated animate__fadeInUp" style="animation-delay: 0.6s">
+      <div class="section-header">
+        <h3><i class="fas fa-user-circle"></i> Account</h3>
+      </div>
       <div id="staffInfo" class="staff-info">Loading...</div>
-      <button id="btnShowChangePassword" class="btn small">Change Password</button>
+      <button id="btnShowChangePassword" class="btn btn-small btn-animate">
+        <i class="fas fa-key"></i>
+        <span>Change Password</span>
+      </button>
     </section>
   </main>
 
   <!-- Change password modal -->
   <div id="modal" class="modal hidden">
-    <div class="modal-body">
-      <h3>Change Password</h3>
-      <form id="changePasswordForm">
-        <label>Current password<input type="password" id="currentPassword" required minlength="6"></label>
-        <label>New password<input type="password" id="newPassword" required minlength="6"></label>
-        <div class="modal-actions">
-          <button type="submit" class="btn">Save</button>
-          <button type="button" id="btnCloseModal" class="btn btn-ghost">Cancel</button>
-        </div>
-      </form>
+    <div class="modal-overlay"></div>
+    <div class="modal-content animate__animated animate__zoomIn">
+      <div class="modal-header">
+        <h3><i class="fas fa-lock"></i> Change Password</h3>
+        <button type="button" class="modal-close" id="btnCloseModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="changePasswordForm">
+          <div class="form-group">
+            <label><i class="fas fa-lock"></i> Current password</label>
+            <input type="password" id="currentPassword" required minlength="6" placeholder="Enter current password">
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-key"></i> New password</label>
+            <input type="password" id="newPassword" required minlength="6" placeholder="Enter new password">
+          </div>
+          <div class="modal-actions">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save"></i>
+              <span>Save</span>
+            </button>
+            <button type="button" id="btnCloseModalAlt" class="btn btn-ghost">
+              <i class="fas fa-times"></i>
+              <span>Cancel</span>
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="spinner"></div>
+    <span class="loading-text">Loading...</span>
   </div>
 
   <script src="js/utils.js"></script>
