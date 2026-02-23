@@ -1,6 +1,6 @@
 // Staff dashboard client-side logic
 (function(){
-  const apiBase = '/api/staff';
+  const apiBase = 'https://school-management-api-zeta-two.vercel.app/api/staff';
   const tokenKeyCandidates = ['staffToken','token'];
 
   function getToken(){
