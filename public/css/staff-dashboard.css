@@ -1,0 +1,40 @@
+/* Staff dashboard styles — school themed */
+:root{
+  --brand:#0b3d91; /* deep blue */
+  --accent:#f0c674; /* warm gold */
+  --muted:#6b7280;
+  --card:#ffffff;
+  --bg:#f7f9fc;
+}
+body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:var(--bg); color:#0f1724; margin:0}
+.sd-header{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:linear-gradient(90deg,var(--brand),#1444a3);color:#fff}
+.sd-brand{font-weight:700;font-size:1.1rem}
+.sd-nav .btn{margin-left:10px}
+.container{max-width:1100px;margin:28px auto;padding:0 16px}
+.sd-intro h1{margin:0 0 6px;color:var(--brand)}
+.muted{color:var(--muted);margin:0}
+.sd-cards{display:flex;gap:16px;margin:18px 0}
+.card{flex:1;background:var(--card);border-radius:8px;padding:18px;box-shadow:0 1px 4px rgba(12,20,40,0.06)}
+.card-title{font-size:0.85rem;color:var(--muted)}
+.card-value{font-size:1.8rem;font-weight:700;color:var(--brand);margin-top:6px}
+.sd-section{background:transparent;margin:18px 0;padding:0}
+.sd-table{width:100%;border-collapse:collapse;background:var(--card);border-radius:6px;overflow:hidden}
+.sd-table thead tr{background:#f3f6fb}
+.sd-table th,.sd-table td{padding:10px 12px;text-align:left;border-bottom:1px solid #eef2f6;font-size:0.95rem}
+.sd-table tbody tr:hover{background:#fcfdff}
+.btn{background:var(--brand);color:#fff;border:none;padding:8px 10px;border-radius:6px;cursor:pointer}
+.btn-ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.12)}
+.btn.small{padding:6px 8px;font-size:0.9rem}
+.table-controls{margin:8px 0}
+.table-controls input{padding:8px;border-radius:6px;border:1px solid #dbe6f6;width:260px}
+.team-list{list-style:none;padding:0;margin:8px 0}
+.team-list li{background:var(--card);padding:10px;margin-bottom:8px;border-radius:6px;display:flex;justify-content:space-between;align-items:center}
+.staff-info{background:var(--card);padding:12px;border-radius:6px}
+.sd-side{margin-top:18px}
+.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(8,12,20,0.45);}
+.modal.hidden{display:none}
+.modal-body{background:var(--card);padding:18px;border-radius:8px;min-width:320px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+.muted-small{color:var(--muted);font-size:0.9rem}
+.edit-input{width:90px;padding:6px;border-radius:4px;border:1px solid #d9e6fb}
+.action-row .btn{padding:6px 8px}

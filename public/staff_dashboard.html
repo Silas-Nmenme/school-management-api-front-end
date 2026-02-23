@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Staff Dashboard — School</title>
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/staff-dashboard.css">
+</head>
+<body>
+  <header class="sd-header">
+    <div class="sd-brand">School Admin</div>
+    <nav class="sd-nav">
+      <button id="btnRefresh" class="btn">Refresh</button>
+      <button id="btnLogout" class="btn btn-ghost">Logout</button>
+    </nav>
+  </header>
+
+  <main class="container sd-main">
+    <section class="sd-intro">
+      <h1>Staff Dashboard</h1>
+      <p class="muted">Welcome back — manage students, view team members, and handle routine tasks.</p>
+    </section>
+
+    <section class="sd-cards" aria-label="key-metrics">
+      <div class="card">
+        <div class="card-title">Total Students</div>
+        <div id="totalStudents" class="card-value">—</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Active Courses</div>
+        <div id="activeCourses" class="card-value">—</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Pending Applications</div>
+        <div id="pendingApps" class="card-value">—</div>
+      </div>
+    </section>
+
+    <section class="sd-section">
+      <h2>Students</h2>
+      <div class="table-controls">
+        <input id="searchStudents" placeholder="Search by name or ID" />
+      </div>
+      <table class="sd-table" id="studentsTable">
+        <thead>
+          <tr><th>Student ID</th><th>Name</th><th>Email</th><th>Age</th><th>Phone</th><th>Joined</th><th>Actions</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section class="sd-section">
+      <h2>Team Members</h2>
+      <ul id="teamList" class="team-list"></ul>
+    </section>
+
+    <section class="sd-section sd-side">
+      <h3>Account</h3>
+      <div id="staffInfo" class="staff-info">Loading...</div>
+      <button id="btnShowChangePassword" class="btn small">Change Password</button>
+    </section>
+  </main>
+
+  <!-- Change password modal -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-body">
+      <h3>Change Password</h3>
+      <form id="changePasswordForm">
+        <label>Current password<input type="password" id="currentPassword" required minlength="6"></label>
+        <label>New password<input type="password" id="newPassword" required minlength="6"></label>
+        <div class="modal-actions">
+          <button type="submit" class="btn">Save</button>
+          <button type="button" id="btnCloseModal" class="btn btn-ghost">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/staff-dashboard.js"></script>
+</body>
+</html>
