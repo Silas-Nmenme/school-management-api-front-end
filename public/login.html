@@ -410,10 +410,12 @@
         // Configuration: set `apiBase` if your API is served from a sub-path (e.g. '/api' or '/student-api')
         const apiBase = '';
 
-        const endpoints = {
-            admin: `${apiBase}/api/admin/login`,
-            staff: `${apiBase}/api/staff/login`,
-            student: `${apiBase}/api/students/login`
+
+        // Set these base paths to where those routers are mounted, the frontend will append `/login`.
+        const roleBases = {
+            admin: `${apiBase}/api/admin`,
+            staff: `${apiBase}/api/staff`,
+            student: `${apiBase}/api/students`
         };
 
         // Role selection
