@@ -567,6 +567,11 @@
                     } else if (selectedRole === 'admin') {
                         localStorage.setItem('adminToken', data.token);
                     }
+                    
+                    // Store staff-specific data
+                    if (selectedRole === 'staff' && data.staff) {
+                        localStorage.setItem('staffData', JSON.stringify(data.staff));
+                    }
 
                     // Show success message
                     showAlert('alert-success', 'Login successful! Redirecting...');

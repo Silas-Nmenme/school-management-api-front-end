@@ -4,6 +4,9 @@
   const apiBase = 'https://school-management-api-zeta-two.vercel.app/api/staff';
   const tokenKeyCandidates = ['staffToken','token'];
 
+  // Flag to prevent redirect loops
+  let isRedirecting = false;
+
   function getToken(){
     for (const k of tokenKeyCandidates) { const v = localStorage.getItem(k); if (v) return v; }
     return null;
@@ -15,10 +18,15 @@
   }
 
   function redirectToLogin(){
+    // Prevent redirect loops
+    if (isRedirecting) return;
+    isRedirecting = true;
+    
     console.warn('Token missing or auth failed; redirecting to login.');
     localStorage.removeItem('staffToken');
     localStorage.removeItem('token');
     localStorage.removeItem('userRole');
+    localStorage.removeItem('staffData');
     window.location.href = 'login.html';
   }
 
@@ -154,15 +162,36 @@
     });
   }
 
+  // Role-based access check - similar to admin dashboard
+  function checkAccess(){
+    const token = getToken();
+    const userRole = localStorage.getItem('userRole');
+    
+    console.log('Staff dashboard access check:', { token: !!token, userRole });
+    
+    if (!token || userRole !== 'staff') {
+      console.warn('Access denied: Invalid or missing token, or wrong role.');
+      redirectToLogin();
+      return false;
+    }
+    return true;
+  }
+
   function ensureAuth(){ 
     const token = getToken();
-    if (!token) {
-      console.warn('No token found on page load; redirecting to login.');
+    const userRole = localStorage.getItem('userRole');
+    
+    // Check both token and role
+    if (!token || userRole !== 'staff') {
+      console.warn('No valid token or wrong role found on page load; redirecting to login.');
       redirectToLogin(); 
     }
   }
 
-  async function fetchAll(){ ensureAuth(); await Promise.allSettled([fetchDashboard(), fetchStudents(), fetchTeam()]); }
+  async function fetchAll(){ 
+    if (!checkAccess()) return;
+    await Promise.allSettled([fetchDashboard(), fetchStudents(), fetchTeam()]); 
+  }
 
   // init
   document.addEventListener('DOMContentLoaded', ()=>{ try{ wireUI(); fetchAll(); }catch(e){ console.error(e); } });
