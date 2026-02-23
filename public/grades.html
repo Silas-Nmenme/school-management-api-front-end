@@ -169,6 +169,35 @@
         .grade-C { color: #ffc107; }
         .grade-D { color: #fd7e14; }
         .grade-F { color: #dc3545; }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 991px) {
+            .navbar { padding: 10px 15px; }
+            .navbar-nav .nav-link { margin: 0 10px; font-size: 0.9rem; }
+            .dashboard-header { padding: 20px; }
+            .dashboard-header h1 { font-size: 2rem; }
+            .student-info { position: static; text-align: center; margin-top: 15px; }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container { margin: 10px; }
+            .dashboard-header h1 { font-size: 1.5rem; }
+            .dashboard-body { padding: 20px; }
+            .stat-card { padding: 15px; margin-bottom: 15px; }
+            .stat-number { font-size: 1.5rem; }
+            .icon-large { font-size: 2rem; }
+            .grade-table { display: block; overflow-x: auto; white-space: nowrap; }
+            .grade-table th, .grade-table td { padding: 8px; font-size: 0.9rem; }
+        }
+
+        @media (max-width: 576px) {
+            .navbar-brand { font-size: 1.2rem; }
+            .logout-btn { padding: 8px 12px; font-size: 0.85rem; }
+            .dashboard-header h1 { font-size: 1.25rem; }
+            .card-header { padding: 15px; }
+            .card-body { padding: 15px; }
+            .btn-custom { padding: 10px 15px; font-size: 0.9rem; width: 100%; margin-bottom: 10px; }
+        }
     </style>
 </head>
 <body>

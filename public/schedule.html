@@ -208,6 +208,36 @@
             color: white;
             transform: translateY(-2px);
         }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 991px) {
+            .navbar { padding: 10px 15px; }
+            .navbar-nav .nav-link { margin: 0 10px; font-size: 0.9rem; }
+            .dashboard-header { padding: 20px; }
+            .dashboard-header h1 { font-size: 2rem; }
+            .student-info { position: static; text-align: center; margin-top: 15px; }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container { margin: 10px; }
+            .dashboard-header h1 { font-size: 1.5rem; }
+            .dashboard-body { padding: 20px; }
+            .semester-btn { padding: 8px 15px; font-size: 0.9rem; }
+            .timetable { display: block; overflow-x: auto; }
+            .timetable th, .timetable td { padding: 8px 4px; font-size: 0.8rem; }
+            .timetable .time-column { width: 80px; font-size: 0.7rem; }
+            .course-name { font-size: 0.8rem; }
+            .course-details { font-size: 0.7rem; }
+        }
+
+        @media (max-width: 576px) {
+            .navbar-brand { font-size: 1.2rem; }
+            .logout-btn { padding: 8px 12px; font-size: 0.85rem; }
+            .dashboard-header h1 { font-size: 1.25rem; }
+            .card-header { padding: 15px; }
+            .card-body { padding: 15px; }
+            .semester-btn { padding: 6px 12px; font-size: 0.8rem; margin: 0 5px 8px 0; }
+        }
     </style>
 </head>
 <body>
