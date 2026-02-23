@@ -407,6 +407,15 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
     <script>
+        // Configuration: set `apiBase` if your API is served from a sub-path (e.g. '/api' or '/student-api')
+        const apiBase = '';
+
+        const endpoints = {
+            admin: `${apiBase}/api/admin/login`,
+            staff: `${apiBase}/api/staff/login`,
+            student: `${apiBase}/api/students/login`
+        };
+
         // Role selection
         document.querySelectorAll('.role-btn').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -454,11 +463,8 @@
                 const email = formData.get('email');
                 const password = formData.get('password');
                 
-                // Determine API endpoint based on role (use relative endpoints)
-                let apiEndpoint;
-                if (selectedRole === 'admin') apiEndpoint = '/api/admin/login';
-                else if (selectedRole === 'staff') apiEndpoint = '/api/staff/login';
-                else apiEndpoint = '/api/students/login';
+                // Determine API endpoint based on role using configured endpoints
+                const apiEndpoint = endpoints[selectedRole] || endpoints.student;
                 
                 const response = await fetch(apiEndpoint, {
                     method: 'POST',
@@ -473,24 +479,21 @@
 
                 // Check if the response is ok (status 200-299)
                 if (!response.ok) {
-                    let errorMessage = 'Login failed. Please try again.';
-                    if (response.status === 404) {
-                        errorMessage = 'The login endpoint for admin is not available. Please check the server configuration.';
-                    } else if (response.status === 500) {
-                        errorMessage = 'Server error. Please try again later.';
-                    } else {
-                        // Try to get error message from response if possible
-                        try {
-                            const errorData = await response.json();
-                            errorMessage = errorData.message || errorMessage;
-                        } catch (jsonError) {
-                            // If JSON parsing fails, use default message
-                            console.warn('Failed to parse error response as JSON:', jsonError);
+                    let errorMessage = `Login failed: ${response.status} ${response.statusText} (endpoint: ${apiEndpoint})`;
+                    // Try to get error message from response if possible
+                    try {
+                        const errorData = await response.json();
+                        if (errorData && errorData.message) {
+                            errorMessage = errorData.message + ` (endpoint: ${apiEndpoint})`;
                         }
+                    } catch (jsonError) {
+                        // ignore JSON parse errors
                     }
+
                     alertMessage.className = 'alert alert-danger';
                     alertMessage.textContent = errorMessage;
                     alertMessage.style.display = 'block';
+                    console.error('Login error response', { endpoint: apiEndpoint, status: response.status, statusText: response.statusText });
                     return; // Exit early on error
                 }
 
@@ -527,17 +530,17 @@
                         } else {
                             window.location.href = 'student_dashboard.html';
                         }
-                    }, 1500);
+                    }, 800);
                 } else {
                     // Show error message if no token
                     alertMessage.className = 'alert alert-danger';
-                    alertMessage.textContent = data.message || 'Login failed. Please try again.';
+                    alertMessage.textContent = (data && data.message) ? data.message : 'Login failed. Please try again.';
                     alertMessage.style.display = 'block';
                 }
             } catch (error) {
                 console.error('Login error:', error);
                 alertMessage.className = 'alert alert-danger';
-                alertMessage.textContent = 'Network error. Please check your connection and try again.';
+                alertMessage.textContent = `Network error. Please check your connection and try again. (${error.message})`;
                 alertMessage.style.display = 'block';
             } finally {
                 // Hide loading state
