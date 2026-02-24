@@ -7,7 +7,7 @@
 // Change this based on your backend location:
 // LOCAL: 'http://localhost:5000/api' or 'http://localhost:3000/api'
 // VERCEL: 'https://school-management-api-zeta-two.vercel.app/api'
-const API_BASE = 'https://school-management-api-zeta-two.vercel.app'; // <-- Change this to match your backend
+const API_BASE = 'https://school-management-api-zeta-two.vercel.app/api'; // <-- Change this to match your backend
 
 // API Connectivity Status
 let apiConnected = null;
