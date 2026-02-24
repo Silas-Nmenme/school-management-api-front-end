@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Log - Bethel College</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary-color: #667eea;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --card-shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .dashboard-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin: 15px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .dashboard-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .dashboard-header h1 {
+            margin: 0;
+            font-size: 1.75rem;
+            font-weight: bold;
+        }
+        
+        .dashboard-header p {
+            margin: 8px 0 0;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .student-info {
+            position: static;
+            text-align: center;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .dashboard-body {
+            padding: 20px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-shadow-hover);
+        }
+        
+        .card-header {
+            background: var(--primary-gradient);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 15px;
+        }
+        
+        .card-header h5 {
+            margin: 0;
+            font-size: 1rem;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .btn-custom {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 10px;
+            padding: 10px 16px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+        
+        .btn-back {
+            background: #6c757d;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 16px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-back:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            color: white;
+        }
+        
+        .logout-btn {
+            background: #dc3545;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 16px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+        
+        .logout-btn:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            color: white;
+        }
+        
+        .navbar {
+            background: var(--primary-gradient);
+            padding: 12px 15px;
+        }
+        
+        .navbar-brand {
+            color: white !important;
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
+        
+        .navbar-toggler {
+            border: none;
+            padding: 8px 12px;
+        }
+        
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+        
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+        
+        .navbar-nav .nav-link {
+            color: white !important;
+            margin: 5px 0;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 8px 0;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            color: #f8f9fa !important;
+        }
+        
+        .navbar-collapse {
+            text-align: center;
+            padding-top: 10px;
+        }
+        
+        .nav-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .activity-item {
+            background: #f8f9fa;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .activity-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .activity-item.success {
+            border-left-color: #28a745;
+        }
+        
+        .activity-item.warning {
+            border-left-color: #ffc107;
+        }
+        
+        .activity-item.info {
+            border-left-color: #17a2b8;
+        }
+        
+        .activity-item.danger {
+            border-left-color: #dc3545;
+        }
+        
+        .activity-icon {
+            font-size: 1.25rem;
+            margin-right: 12px;
+            width: 30px;
+            text-align: center;
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        
+        .activity-description {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+        
+        .activity-time {
+            color: #adb5bd;
+            font-size: 0.8rem;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-btn {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            border-radius: 20px;
+            padding: 6px 16px;
+            color: var(--primary-color);
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--primary-gradient);
+            border-color: transparent;
+            color: white;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: center;
+            width: 100%;
+            font-size: 0.85rem;
+        }
+        
+        .footer p {
+            margin: 5px 0;
+        }
+        
+        .text-muted {
+            color: #6c757d !important;
+            font-size: 0.85rem;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 15px;
+        }
+        
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .stat-card h5 {
+            font-size: 0.9rem;
+            margin: 5px 0 0;
+        }
+        
+        .icon-large {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        @media (min-width: 768px) {
+            .dashboard-container {
+                margin: 20px;
+            }
+            
+            .dashboard-header {
+                padding: 30px;
+            }
+            
+            .dashboard-header h1 {
+                font-size: 2rem;
+            }
+            
+            .student-info {
+                position: absolute;
+                top: 20px;
+                right: 30px;
+                text-align: right;
+                margin-top: 0;
+                padding-top: 0;
+                border-top: none;
+            }
+            
+            .dashboard-body {
+                padding: 30px;
+            }
+            
+            .card-body {
+                padding: 25px;
+            }
+            
+            .card-header {
+                padding: 18px;
+            }
+            
+            .card-header h5 {
+                font-size: 1.1rem;
+            }
+            
+            .navbar {
+                padding: 15px 30px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.5rem;
+            }
+            
+            .navbar-nav .nav-link {
+                margin: 0 15px;
+                padding: 0;
+            }
+            
+            .nav-actions {
+                flex-direction: row;
+                margin-top: 0;
+            }
+            
+            .footer {
+                padding: 20px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .dashboard-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .dashboard-body {
+                padding: 40px;
+            }
+            
+            .card-body {
+                padding: 30px;
+            }
+            
+            .btn-custom {
+                padding: 12px 20px;
+            }
+        }
+        
+        @media (max-width: 575.98px) {
+            .dashboard-container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .dashboard-header {
+                padding: 20px 15px;
+            }
+            
+            .dashboard-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .dashboard-body {
+                padding: 15px;
+            }
+            
+            .card {
+                margin-bottom: 15px;
+                border-radius: 12px;
+            }
+            
+            .card-header {
+                padding: 12px 15px;
+                border-radius: 12px 12px 0 0;
+            }
+            
+            .card-header h5 {
+                font-size: 0.95rem;
+            }
+            
+            .card-body {
+                padding: 15px;
+            }
+            
+            .activity-item {
+                padding: 12px;
+            }
+            
+            .activity-icon {
+                font-size: 1rem;
+                width: 25px;
+            }
+            
+            .footer {
+                padding: 12px 10px;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><i class="fas fa-graduation-cap me-2"></i>Bethel College</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile.html"><i class="fas fa-user me-1"></i>Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="courses.html"><i class="fas fa-book me-1"></i>Courses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="grades.html"><i class="fas fa-chart-line me-1"></i>Grades</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="student_dashboard.html"><i class="fas fa-home me-1"></i>Dashboard</a>
+                    </li>
+                </ul>
+                <div class="nav-actions">
+                    <button class="btn logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt me-1"></i>Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1><i class="fas fa-history me-2"></i>Activity Log</h1>
+            <p>View your complete activity history</p>
+            <div class="student-info">
+                <strong id="studentName">John Doe</strong><br>
+                <small>Student ID: 2023001</small>
+            </div>
+        </div>
+        <div class="dashboard-body">
+            <!-- Back Button -->
+            <a href="student_dashboard.html" class="btn-back mb-4">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+            
+            <!-- Activity Stats -->
+            <div class="row mb-4 g-3">
+                <div class="col-12 col-sm-4">
+                    <div class="card stat-card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-list icon-large d-block" style="color: var(--primary-color);"></i>
+                            <div class="stat-number" id="totalActivities">0</div>
+                            <h5>Total Activities</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="card stat-card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-check-circle icon-large d-block" style="color: #28a745;"></i>
+                            <div class="stat-number" id="enrollmentCount">0</div>
+                            <h5>Enrollments</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="card stat-card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-chart-line icon-large d-block" style="color: #17a2b8;"></i>
+                            <div class="stat-number" id="gradeCount">0</div>
+                            <h5>Grade Updates</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Filter Buttons -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Filter Activities</h5>
+                </div>
+                <div class="card-body">
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">All Activities</button>
+                        <button class="filter-btn" data-filter="enrollment">Enrollments</button>
+                        <button class="filter-btn" data-filter="grade">Grades</button>
+                        <button class="filter-btn" data-filter="download">Downloads</button>
+                        <button class="filter-btn" data-filter="login">Logins</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Activity List -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-list-alt me-2"></i>All Activities</h5>
+                </div>
+                <div class="card-body">
+                    <div id="activityList">
+                        <div class="text-center py-4">
+                            <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
+                            <p class="mt-2 text-muted">Loading activities...</p>
+                        </div>
+                    </div>
+                    <div id="noActivityMessage" style="display: none;">
+                        <p class="text-muted text-center py-4">No activity to display.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p class="mb-1">&copy; 2026 Bethel College. All rights reserved.</p>
+        <p class="mb-1">
+            <a href="contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a>
+        </p>
+        <p class="text-muted mb-0">123 College Ave, Bethel, IN 46501 | (555) 123-4567</p>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        // Global activity data
+        let allActivities = [];
+        
+        // Role-based access check and load student data
+        document.addEventListener('DOMContentLoaded', async function() {
+            const userRole = localStorage.getItem('userRole');
+            const token = localStorage.getItem('token');
+
+            if (!token || userRole !== 'student') {
+                alert('Access denied. Please log in as a student.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Fetch student details from API
+            try {
+                const response = await fetch('https://school-management-api-zeta-two.vercel.app/api/students/profile', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const responseData = await response.json();
+                    const profile = responseData.profile;
+                    const studentName = `${profile.Firstname || ''} ${profile.Lastname || ''}`.trim() || 'Student';
+                    const studentId = profile.studentId || 'N/A';
+
+                    // Set student name and ID
+                    document.getElementById('studentName').textContent = studentName;
+                    document.querySelector('.student-info small').textContent = `Student ID: ${studentId}`;
+                } else {
+                    throw new Error('Failed to fetch student data');
+                }
+            } catch (error) {
+                console.error('Error fetching student data:', error);
+                // Fallback to localStorage or dummy data
+                const studentName = localStorage.getItem('studentName') || 'John Doe';
+                document.getElementById('studentName').textContent = studentName;
+            }
+            
+            // Fetch full activity log
+            fetchAllActivities();
+        });
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('studentName');
+            window.location.href = 'login.html';
+        });
+
+        // Fetch all activities from API
+        async function fetchAllActivities() {
+            const token = localStorage.getItem('token');
+            const activityList = document.getElementById('activityList');
+            const noActivityMessage = document.getElementById('noActivityMessage');
+
+            try {
+                const response = await fetch('https://school-management-api-zeta-two.vercel.app/api/students/recent-activity', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const activities = data.recentActivity;
+
+                    if (activities && activities.length > 0) {
+                        // Process activities
+                        allActivities = activities.map(function(activity) {
+                            // Handle both string and object activity formats
+                            let activityText = '';
+                            let activityType = '';
+                            let activityTime = '';
+                            
+                            if (typeof activity === 'string') {
+                                activityText = activity;
+                            } else if (typeof activity === 'object') {
+                                activityText = activity.description || activity.message || activity.text || JSON.stringify(activity);
+                                activityType = activity.type || activity.category || '';
+                                activityTime = activity.timestamp || activity.time || activity.date || '';
+                            }
+                            
+                            return {
+                                text: activityText,
+                                type: activityType,
+                                time: activityTime
+                            };
+                        });
+                        
+                        displayActivities(allActivities);
+                        updateStats(allActivities);
+                    } else {
+                        // No activities
+                        activityList.style.display = 'none';
+                        noActivityMessage.style.display = 'block';
+                    }
+                } else if (response.status === 404) {
+                    activityList.innerHTML = '<p class="text-muted">Student not found.</p>';
+                } else {
+                    throw new Error('Failed to fetch activities');
+                }
+            } catch (error) {
+                console.error('Error getting activities:', error);
+                activityList.innerHTML = '<p class="text-danger">Unable to load activities. Please try again later.</p>';
+            }
+        }
+
+        // Display activities in the list
+        function displayActivities(activities) {
+            const activityList = document.getElementById('activityList');
+            const noActivityMessage = document.getElementById('noActivityMessage');
+            
+            if (activities.length === 0) {
+                activityList.style.display = 'none';
+                noActivityMessage.style.display = 'block';
+                return;
+            }
+            
+            activityList.style.display = 'block';
+            noActivityMessage.style.display = 'none';
+            activityList.innerHTML = '';
+            
+            activities.forEach(function(activity) {
+                const div = document.createElement('div');
+                
+                // Determine icon and color based on activity type
+                let iconClass = 'fa-info-circle';
+                let iconColor = '#667eea';
+                let borderClass = '';
+                
+                const type = activity.type ? activity.type.toLowerCase() : '';
+                
+                if (type === 'enrollment' || type === 'enrolled') {
+                    iconClass = 'fa-check-circle';
+                    iconColor = '#28a745';
+                    borderClass = 'success';
+                } else if (type === 'grade' || type === 'grades') {
+                    iconClass = 'fa-chart-line';
+                    iconColor = '#17a2b8';
+                    borderClass = 'info';
+                } else if (type === 'download') {
+                    iconClass = 'fa-download';
+                    iconColor = '#6c757d';
+                    borderClass = '';
+                } else if (type === 'login' || type === 'signin') {
+                    iconClass = 'fa-sign-in-alt';
+                    iconColor = '#17a2b8';
+                    borderClass = 'info';
+                } else if (type === 'logout' || type === 'signout') {
+                    iconClass = 'fa-sign-out-alt';
+                    iconColor = '#dc3545';
+                    borderClass = 'danger';
+                } else if (type === 'warning' || type === 'alert') {
+                    iconClass = 'fa-exclamation-triangle';
+                    iconColor = '#ffc107';
+                    borderClass = 'warning';
+                }
+                
+                div.className = 'activity-item ' + borderClass;
+                div.innerHTML = '<div class="d-flex align-items-start">' +
+                    '<i class="fas ' + iconClass + ' activity-icon" style="color: ' + iconColor + ';"></i>' +
+                    '<div class="activity-content">' +
+                    '<div class="activity-title">' + formatActivityType(activity.type) + '</div>' +
+                    '<div class="activity-description">' + activity.text + '</div>' +
+                    (activity.time ? '<div class="activity-time"><i class="far fa-clock me-1"></i>' + activity.time + '</div>' : '') +
+                    '</div></div>';
+                activityList.appendChild(div);
+            });
+        }
+
+        // Format activity type for display
+        function formatActivityType(type) {
+            if (!type) return 'Activity';
+            
+            const typeStr = type.toString().toLowerCase();
+            
+            if (typeStr === 'enrollment' || typeStr === 'enrolled') return 'Course Enrollment';
+            if (typeStr === 'grade' || typeStr === 'grades') return 'Grade Update';
+            if (typeStr === 'download') return 'File Download';
+            if (typeStr === 'login' || typeStr === 'signin') return 'Login';
+            if (typeStr === 'logout' || typeStr === 'signout') return 'Logout';
+            
+            // Capitalize first letter
+            return type.charAt(0).toUpperCase() + type.slice(1);
+        }
+
+        // Update statistics
+        function updateStats(activities) {
+            document.getElementById('totalActivities').textContent = activities.length;
+            
+            let enrollments = 0;
+            let grades = 0;
+            
+            activities.forEach(function(a) {
+                const type = a.type ? a.type.toLowerCase() : '';
+                if (type === 'enrollment' || type === 'enrolled') {
+                    enrollments++;
+                }
+                if (type === 'grade' || type === 'grades') {
+                    grades++;
+                }
+            });
+            
+            document.getElementById('enrollmentCount').textContent = enrollments;
+            document.getElementById('gradeCount').textContent = grades;
+        }
+
+        // Filter button click handlers
+        document.querySelectorAll('.filter-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                // Update active state
+                document.querySelectorAll('.filter-btn').forEach(function(b) {
+                    b.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                const filter = this.dataset.filter;
+                
+                if (filter === 'all') {
+                    displayActivities(allActivities);
+                } else {
+                    const filtered = allActivities.filter(function(activity) {
+                        const type = activity.type ? activity.type.toLowerCase() : '';
+                        return type === filter;
+                    });
+                    displayActivities(filtered);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

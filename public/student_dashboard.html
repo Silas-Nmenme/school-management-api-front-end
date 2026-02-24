@@ -858,18 +858,29 @@
                             let iconClass = 'fa-info-circle';
                             let iconColor = 'text-primary';
                             
-                            if (activity.type === 'enrollment' || activity.type === 'enrolled') {
+                            // Handle both string and object activity formats
+                            let activityText = '';
+                            let activityType = '';
+                            
+                            if (typeof activity === 'string') {
+                                activityText = activity;
+                            } else if (typeof activity === 'object') {
+                                activityText = activity.description || activity.message || activity.text || JSON.stringify(activity);
+                                activityType = activity.type || activity.category || '';
+                            }
+                            
+                            if (activityType === 'enrollment' || activityType === 'enrolled') {
                                 iconClass = 'fa-check-circle';
                                 iconColor = 'text-success';
-                            } else if (activity.type === 'grade' || activity.type === 'grades') {
+                            } else if (activityType === 'grade' || activityType === 'grades') {
                                 iconClass = 'fa-chart-line';
                                 iconColor = 'text-primary';
-                            } else if (activity.type === 'download') {
+                            } else if (activityType === 'download') {
                                 iconClass = 'fa-download';
                                 iconColor = 'text-info';
                             }
                             
-                            li.innerHTML = `<i class="fas ${iconClass} ${iconColor} me-2"></i>${activity.description || activity}`;
+                            li.innerHTML = `<i class="fas ${iconClass} ${iconColor} me-2"></i>${activityText}`;
                             recentActivityList.appendChild(li);
                         });
                     } else {
