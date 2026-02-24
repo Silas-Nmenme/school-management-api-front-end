@@ -854,33 +854,17 @@
                         // Display each activity
                         recentActivity.forEach(activity => {
                             const li = document.createElement('li');
-                            // Determine icon based on activity type
-                            let iconClass = 'fa-info-circle';
-                            let iconColor = 'text-primary';
                             
                             // Handle both string and object activity formats
                             let activityText = '';
-                            let activityType = '';
                             
                             if (typeof activity === 'string') {
                                 activityText = activity;
                             } else if (typeof activity === 'object') {
                                 activityText = activity.description || activity.message || activity.text || JSON.stringify(activity);
-                                activityType = activity.type || activity.category || '';
                             }
                             
-                            if (activityType === 'enrollment' || activityType === 'enrolled') {
-                                iconClass = 'fa-check-circle';
-                                iconColor = 'text-success';
-                            } else if (activityType === 'grade' || activityType === 'grades') {
-                                iconClass = 'fa-chart-line';
-                                iconColor = 'text-primary';
-                            } else if (activityType === 'download') {
-                                iconClass = 'fa-download';
-                                iconColor = 'text-info';
-                            }
-                            
-                            li.innerHTML = `<i class="fas ${iconClass} ${iconColor} me-2"></i>${activityText}`;
+                            li.innerHTML = activityText;
                             recentActivityList.appendChild(li);
                         });
                     } else {

@@ -764,9 +764,7 @@
                 div.innerHTML = '<div class="d-flex align-items-start">' +
                     '<i class="fas ' + iconClass + ' activity-icon" style="color: ' + iconColor + ';"></i>' +
                     '<div class="activity-content">' +
-                    '<div class="activity-title">' + formatActivityType(activity.type) + '</div>' +
                     '<div class="activity-description">' + activity.text + '</div>' +
-                    (activity.time ? '<div class="activity-time"><i class="far fa-clock me-1"></i>' + activity.time + '</div>' : '') +
                     '</div></div>';
                 activityList.appendChild(div);
             });
