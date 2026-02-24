@@ -828,6 +828,120 @@
         // Call fetchExams when DOM is loaded
         fetchExams();
 
+        // Helper function to extract meaningful activity details
+        function extractActivityDetails(activity) {
+            // Handle string format
+            if (typeof activity === 'string') {
+                return activity.trim() || 'Activity recorded';
+            }
+            
+            // Handle object format
+            if (typeof activity === 'object' && activity !== null) {
+                // First, check for direct descriptive fields
+                const directFields = ['description', 'message', 'text', 'activity', 'activityText', 'details'];
+                for (const field of directFields) {
+                    if (activity[field] && typeof activity[field] === 'string' && activity[field].trim()) {
+                        return activity[field].trim();
+                    }
+                }
+                
+                // Check for type-based descriptions
+                const type = (activity.type || activity.activityType || '').toLowerCase();
+                const courseName = activity.courseName || activity.course?.name || activity.course || '';
+                const gradeValue = activity.grade || activity.gradeValue || activity.grade?.grade || '';
+                const gradeSubject = activity.subject || activity.course || '';
+                const examName = activity.examName || activity.exam?.name || activity.exam || '';
+                const assignmentName = activity.assignmentName || activity.assignment?.name || activity.assignment || '';
+                const fileName = activity.fileName || activity.file || '';
+                
+                if (type === 'enrollment' || type === 'enrolled' || type.includes('enroll')) {
+                    if (courseName && typeof courseName === 'string' && courseName.trim()) {
+                        return `Enrolled in ${courseName.trim()}`;
+                    }
+                    return 'Course enrollment';
+                }
+                
+                if (type === 'grade' || type === 'grades' || type.includes('grade')) {
+                    if (gradeValue && gradeSubject && typeof gradeSubject === 'string' && gradeSubject.trim()) {
+                        return `Grade ${gradeValue} received for ${gradeSubject.trim()}`;
+                    }
+                    if (gradeValue) {
+                        return `Grade posted: ${gradeValue}`;
+                    }
+                    if (gradeSubject && typeof gradeSubject === 'string' && gradeSubject.trim()) {
+                        return `Grade posted for ${gradeSubject.trim()}`;
+                    }
+                    return 'Grade update';
+                }
+                
+                if (type === 'exam' || type === 'exam registration' || type.includes('exam')) {
+                    if (examName && typeof examName === 'string' && examName.trim()) {
+                        return `Registered for exam: ${examName.trim()}`;
+                    }
+                    return 'Exam registration';
+                }
+                
+                if (type === 'assignment' || type === 'submission' || type.includes('assignment')) {
+                    if (assignmentName && typeof assignmentName === 'string' && assignmentName.trim()) {
+                        return `Assignment submitted: ${assignmentName.trim()}`;
+                    }
+                    return 'Assignment submission';
+                }
+                
+                if (type === 'login' || type === 'signin' || type.includes('login')) {
+                    return 'Logged into the system';
+                }
+                
+                if (type === 'logout' || type === 'signout' || type.includes('logout')) {
+                    return 'Logged out of the system';
+                }
+                
+                if (type === 'download' || type.includes('download')) {
+                    if (fileName && typeof fileName === 'string' && fileName.trim()) {
+                        return `Downloaded: ${fileName.trim()}`;
+                    }
+                    return 'File downloaded';
+                }
+                
+                // Try to get values from remaining fields
+                const meaningfulParts = [];
+                const fieldsToSkip = ['action', 'timestamp', 'details', 'ID', 'id', '__v', '_id', 'studentId', 'updatedAt', 'createdAt', 'actionType', 'type', 'activityType'];
+                
+                for (const [key, value] of Object.entries(activity)) {
+                    // Skip unwanted fields
+                    if (fieldsToSkip.includes(key)) {
+                        continue;
+                    }
+                    
+                    // Skip if value is just an ID (24-character hex string or numeric ID)
+                    if (typeof value === 'string' && (/^[0-9a-fA-F]{24}$/.test(value) || /^\d+$/.test(value))) {
+                        continue;
+                    }
+                    
+                    // Skip empty values
+                    if (!value) {
+                        continue;
+                    }
+                    
+                    // Add meaningful string values
+                    if (typeof value === 'string' && value.trim()) {
+                        meaningfulParts.push(value.trim());
+                    } else if (typeof value === 'number') {
+                        meaningfulParts.push(value.toString());
+                    }
+                }
+                
+                if (meaningfulParts.length > 0) {
+                    return meaningfulParts.join(' - ');
+                }
+                
+                // Fallback
+                return 'Activity recorded';
+            }
+            
+            return 'Activity recorded';
+        }
+
         // Fetch recent activity from API
         async function fetchRecentActivity() {
             const token = localStorage.getItem('token');
@@ -854,19 +968,7 @@
                         // Display each activity
                         recentActivity.forEach(activity => {
                             const li = document.createElement('li');
-                            
-                            // Handle both string and object activity formats
-                            // Filter out unwanted fields: action, timestamp, details, ID
-                            let activityText = '';
-                            
-                            if (typeof activity === 'string') {
-                                activityText = activity;
-                            } else if (typeof activity === 'object') {
-                                // Create a clean copy without unwanted fields
-                                const { action, timestamp, details, ID, id, ...cleanActivity } = activity;
-                                activityText = cleanActivity.description || cleanActivity.message || cleanActivity.text || Object.values(cleanActivity).filter(v => typeof v === 'string').join(' - ') || 'Activity recorded';
-                            }
-                            
+                            const activityText = extractActivityDetails(activity);
                             li.innerHTML = activityText;
                             recentActivityList.appendChild(li);
                         });
