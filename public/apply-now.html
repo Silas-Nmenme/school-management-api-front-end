@@ -525,23 +525,8 @@
                     <h5><i class="fas fa-graduation-cap me-2"></i>Program of Interest</h5>
                     <div class="form-group">
                         <label for="faculty" class="form-label"><i class="fas fa-university"></i>Faculty</label>
-<select class="form-control" id="faculty" name="faculty" required>
-                            <option value="">Choose a faculty...</option>
-                            <option value="Science">Faculty of Science</option>
-                            <option value="Engineering">Faculty of Engineering</option>
-                            <option value="BusinessManagement">Faculty of Business & Management Sciences</option>
-                            <option value="ArtsHumanities">Faculty of Arts & Humanities</option>
-                            <option value="SocialSciences">Faculty of Social Sciences</option>
-                            <option value="HealthSciences">Faculty of Health Sciences</option>
-                            <option value="Law">Faculty of Law</option>
-                            <option value="Agriculture">Faculty of Agriculture</option>
-                            <option value="Education">Faculty of Education</option>
-                            <option value="EnvironmentalSciences">Faculty of Environmental Sciences</option>
-                            <option value="InformationDigital">Faculty of Information & Digital Technologies</option>
-                            <option value="TransportLogistics">Faculty of Transport & Logistics</option>
-                            <option value="CreativeMedia">Faculty of Creative & Media Technologies</option>
-                            <option value="AdvancedResearch">Faculty of Advanced Research & Innovation</option>
-                            <option value="ProfessionalStudies">Faculty of Professional Studies</option>
+                        <select class="form-control" id="faculty" name="faculty" required>
+                            <option value="">Loading faculties...</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -578,6 +563,8 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- API Config -->
+    <script src="js/api-config.js"></script>
     <!-- Custom JS -->
     <script>
         // Helper functions moved from CSS block
@@ -634,268 +621,70 @@
             if (timeout > 0) setTimeout(() => { alertMessage.style.display = 'none'; }, timeout);
         }
 
-        // Program data structure
-        const programs = {
-            Science: {
-                'Computer Science': ['BSc Computer Science', 'MSc Computer Science', 'PhD Computer Science'],
-                'Software Engineering': ['BSc Software Engineering', 'MSc Software Engineering', 'PhD Software Engineering'],
-                'Information Systems': ['BSc Information Systems', 'MSc Information Systems', 'PhD Information Systems'],
-                'Cybersecurity': ['BSc Cybersecurity', 'MSc Cybersecurity', 'PhD Cybersecurity'],
-                'Artificial Intelligence': ['BSc Artificial Intelligence', 'MSc Artificial Intelligence', 'PhD Artificial Intelligence'],
-                'Data Science': ['BSc Data Science', 'MSc Data Science', 'PhD Data Science'],
-                'Mathematics': ['BSc Mathematics', 'MSc Mathematics', 'PhD Mathematics'],
-                'Applied Mathematics': ['BSc Applied Mathematics', 'MSc Applied Mathematics', 'PhD Applied Mathematics'],
-                'Statistics': ['BSc Statistics', 'MSc Statistics', 'PhD Statistics'],
-                'Actuarial Science': ['BSc Actuarial Science', 'MSc Actuarial Science', 'PhD Actuarial Science'],
-                'Physics': ['BSc Physics', 'MSc Physics', 'PhD Physics'],
-                'Applied Physics': ['BSc Applied Physics', 'MSc Applied Physics', 'PhD Applied Physics'],
-                'Medical Physics': ['BSc Medical Physics', 'MSc Medical Physics', 'PhD Medical Physics'],
-                'Chemistry': ['BSc Chemistry', 'MSc Chemistry', 'PhD Chemistry'],
-                'Industrial Chemistry': ['BSc Industrial Chemistry', 'MSc Industrial Chemistry', 'PhD Industrial Chemistry'],
-                'Biochemistry': ['BSc Biochemistry', 'MSc Biochemistry', 'PhD Biochemistry'],
-                'Biology': ['BSc Biology', 'MSc Biology', 'PhD Biology'],
-                'Microbiology': ['BSc Microbiology', 'MSc Microbiology', 'PhD Microbiology'],
-                'Biotechnology': ['BSc Biotechnology', 'MSc Biotechnology', 'PhD Biotechnology'],
-                'Environmental Science': ['BSc Environmental Science', 'MSc Environmental Science', 'PhD Environmental Science']
-            },
-            Engineering: {
-                'Mechanical Engineering': ['BEng Mechanical Engineering', 'MEng Mechanical Engineering', 'PhD Mechanical Engineering'],
-                'Mechatronics Engineering': ['BEng Mechatronics Engineering', 'MEng Mechatronics Engineering', 'PhD Mechatronics Engineering'],
-                'Automotive Engineering': ['BEng Automotive Engineering', 'MEng Automotive Engineering', 'PhD Automotive Engineering'],
-                'Civil Engineering': ['BEng Civil Engineering', 'MEng Civil Engineering', 'PhD Civil Engineering'],
-                'Structural Engineering': ['BEng Structural Engineering', 'MEng Structural Engineering', 'PhD Structural Engineering'],
-                'Building Engineering': ['BEng Building Engineering', 'MEng Building Engineering', 'PhD Building Engineering'],
-                'Electrical Engineering': ['BEng Electrical Engineering', 'MEng Electrical Engineering', 'PhD Electrical Engineering'],
-                'Electronics Engineering': ['BEng Electronics Engineering', 'MEng Electronics Engineering', 'PhD Electronics Engineering'],
-                'Computer Engineering': ['BEng Computer Engineering', 'MEng Computer Engineering', 'PhD Computer Engineering'],
-                'Telecommunications Engineering': ['BEng Telecommunications Engineering', 'MEng Telecommunications Engineering', 'PhD Telecommunications Engineering'],
-                'Chemical Engineering': ['BEng Chemical Engineering', 'MEng Chemical Engineering', 'PhD Chemical Engineering'],
-                'Petroleum Engineering': ['BEng Petroleum Engineering', 'MEng Petroleum Engineering', 'PhD Petroleum Engineering'],
-                'Gas Engineering': ['BEng Gas Engineering', 'MEng Gas Engineering', 'PhD Gas Engineering'],
-                'Marine Engineering': ['BEng Marine Engineering', 'MEng Marine Engineering', 'PhD Marine Engineering'],
-                'Aerospace Engineering': ['BEng Aerospace Engineering', 'MEng Aerospace Engineering', 'PhD Aerospace Engineering'],
-                'Agricultural Engineering': ['BEng Agricultural Engineering', 'MEng Agricultural Engineering', 'PhD Agricultural Engineering'],
-                'Biomedical Engineering': ['BEng Biomedical Engineering', 'MEng Biomedical Engineering', 'PhD Biomedical Engineering'],
-                'Materials Engineering': ['BEng Materials Engineering', 'MEng Materials Engineering', 'PhD Materials Engineering'],
-                'Metallurgical Engineering': ['BEng Metallurgical Engineering', 'MEng Metallurgical Engineering', 'PhD Metallurgical Engineering'],
-                'Industrial & Production Engineering': ['BEng Industrial & Production Engineering', 'MEng Industrial & Production Engineering', 'PhD Industrial & Production Engineering']
-            },
-            BusinessManagement: {
-                'Business Administration': ['BBA Business Administration', 'MBA Business Administration', 'PhD Business Administration'],
-                'Management Studies': ['BSc Management Studies', 'MSc Management Studies', 'PhD Management Studies'],
-                'Human Resource Management': ['BSc Human Resource Management', 'MSc Human Resource Management', 'PhD Human Resource Management'],
-                'Entrepreneurship': ['BSc Entrepreneurship', 'MSc Entrepreneurship', 'PhD Entrepreneurship'],
-                'Marketing': ['BSc Marketing', 'MSc Marketing', 'PhD Marketing'],
-                'International Business': ['BSc International Business', 'MSc International Business', 'PhD International Business'],
-                'Accounting': ['BSc Accounting', 'MSc Accounting', 'PhD Accounting'],
-                'Finance': ['BSc Finance', 'MSc Finance', 'PhD Finance'],
-                'Banking & Finance': ['BSc Banking & Finance', 'MSc Banking & Finance', 'PhD Banking & Finance'],
-                'Insurance': ['BSc Insurance', 'MSc Insurance', 'PhD Insurance'],
-                'Economics': ['BSc Economics', 'MSc Economics', 'PhD Economics'],
-                'Development Economics': ['BSc Development Economics', 'MSc Development Economics', 'PhD Development Economics'],
-                'Public Administration': ['BSc Public Administration', 'MSc Public Administration', 'PhD Public Administration'],
-                'Procurement & Supply Chain': ['BSc Procurement & Supply Chain', 'MSc Procurement & Supply Chain', 'PhD Procurement & Supply Chain'],
-                'Logistics Management': ['BSc Logistics Management', 'MSc Logistics Management', 'PhD Logistics Management'],
-                'Project Management': ['BSc Project Management', 'MSc Project Management', 'PhD Project Management'],
-                'Taxation': ['BSc Taxation', 'MSc Taxation', 'PhD Taxation'],
-                'Real Estate Management': ['BSc Real Estate Management', 'MSc Real Estate Management', 'PhD Real Estate Management'],
-                'Hospitality Management': ['BSc Hospitality Management', 'MSc Hospitality Management', 'PhD Hospitality Management'],
-                'Tourism Management': ['BSc Tourism Management', 'MSc Tourism Management', 'PhD Tourism Management']
-            },
-            ArtsHumanities: {
-                'English Language': ['BA English Language', 'MA English Language', 'PhD English Language'],
-                'English Literature': ['BA English Literature', 'MA English Literature', 'PhD English Literature'],
-                'Linguistics': ['BA Linguistics', 'MA Linguistics', 'PhD Linguistics'],
-                'Creative Writing': ['BA Creative Writing', 'MA Creative Writing', 'PhD Creative Writing'],
-                'History': ['BA History', 'MA History', 'PhD History'],
-                'International Studies': ['BA International Studies', 'MA International Studies', 'PhD International Studies'],
-                'Philosophy': ['BA Philosophy', 'MA Philosophy', 'PhD Philosophy'],
-                'Religious Studies': ['BA Religious Studies', 'MA Religious Studies', 'PhD Religious Studies'],
-                'Islamic Studies': ['BA Islamic Studies', 'MA Islamic Studies', 'PhD Islamic Studies'],
-                'Christian Studies': ['BA Christian Studies', 'MA Christian Studies', 'PhD Christian Studies'],
-                'Theatre Arts': ['BA Theatre Arts', 'MA Theatre Arts', 'PhD Theatre Arts'],
-                'Performing Arts': ['BA Performing Arts', 'MA Performing Arts', 'PhD Performing Arts'],
-                'Music': ['BA Music', 'MA Music', 'PhD Music'],
-                'Fine Arts': ['BA Fine Arts', 'MA Fine Arts', 'PhD Fine Arts'],
-                'Visual Arts': ['BA Visual Arts', 'MA Visual Arts', 'PhD Visual Arts'],
-                'Graphic Design': ['BA Graphic Design', 'MA Graphic Design', 'PhD Graphic Design'],
-                'Fashion Design': ['BA Fashion Design', 'MA Fashion Design', 'PhD Fashion Design'],
-                'French': ['BA French', 'MA French', 'PhD French'],
-                'Spanish': ['BA Spanish', 'MA Spanish', 'PhD Spanish'],
-                'Chinese Studies': ['BA Chinese Studies', 'MA Chinese Studies', 'PhD Chinese Studies']
-            },
-            SocialSciences: {
-                'Political Science': ['BSc Political Science', 'MSc Political Science', 'PhD Political Science'],
-                'Public Policy': ['BSc Public Policy', 'MSc Public Policy', 'PhD Public Policy'],
-                'Sociology': ['BSc Sociology', 'MSc Sociology', 'PhD Sociology'],
-                'Anthropology': ['BSc Anthropology', 'MSc Anthropology', 'PhD Anthropology'],
-                'Psychology': ['BSc Psychology', 'MSc Psychology', 'PhD Psychology'],
-                'Criminology': ['BSc Criminology', 'MSc Criminology', 'PhD Criminology'],
-                'Peace & Conflict Studies': ['BSc Peace & Conflict Studies', 'MSc Peace & Conflict Studies', 'PhD Peace & Conflict Studies'],
-                'Gender Studies': ['BSc Gender Studies', 'MSc Gender Studies', 'PhD Gender Studies'],
-                'Geography': ['BSc Geography', 'MSc Geography', 'PhD Geography'],
-                'Urban & Regional Planning': ['BSc Urban & Regional Planning', 'MSc Urban & Regional Planning', 'PhD Urban & Regional Planning'],
-                'Demography': ['BSc Demography', 'MSc Demography', 'PhD Demography'],
-                'Social Work': ['BSc Social Work', 'MSc Social Work', 'PhD Social Work'],
-                'International Relations': ['BSc International Relations', 'MSc International Relations', 'PhD International Relations'],
-                'Strategic Studies': ['BSc Strategic Studies', 'MSc Strategic Studies', 'PhD Strategic Studies'],
-                'Security Studies': ['BSc Security Studies', 'MSc Security Studies', 'PhD Security Studies'],
-                'Communication Studies': ['BSc Communication Studies', 'MSc Communication Studies', 'PhD Communication Studies'],
-                'Media Studies': ['BSc Media Studies', 'MSc Media Studies', 'PhD Media Studies'],
-                'Journalism': ['BSc Journalism', 'MSc Journalism', 'PhD Journalism'],
-                'Broadcasting': ['BSc Broadcasting', 'MSc Broadcasting', 'PhD Broadcasting'],
-                'Development Studies': ['BSc Development Studies', 'MSc Development Studies', 'PhD Development Studies']
-            },
-            HealthSciences: {
-                'Medicine': ['MBBS', 'MD', 'PhD Medicine'],
-                'Surgery': ['BSc Surgery', 'MSc Surgery', 'PhD Surgery'],
-                'Nursing': ['BSc Nursing', 'MSc Nursing', 'PhD Nursing'],
-                'Pharmacy': ['BPharm', 'MPharm', 'PhD Pharmacy'],
-                'Pharmacology': ['BSc Pharmacology', 'MSc Pharmacology', 'PhD Pharmacology'],
-                'Anatomy': ['BSc Anatomy', 'MSc Anatomy', 'PhD Anatomy'],
-                'Physiology': ['BSc Physiology', 'MSc Physiology', 'PhD Physiology'],
-                'Medical Laboratory Science': ['BSc Medical Laboratory Science', 'MSc Medical Laboratory Science', 'PhD Medical Laboratory Science'],
-                'Public Health': ['BSc Public Health', 'MSc Public Health', 'PhD Public Health'],
-                'Environmental Health': ['BSc Environmental Health', 'MSc Environmental Health', 'PhD Environmental Health'],
-                'Dentistry': ['BDS', 'MSc Dentistry', 'PhD Dentistry'],
-                'Optometry': ['BSc Optometry', 'MSc Optometry', 'PhD Optometry'],
-                'Physiotherapy': ['BSc Physiotherapy', 'MSc Physiotherapy', 'PhD Physiotherapy'],
-                'Radiography': ['BSc Radiography', 'MSc Radiography', 'PhD Radiography'],
-                'Nutrition & Dietetics': ['BSc Nutrition & Dietetics', 'MSc Nutrition & Dietetics', 'PhD Nutrition & Dietetics'],
-                'Epidemiology': ['BSc Epidemiology', 'MSc Epidemiology', 'PhD Epidemiology'],
-                'Health Information Management': ['BSc Health Information Management', 'MSc Health Information Management', 'PhD Health Information Management'],
-                'Community Health': ['BSc Community Health', 'MSc Community Health', 'PhD Community Health'],
-                'Veterinary Medicine': ['DVM', 'MSc Veterinary Medicine', 'PhD Veterinary Medicine'],
-                'Biomedical Sciences': ['BSc Biomedical Sciences', 'MSc Biomedical Sciences', 'PhD Biomedical Sciences']
-            },
-            Law: {
-                'Public Law': ['LLB Public Law', 'LLM Public Law', 'PhD Public Law'],
-                'Private Law': ['LLB Private Law', 'LLM Private Law', 'PhD Private Law'],
-                'Commercial Law': ['LLB Commercial Law', 'LLM Commercial Law', 'PhD Commercial Law'],
-                'International Law': ['LLB International Law', 'LLM International Law', 'PhD International Law'],
-                'Constitutional Law': ['LLB Constitutional Law', 'LLM Constitutional Law', 'PhD Constitutional Law'],
-                'Criminal Law': ['LLB Criminal Law', 'LLM Criminal Law', 'PhD Criminal Law'],
-                'Property Law': ['LLB Property Law', 'LLM Property Law', 'PhD Property Law'],
-                'Maritime Law': ['LLB Maritime Law', 'LLM Maritime Law', 'PhD Maritime Law'],
-                'Environmental Law': ['LLB Environmental Law', 'LLM Environmental Law', 'PhD Environmental Law'],
-                'Tax Law': ['LLB Tax Law', 'LLM Tax Law', 'PhD Tax Law']
-            },
-            Agriculture: {
-                'Crop Science': ['BSc Crop Science', 'MSc Crop Science', 'PhD Crop Science'],
-                'Soil Science': ['BSc Soil Science', 'MSc Soil Science', 'PhD Soil Science'],
-                'Animal Science': ['BSc Animal Science', 'MSc Animal Science', 'PhD Animal Science'],
-                'Agricultural Economics': ['BSc Agricultural Economics', 'MSc Agricultural Economics', 'PhD Agricultural Economics'],
-                'Agribusiness': ['BSc Agribusiness', 'MSc Agribusiness', 'PhD Agribusiness'],
-                'Fisheries & Aquaculture': ['BSc Fisheries & Aquaculture', 'MSc Fisheries & Aquaculture', 'PhD Fisheries & Aquaculture'],
-                'Forestry': ['BSc Forestry', 'MSc Forestry', 'PhD Forestry'],
-                'Horticulture': ['BSc Horticulture', 'MSc Horticulture', 'PhD Horticulture'],
-                'Plant Breeding': ['BSc Plant Breeding', 'MSc Plant Breeding', 'PhD Plant Breeding'],
-                'Agricultural Extension': ['BSc Agricultural Extension', 'MSc Agricultural Extension', 'PhD Agricultural Extension']
-            },
-            Education: {
-                'Educational Management': ['BSc Educational Management', 'MEd Educational Management', 'PhD Educational Management'],
-                'Curriculum Studies': ['BSc Curriculum Studies', 'MEd Curriculum Studies', 'PhD Curriculum Studies'],
-                'Early Childhood Education': ['BSc Early Childhood Education', 'MEd Early Childhood Education', 'PhD Early Childhood Education'],
-                'Primary Education': ['BSc Primary Education', 'MEd Primary Education', 'PhD Primary Education'],
-                'Secondary Education': ['BSc Secondary Education', 'MEd Secondary Education', 'PhD Secondary Education'],
-                'Guidance & Counselling': ['BSc Guidance & Counselling', 'MEd Guidance & Counselling', 'PhD Guidance & Counselling'],
-                'Special Education': ['BSc Special Education', 'MEd Special Education', 'PhD Special Education'],
-                'Educational Psychology': ['BSc Educational Psychology', 'MEd Educational Psychology', 'PhD Educational Psychology'],
-                'Adult Education': ['BSc Adult Education', 'MEd Adult Education', 'PhD Adult Education'],
-                'Science Education': ['BSc Science Education', 'MEd Science Education', 'PhD Science Education']
-            },
-            EnvironmentalSciences: {
-                'Architecture': ['BSc Architecture', 'MSc Architecture', 'PhD Architecture'],
-                'Quantity Surveying': ['BSc Quantity Surveying', 'MSc Quantity Surveying', 'PhD Quantity Surveying'],
-                'Building Technology': ['BSc Building Technology', 'MSc Building Technology', 'PhD Building Technology'],
-                'Estate Management': ['BSc Estate Management', 'MSc Estate Management', 'PhD Estate Management'],
-                'Surveying & Geoinformatics': ['BSc Surveying & Geoinformatics', 'MSc Surveying & Geoinformatics', 'PhD Surveying & Geoinformatics'],
-                'Urban Planning': ['BSc Urban Planning', 'MSc Urban Planning', 'PhD Urban Planning'],
-                'Environmental Management': ['BSc Environmental Management', 'MSc Environmental Management', 'PhD Environmental Management'],
-                'Landscape Architecture': ['BSc Landscape Architecture', 'MSc Landscape Architecture', 'PhD Landscape Architecture'],
-                'Interior Design': ['BSc Interior Design', 'MSc Interior Design', 'PhD Interior Design'],
-                'Construction Management': ['BSc Construction Management', 'MSc Construction Management', 'PhD Construction Management']
-            },
-            InformationDigital: {
-                'Information Technology': ['BSc Information Technology', 'MSc Information Technology', 'PhD Information Technology'],
-                'Cloud Computing': ['BSc Cloud Computing', 'MSc Cloud Computing', 'PhD Cloud Computing'],
-                'Blockchain Technology': ['BSc Blockchain Technology', 'MSc Blockchain Technology', 'PhD Blockchain Technology'],
-                'Robotics': ['BSc Robotics', 'MSc Robotics', 'PhD Robotics'],
-                'Internet of Things': ['BSc Internet of Things', 'MSc Internet of Things', 'PhD Internet of Things'],
-                'Game Development': ['BSc Game Development', 'MSc Game Development', 'PhD Game Development'],
-                'UI/UX Design': ['BSc UI/UX Design', 'MSc UI/UX Design', 'PhD UI/UX Design'],
-                'Digital Marketing': ['BSc Digital Marketing', 'MSc Digital Marketing', 'PhD Digital Marketing'],
-                'E-Commerce': ['BSc E-Commerce', 'MSc E-Commerce', 'PhD E-Commerce'],
-                'Business Analytics': ['BSc Business Analytics', 'MSc Business Analytics', 'PhD Business Analytics']
-            },
-            TransportLogistics: {
-                'Transportation Management': ['BSc Transportation Management', 'MSc Transportation Management', 'PhD Transportation Management'],
-                'Aviation Management': ['BSc Aviation Management', 'MSc Aviation Management', 'PhD Aviation Management'],
-                'Maritime Studies': ['BSc Maritime Studies', 'MSc Maritime Studies', 'PhD Maritime Studies'],
-                'Railway Engineering': ['BSc Railway Engineering', 'MSc Railway Engineering', 'PhD Railway Engineering'],
-                'Logistics Engineering': ['BSc Logistics Engineering', 'MSc Logistics Engineering', 'PhD Logistics Engineering'],
-                'Fleet Management': ['BSc Fleet Management', 'MSc Fleet Management', 'PhD Fleet Management'],
-                'Port Management': ['BSc Port Management', 'MSc Port Management', 'PhD Port Management'],
-                'Supply Chain Analytics': ['BSc Supply Chain Analytics', 'MSc Supply Chain Analytics', 'PhD Supply Chain Analytics']
-            },
-            CreativeMedia: {
-                'Film Production': ['BA Film Production', 'MA Film Production', 'PhD Film Production'],
-                'Cinematography': ['BA Cinematography', 'MA Cinematography', 'PhD Cinematography'],
-                'Animation': ['BA Animation', 'MA Animation', 'PhD Animation'],
-                'Multimedia Technology': ['BA Multimedia Technology', 'MA Multimedia Technology', 'PhD Multimedia Technology'],
-                'Sound Engineering': ['BA Sound Engineering', 'MA Sound Engineering', 'PhD Sound Engineering'],
-                'Digital Photography': ['BA Digital Photography', 'MA Digital Photography', 'PhD Digital Photography'],
-                'Content Creation': ['BA Content Creation', 'MA Content Creation', 'PhD Content Creation'],
-                'Advertising': ['BA Advertising', 'MA Advertising', 'PhD Advertising']
-            },
-            AdvancedResearch: {
-                'Nanotechnology': ['BSc Nanotechnology', 'MSc Nanotechnology', 'PhD Nanotechnology'],
-                'Renewable Energy': ['BSc Renewable Energy', 'MSc Renewable Energy', 'PhD Renewable Energy'],
-                'Space Science': ['BSc Space Science', 'MSc Space Science', 'PhD Space Science'],
-                'Climate Change Studies': ['BSc Climate Change Studies', 'MSc Climate Change Studies', 'PhD Climate Change Studies'],
-                'Artificial Intelligence Research': ['BSc Artificial Intelligence Research', 'MSc Artificial Intelligence Research', 'PhD Artificial Intelligence Research'],
-                'Biotechnology Research': ['BSc Biotechnology Research', 'MSc Biotechnology Research', 'PhD Biotechnology Research'],
-                'Smart Systems Engineering': ['BSc Smart Systems Engineering', 'MSc Smart Systems Engineering', 'PhD Smart Systems Engineering'],
-                'Quantum Computing': ['BSc Quantum Computing', 'MSc Quantum Computing', 'PhD Quantum Computing']
-            },
-            ProfessionalStudies: {
-                'Leadership Studies': ['BSc Leadership Studies', 'MSc Leadership Studies', 'PhD Leadership Studies'],
-                'Corporate Governance': ['BSc Corporate Governance', 'MSc Corporate Governance', 'PhD Corporate Governance'],
-                'Risk Management': ['BSc Risk Management', 'MSc Risk Management', 'PhD Risk Management'],
-                'Financial Technology (FinTech)': ['BSc Financial Technology (FinTech)', 'MSc Financial Technology (FinTech)', 'PhD Financial Technology (FinTech)'],
-                'Compliance & Regulation': ['BSc Compliance & Regulation', 'MSc Compliance & Regulation', 'PhD Compliance & Regulation'],
-                'Business Law': ['LLB Business Law', 'LLM Business Law', 'PhD Business Law'],
-                'Digital Transformation': ['BSc Digital Transformation', 'MSc Digital Transformation', 'PhD Digital Transformation'],
-                'Innovation Management': ['BSc Innovation Management', 'MSc Innovation Management', 'PhD Innovation Management']
+        // Initialize faculty dropdown and setup cascading dropdowns from API
+        async function initializeFacultyDropdown() {
+            try {
+                const faculties = await BethelAPI.fetchFaculties();
+                const facultySelect = document.getElementById('faculty');
+                
+                // Clear loading option and populate with actual faculties
+                facultySelect.innerHTML = '<option value="">Choose a faculty...</option>';
+                
+                faculties.forEach(faculty => {
+                    const option = document.createElement('option');
+                    option.value = faculty._id;
+                    option.textContent = faculty.name;
+                    facultySelect.appendChild(option);
+                });
+                
+                // Setup cascading dropdowns
+                await BethelAPI.setupFacultyDepartmentChain();
+            } catch (error) {
+                console.error('Error initializing faculty dropdown:', error);
+                showTempMessage('Error loading faculties. Please refresh the page.', 'danger');
             }
-        };
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializeFacultyDropdown);
 
-        // Populate departments based on faculty selection
-        document.getElementById('faculty').addEventListener('change', function() {
-            const faculty = this.value;
+        // Handle faculty selection change - departments will be loaded via API
+        document.getElementById('faculty').addEventListener('change', async function() {
+            const facultyId = this.value;
             const departmentSelect = document.getElementById('department');
             const courseSelect = document.getElementById('course');
 
-            // Reset department and course
+            // Reset dropdowns
             departmentSelect.innerHTML = '<option value="">Choose a department...</option>';
             courseSelect.innerHTML = '<option value="">Choose a course...</option>';
             departmentSelect.disabled = true;
             courseSelect.disabled = true;
 
-            if (faculty && programs[faculty]) {
-                departmentSelect.disabled = false;
-                Object.keys(programs[faculty]).forEach(dept => {
-                    const option = document.createElement('option');
-                    option.value = dept;
-                    option.textContent = `Department of ${dept}`;
-                    departmentSelect.appendChild(option);
-                });
+            if (!facultyId) return;
+
+            try {
+                // Fetch departments for this faculty
+                const departments = await BethelAPI.fetchDepartmentsByFaculty(facultyId);
+                
+                if (departments && departments.length > 0) {
+                    departmentSelect.disabled = false;
+                    departments.forEach(dept => {
+                        const option = document.createElement('option');
+                        option.value = dept._id;
+                        option.textContent = dept.name;
+                        departmentSelect.appendChild(option);
+                    });
+                } else {
+                    departmentSelect.innerHTML = '<option value="">No departments available</option>';
+                }
+            } catch (error) {
+                console.error('Error fetching departments:', error);
+                departmentSelect.innerHTML = '<option value="">Error loading departments</option>';
             }
         });
 
-        // Populate courses based on department selection
+        // Handle department selection change - generate course options
         document.getElementById('department').addEventListener('change', function() {
-            const faculty = document.getElementById('faculty').value;
             const department = this.value;
             const courseSelect = document.getElementById('course');
 
@@ -903,14 +692,23 @@
             courseSelect.innerHTML = '<option value="">Choose a course...</option>';
             courseSelect.disabled = true;
 
-            if (faculty && department && programs[faculty][department]) {
-                courseSelect.disabled = false;
-                programs[faculty][department].forEach(course => {
-                    const option = document.createElement('option');
-                    option.value = course;
-                    option.textContent = course;
-                    courseSelect.appendChild(option);
-                });
+            if (!department) return;
+
+            try {
+                // Get program options for the selected department
+                const courses = BethelAPI.getProgramOptions();
+                
+                if (courses && courses.length > 0) {
+                    courseSelect.disabled = false;
+                    courses.forEach(course => {
+                        const option = document.createElement('option');
+                        option.value = course;
+                        option.textContent = course;
+                        courseSelect.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading course options:', error);
             }
         });
 
