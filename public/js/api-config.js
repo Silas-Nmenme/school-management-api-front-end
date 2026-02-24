@@ -3,8 +3,11 @@
    Faculty & Department API Utilities
    ============================================ */
 
-// API Base URL - update this to match your backend
-const API_BASE = 'https://school-management-api-zeta-two.vercel.app/api';
+// API Base URL Configuration
+// Change this based on your backend location:
+// LOCAL: 'http://localhost:5000/api' or 'http://localhost:3000/api'
+// VERCEL: 'https://school-management-api-zeta-two.vercel.app/api'
+const API_BASE = 'https://school-management-api-zeta-two.vercel.app/api'; // <-- Change this to match your backend
 
 // API Connectivity Status
 let apiConnected = null;
@@ -486,6 +489,128 @@ function getProgramOptions(department, faculty) {
     ];
 }
 
+/**
+ * Comprehensive API Diagnostic - Run this in browser console for troubleshooting
+ * Usage: await BethelAPI.diagnoseAPI()
+ */
+async function diagnoseAPI() {
+    console.log('🔍 Bethel College API Diagnostic Report');
+    console.log('=' .repeat(50));
+    
+    const report = {
+        timestamp: new Date().toISOString(),
+        apiBaseUrl: API_BASE,
+        checks: {}
+    };
+    
+    // Check 1: API Base URL format
+    console.log('✓ Check 1: API Base URL');
+    console.log(`  URL: ${API_BASE}`);
+    report.checks.urlFormat = {
+        status: API_BASE ? 'OK' : 'MISSING',
+        url: API_BASE
+    };
+    
+    // Check 2: Test connectivity to faculties endpoint
+    console.log('✓ Check 2: Testing /api/faculties endpoint');
+    try {
+        const response = await fetch(`${API_BASE}/faculties`, {
+            method: 'GET',
+            signal: AbortSignal.timeout(5000)
+        });
+        
+        console.log(`  Status: ${response.status} ${response.statusText}`);
+        
+        if (response.ok) {
+            const data = await response.json();
+            console.log(`  ✓ Connected! Found ${data.faculties?.length || 0} faculties`);
+            report.checks.facultiesEndpoint = {
+                status: 'SUCCESS',
+                httpStatus: response.status,
+                totalFaculties: data.faculties?.length || 0
+            };
+        } else {
+            console.error(`  ✗ HTTP Error ${response.status}`);
+            report.checks.facultiesEndpoint = {
+                status: 'ERROR',
+                httpStatus: response.status,
+                message: `Got ${response.status} error - backend may not have this endpoint`
+            };
+        }
+    } catch (error) {
+        console.error(`  ✗ Connection Error: ${error.message}`);
+        report.checks.facultiesEndpoint = {
+            status: 'FAILED',
+            error: error.message,
+            troubleshoot: [
+                '1. Is backend server running?',
+                '2. Is it running on the correct port?',
+                '3. Check API_BASE URL is correct',
+                '4. If using Vercel, is it deployed?'
+            ]
+        };
+    }
+    
+    // Check 3: Test connectivity to departments endpoint
+    console.log('✓ Check 3: Testing /api/departments endpoint');
+    try {
+        const response = await fetch(`${API_BASE}/departments`, {
+            method: 'GET',
+            signal: AbortSignal.timeout(5000)
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            console.log(`  ✓ Connected! Found ${data.departments?.length || 0} departments`);
+            report.checks.departmentsEndpoint = {
+                status: 'SUCCESS',
+                httpStatus: response.status,
+                totalDepartments: data.departments?.length || 0
+            };
+        } else {
+            console.error(`  ✗ HTTP Error ${response.status}`);
+            report.checks.departmentsEndpoint = {
+                status: 'ERROR',
+                httpStatus: response.status
+            };
+        }
+    } catch (error) {
+        console.error(`  ✗ Connection Error: ${error.message}`);
+        report.checks.departmentsEndpoint = {
+            status: 'FAILED',
+            error: error.message
+        };
+    }
+    
+    // Check 4: Cache status
+    console.log('✓ Check 4: Cache Status');
+    console.log(`  Faculties cached: ${facultiesCache ? facultiesCache.length : 0}`);
+    console.log(`  Departments cached: ${departmentsCache ? departmentsCache.length : 0}`);
+    report.checks.cache = {
+        facultiesCached: facultiesCache?.length || 0,
+        departmentsCached: departmentsCache?.length || 0
+    };
+    
+    // Summary
+    console.log('=' .repeat(50));
+    console.log('📋 DIAGNOSTIC SUMMARY:');
+    console.log(JSON.stringify(report, null, 2));
+    
+    // Recommendations
+    const hasFacultiesError = report.checks.facultiesEndpoint?.status !== 'SUCCESS';
+    if (hasFacultiesError) {
+        console.warn('⚠️ RECOMMENDATIONS:');
+        console.warn('1. Start your backend server: npm start');
+        console.warn('2. Verify the port matches API_BASE (currently ' + API_BASE + ')');
+        console.warn('3. Check that routes are registered in your backend');
+        console.warn('4. Seed database: POST to http://localhost:PORT/api/seed/all');
+    } else {
+        console.log('✅ API is working! Try running: await BethelAPI.fetchFaculties()');
+    }
+    
+    return report;
+}
+
 // Export functions for use in other scripts
 window.BethelAPI = {
     API_BASE,
@@ -505,5 +630,6 @@ window.BethelAPI = {
     searchDepartments,
     getProgramOptions,
     testAPIConnectivity,
-    getAPIStatus
+    getAPIStatus,
+    diagnoseAPI
 };
