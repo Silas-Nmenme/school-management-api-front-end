@@ -809,9 +809,6 @@
                             const modal = bootstrap.Modal.getInstance(document.getElementById('examRegistrationModal'));
                             modal.hide();
 
-                            // Clear exam registrations after successful registration
-                            await clearExamRegistrations(selectedCourses);
-
                             // Reload registered courses to ensure UI is in sync
                             loadRegisteredCourses();
                         } else {
