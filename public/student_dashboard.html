@@ -856,12 +856,15 @@
                             const li = document.createElement('li');
                             
                             // Handle both string and object activity formats
+                            // Filter out unwanted fields: action, timestamp, details, ID
                             let activityText = '';
                             
                             if (typeof activity === 'string') {
                                 activityText = activity;
                             } else if (typeof activity === 'object') {
-                                activityText = activity.description || activity.message || activity.text || JSON.stringify(activity);
+                                // Create a clean copy without unwanted fields
+                                const { action, timestamp, details, ID, id, ...cleanActivity } = activity;
+                                activityText = cleanActivity.description || cleanActivity.message || cleanActivity.text || Object.values(cleanActivity).filter(v => typeof v === 'string').join(' - ') || 'Activity recorded';
                             }
                             
                             li.innerHTML = activityText;

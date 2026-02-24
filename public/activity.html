@@ -672,6 +672,7 @@
                         // Process activities
                         allActivities = activities.map(function(activity) {
                             // Handle both string and object activity formats
+                            // Filter out unwanted fields: action, timestamp, details, ID
                             let activityText = '';
                             let activityType = '';
                             let activityTime = '';
@@ -679,9 +680,11 @@
                             if (typeof activity === 'string') {
                                 activityText = activity;
                             } else if (typeof activity === 'object') {
-                                activityText = activity.description || activity.message || activity.text || JSON.stringify(activity);
-                                activityType = activity.type || activity.category || '';
-                                activityTime = activity.timestamp || activity.time || activity.date || '';
+                                // Create a clean copy without unwanted fields
+                                const { action, timestamp, details, ID, id, ...cleanActivity } = activity;
+                                activityText = cleanActivity.description || cleanActivity.message || cleanActivity.text || Object.values(cleanActivity).filter(v => typeof v === 'string').join(' - ') || 'Activity recorded';
+                                activityType = cleanActivity.type || cleanActivity.category || '';
+                                activityTime = cleanActivity.time || cleanActivity.date || '';
                             }
                             
                             return {
