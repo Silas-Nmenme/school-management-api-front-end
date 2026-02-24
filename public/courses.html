@@ -779,45 +779,21 @@
                             const modal = bootstrap.Modal.getInstance(document.getElementById('examRegistrationModal'));
                             modal.hide();
 
-                            // Remove registered course cards for the courses that were just registered for exams
-                            // Then reload from API to ensure proper sync
-                            try {
-                                const registeredRow = document.getElementById('registeredCoursesRow');
-                                
-                                // First, try to remove cards from DOM using flexible matching
-                                selectedCourses.forEach(function(cid) {
-                                    // Try to find by data-course-id first
-                                    let cardEl = registeredRow.querySelector(`[data-course-id="${cid}"]`);
-                                    if (cardEl) {
-                                        cardEl.remove();
-                                        return;
-                                    }
-                                    
-                                    // Try to find by data-course-code (courseId)
-                                    cardEl = registeredRow.querySelector(`[data-course-code="${cid}"]`);
-                                    if (cardEl) {
-                                        cardEl.remove();
-                                        return;
-                                    }
-                                    
-                                    // Try to find any card that might have this ID in any format
-                                    const allCards = registeredRow.querySelectorAll('[data-course-id], [data-course-code]');
-                                    allCards.forEach(function(card) {
-                                        const cardId = card.getAttribute('data-course-id') || card.getAttribute('data-course-code');
-                                        if (cardId === cid || cardId === cid.toString()) {
-                                            card.remove();
-                                        }
-                                    });
-                                });
-
-                                // Reload registered courses from API to ensure proper sync with backend
-                                // This handles any edge cases where local removal might have failed
-                                loadRegisteredCourses();
-                            } catch (removeErr) {
-                                console.warn('Error removing registered course cards:', removeErr);
-                                // Even if DOM removal fails, reload from API to sync
-                                loadRegisteredCourses();
-                            }
+                            // Clear registered courses section and reload from API
+                            // This ensures the UI is properly synced with the backend after exam registration
+                            const registeredRow = document.getElementById('registeredCoursesRow');
+                            const registeredSection = document.getElementById('registeredCoursesSection');
+                            const noRegisteredCourses = document.getElementById('noRegisteredCourses');
+                            
+                            // Clear the DOM immediately
+                            registeredRow.innerHTML = '';
+                            
+                            // Show "no registered courses" message while reloading
+                            registeredSection.style.display = 'block';
+                            noRegisteredCourses.style.display = 'block';
+                            
+                            // Reload registered courses from API to ensure proper sync with backend
+                            loadRegisteredCourses();
                         } else {
                             // Show more detailed error message
                             let errorMessage = data.message || 'Failed to register for exams';
