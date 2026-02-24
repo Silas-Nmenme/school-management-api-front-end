@@ -809,8 +809,17 @@
                             const modal = bootstrap.Modal.getInstance(document.getElementById('examRegistrationModal'));
                             modal.hide();
 
-                            // Reload registered courses to ensure UI is in sync
-                            loadRegisteredCourses();
+                            // Remove the courses from registered list after exam registration
+                            if (window.registeredCourses && selectedCourses.length > 0) {
+                                window.registeredCourses = window.registeredCourses.filter(course => {
+                                    const courseId = course._id || course.courseId;
+                                    return !selectedCourses.includes(courseId);
+                                });
+                                displayRegisteredCourses(window.registeredCourses);
+                            }
+                            
+                            // Reload available courses to show courses that were previously registered
+                            loadAvailableCourses();
                         } else {
                             // Show more detailed error message
                             let errorMessage = data.message || 'Failed to register for exams';
