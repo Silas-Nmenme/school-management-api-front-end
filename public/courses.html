@@ -499,7 +499,10 @@
                 instructorDisplay = course.instructor;
             }
 
-            const courseId = course.courseId || course._id || course.id;
+            // Use MongoDB _id as primary identifier (consistent with exam registration)
+            // Store both _id and courseId as data attributes for flexible matching
+            const courseId = course._id || course.courseId || course.id;
+            const courseCode = course.courseId || 'N/A';
             const description = course.description || 'No description available';
 
             colDiv.innerHTML = `
@@ -509,7 +512,7 @@
                         <h5 class="course-title">${course.name || 'Course Name'}</h5>
                         <p class="course-description">${description}</p>
                         <div class="course-meta">
-                            <strong>Code:</strong> ${course.courseId || 'N/A'}<br>
+                            <strong>Code:</strong> ${courseCode}<br>
                             <strong>Credits:</strong> 3<br>
                             <strong>Instructor:</strong> ${instructorDisplay}
                         </div>
@@ -522,15 +525,16 @@
                         <div class="collapse mt-3" id="collapse-${courseId}">
                             <div class="p-3 bg-light rounded">
                                 <h6>Course Name: ${course.name || 'Course Name'}</h6>
-                                <p>Course ID: ${course.courseId || 'N/A'}</p>
+                                <p>Course ID: ${courseCode}</p>
                             </div>
                         </div>
                     </div>
                 </div>
             `;
 
-            // mark DOM element with course identifier for easy lookup
+            // Mark DOM element with both _id and courseId for flexible lookup during exam registration
             colDiv.setAttribute('data-course-id', courseId);
+            colDiv.setAttribute('data-course-code', courseCode);
 
             return colDiv;
         }
@@ -776,31 +780,43 @@
                             modal.hide();
 
                             // Remove registered course cards for the courses that were just registered for exams
+                            // Then reload from API to ensure proper sync
                             try {
                                 const registeredRow = document.getElementById('registeredCoursesRow');
+                                
+                                // First, try to remove cards from DOM using flexible matching
                                 selectedCourses.forEach(function(cid) {
-                                    // remove any card element that was marked with this course id
-                                    const cardEl = registeredRow.querySelector(`[data-course-id="${cid}"]`);
-                                    if (cardEl) cardEl.remove();
+                                    // Try to find by data-course-id first
+                                    let cardEl = registeredRow.querySelector(`[data-course-id="${cid}"]`);
+                                    if (cardEl) {
+                                        cardEl.remove();
+                                        return;
+                                    }
+                                    
+                                    // Try to find by data-course-code (courseId)
+                                    cardEl = registeredRow.querySelector(`[data-course-code="${cid}"]`);
+                                    if (cardEl) {
+                                        cardEl.remove();
+                                        return;
+                                    }
+                                    
+                                    // Try to find any card that might have this ID in any format
+                                    const allCards = registeredRow.querySelectorAll('[data-course-id], [data-course-code]');
+                                    allCards.forEach(function(card) {
+                                        const cardId = card.getAttribute('data-course-id') || card.getAttribute('data-course-code');
+                                        if (cardId === cid || cardId === cid.toString()) {
+                                            card.remove();
+                                        }
+                                    });
                                 });
 
-                                // Update in-memory registeredCourses array so filters and UI stay consistent
-                                if (window.registeredCourses && Array.isArray(window.registeredCourses)) {
-                                    window.registeredCourses = window.registeredCourses.filter(function(c) {
-                                        const id = c._id || c.courseId || c.id || '';
-                                        return id && !selectedCourses.includes(id.toString());
-                                    });
-                                }
-
-                                // If no registered courses remain, show the empty state
-                                const noRegistered = document.getElementById('noRegisteredCourses');
-                                const registeredSection = document.getElementById('registeredCoursesSection');
-                                if (registeredRow && registeredRow.children.length === 0) {
-                                    if (noRegistered) noRegistered.style.display = 'block';
-                                    if (registeredSection) registeredSection.style.display = 'block';
-                                }
+                                // Reload registered courses from API to ensure proper sync with backend
+                                // This handles any edge cases where local removal might have failed
+                                loadRegisteredCourses();
                             } catch (removeErr) {
                                 console.warn('Error removing registered course cards:', removeErr);
+                                // Even if DOM removal fails, reload from API to sync
+                                loadRegisteredCourses();
                             }
                         } else {
                             // Show more detailed error message
