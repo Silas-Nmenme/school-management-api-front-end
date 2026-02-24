@@ -736,6 +736,36 @@
             modal.show();
         }
 
+        // Clear exam registrations after successful registration
+        async function clearExamRegistrations(courseIds) {
+            const token = localStorage.getItem('token');
+
+            try {
+                const response = await fetch('https://school-management-api-zeta-two.vercel.app/api/students/exams/clear', {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ courseIds })
+                });
+
+                const data = await response.json();
+                console.log('Clear exam registrations response:', response.status, data);
+
+                if (response.ok) {
+                    console.log('Successfully cleared exam registrations:', data.clearedExams);
+                    if (data.errors && data.errors.length > 0) {
+                        console.warn('Some errors occurred while clearing:', data.errors);
+                    }
+                } else {
+                    console.error('Failed to clear exam registrations:', data.message);
+                }
+            } catch (error) {
+                console.error('Error clearing exam registrations:', error);
+            }
+        }
+
         // Handle exam registration form submission
         document.addEventListener('DOMContentLoaded', function() {
             const examForm = document.getElementById('examRegistrationForm');
@@ -778,6 +808,9 @@
                             }
                             const modal = bootstrap.Modal.getInstance(document.getElementById('examRegistrationModal'));
                             modal.hide();
+
+                            // Clear exam registrations after successful registration
+                            await clearExamRegistrations(selectedCourses);
 
                             // Clear registered courses section and reload from API
                             // This ensures the UI is properly synced with the backend after exam registration
