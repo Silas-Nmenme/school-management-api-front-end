@@ -688,11 +688,12 @@
                     <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Activity</h5>
                 </div>
                 <div class="card-body">
-                    <ul class="list-unstyled recent-activity">
-                        <li><i class="fas fa-check-circle text-success me-2"></i>Enrolled in Biology 102 - October 10, 2025</li>
-                        <li><i class="fas fa-chart-line text-primary me-2"></i>Grades updated for History 101 - October 8, 2025</li>
-                        <li><i class="fas fa-download text-info me-2"></i>Downloaded syllabus for Physics 201 - October 5, 2025</li>
+                    <ul class="list-unstyled recent-activity" id="recentActivityList">
+                        <li><i class="fas fa-spinner fa-spin me-2"></i>Loading recent activity...</li>
                     </ul>
+                    <div id="noActivityMessage" style="display: none;">
+                        <p class="text-muted">No recent activity to display.</p>
+                    </div>
                     <a href="activity.html" class="btn btn-custom">View Full Log</a>
                 </div>
             </div>
@@ -826,6 +827,69 @@
 
         // Call fetchExams when DOM is loaded
         fetchExams();
+
+        // Fetch recent activity from API
+        async function fetchRecentActivity() {
+            const token = localStorage.getItem('token');
+            const recentActivityList = document.getElementById('recentActivityList');
+            const noActivityMessage = document.getElementById('noActivityMessage');
+
+            try {
+                const response = await fetch('https://school-management-api-zeta-two.vercel.app/api/students/recent-activity', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const recentActivity = data.recentActivity;
+
+                    if (recentActivity && recentActivity.length > 0) {
+                        // Clear loading message
+                        recentActivityList.innerHTML = '';
+
+                        // Display each activity
+                        recentActivity.forEach(activity => {
+                            const li = document.createElement('li');
+                            // Determine icon based on activity type
+                            let iconClass = 'fa-info-circle';
+                            let iconColor = 'text-primary';
+                            
+                            if (activity.type === 'enrollment' || activity.type === 'enrolled') {
+                                iconClass = 'fa-check-circle';
+                                iconColor = 'text-success';
+                            } else if (activity.type === 'grade' || activity.type === 'grades') {
+                                iconClass = 'fa-chart-line';
+                                iconColor = 'text-primary';
+                            } else if (activity.type === 'download') {
+                                iconClass = 'fa-download';
+                                iconColor = 'text-info';
+                            }
+                            
+                            li.innerHTML = `<i class="fas ${iconClass} ${iconColor} me-2"></i>${activity.description || activity}`;
+                            recentActivityList.appendChild(li);
+                        });
+                    } else {
+                        // No recent activity
+                        recentActivityList.style.display = 'none';
+                        noActivityMessage.style.display = 'block';
+                    }
+                } else if (response.status === 404) {
+                    recentActivityList.innerHTML = '<p class="text-muted">Student not found.</p>';
+                } else {
+                    throw new Error('Failed to fetch recent activity');
+                }
+            } catch (error) {
+                console.error('Error getting recent activity:', error);
+                recentActivityList.innerHTML = '<p class="text-danger">Unable to load recent activity. Please try again later.</p>';
+            }
+        }
+
+        // Call fetchRecentActivity when DOM is loaded
+        fetchRecentActivity();
     </script>
 </body>
 </html>
