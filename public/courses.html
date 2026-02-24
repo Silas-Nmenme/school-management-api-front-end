@@ -476,6 +476,9 @@
                 </div>
             `;
 
+            // mark DOM element with course identifier for easy lookup
+            colDiv.setAttribute('data-course-id', courseId);
+
             return colDiv;
         }
 
@@ -525,6 +528,9 @@
                     </div>
                 </div>
             `;
+
+            // mark DOM element with course identifier for easy lookup
+            colDiv.setAttribute('data-course-id', courseId);
 
             return colDiv;
         }
@@ -768,9 +774,34 @@
                             }
                             const modal = bootstrap.Modal.getInstance(document.getElementById('examRegistrationModal'));
                             modal.hide();
-                            
-                            // Refresh registered courses list
-                            loadRegisteredCourses();
+
+                            // Remove registered course cards for the courses that were just registered for exams
+                            try {
+                                const registeredRow = document.getElementById('registeredCoursesRow');
+                                selectedCourses.forEach(function(cid) {
+                                    // remove any card element that was marked with this course id
+                                    const cardEl = registeredRow.querySelector(`[data-course-id="${cid}"]`);
+                                    if (cardEl) cardEl.remove();
+                                });
+
+                                // Update in-memory registeredCourses array so filters and UI stay consistent
+                                if (window.registeredCourses && Array.isArray(window.registeredCourses)) {
+                                    window.registeredCourses = window.registeredCourses.filter(function(c) {
+                                        const id = c._id || c.courseId || c.id || '';
+                                        return id && !selectedCourses.includes(id.toString());
+                                    });
+                                }
+
+                                // If no registered courses remain, show the empty state
+                                const noRegistered = document.getElementById('noRegisteredCourses');
+                                const registeredSection = document.getElementById('registeredCoursesSection');
+                                if (registeredRow && registeredRow.children.length === 0) {
+                                    if (noRegistered) noRegistered.style.display = 'block';
+                                    if (registeredSection) registeredSection.style.display = 'block';
+                                }
+                            } catch (removeErr) {
+                                console.warn('Error removing registered course cards:', removeErr);
+                            }
                         } else {
                             // Show more detailed error message
                             let errorMessage = data.message || 'Failed to register for exams';
