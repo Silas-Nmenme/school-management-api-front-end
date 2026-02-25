@@ -624,6 +624,9 @@
             if (timeout > 0) setTimeout(() => { alertMessage.style.display = 'none'; }, timeout);
         }
 
+        // Map static faculty names to API-compatible IDs
+        const facultyNameToId = {};
+        
         // Initialize faculty dropdown - tries API first, then falls back to static data
         async function initializeFacultyDropdown() {
             const facultySelect = document.getElementById('faculty');
@@ -661,12 +664,19 @@
                 const faculties = StaticData.getFaculties();
                 facultySelect.innerHTML = '<option value="">Choose a faculty...</option>';
 
-                faculties.forEach(faculty => {
+                faculties.forEach((faculty, index) => {
                     const option = document.createElement('option');
-                    option.value = faculty._id || faculty.id;
+                    // Use index as fallback ID for static data
+                    const fallbackId = `static-faculty-${index}`;
+                    option.value = fallbackId;
                     option.dataset.name = faculty.name;
                     option.dataset.icon = faculty.icon;
+                    option.dataset.isStatic = 'true';
                     option.textContent = faculty.icon + ' ' + faculty.name;
+                    
+                    // Map the name to our fallback ID
+                    facultyNameToId[faculty.name] = fallbackId;
+                    
                     facultySelect.appendChild(option);
                 });
                 console.log('Faculties loaded from static data');
@@ -840,7 +850,14 @@
                 // Get the department name - always send the name to the API, not the ID
                 // The API expects the department name, not the ObjectId
                 const deptNameAttr = document.getElementById('department').options[document.getElementById('department').selectedIndex]?.dataset?.name;
-                const deptDisplay = deptNameAttr || deptVal;
+                // Get faculty name for API
+                const facultyNameAttr = document.getElementById('faculty').options[document.getElementById('faculty').selectedIndex]?.dataset?.name;
+                
+                // Check if using static data fallback
+                const isStaticFaculty = document.getElementById('faculty').options[document.getElementById('faculty').selectedIndex]?.dataset?.isStatic === 'true';
+                
+                // Send faculty name if using static data, otherwise send the ID
+                const facultyToSend = isStaticFaculty ? facultyNameAttr : facultyVal;
                 
                 // Always send department name to API (not ObjectId) to avoid "Department not found" error
                 // The backend validates department by name
@@ -856,7 +873,7 @@
                     gpa: formData.get('gpa') ? parseFloat(formData.get('gpa')) : null,
                     satScore: formData.get('satScore') ? parseInt(formData.get('satScore')) : null,
                     actScore: formData.get('actScore') ? parseInt(formData.get('actScore')) : null,
-                    faculty: facultyVal,
+                    faculty: facultyToSend,
                     department: deptToSend,
                     course: formData.get('course'),
                     essay: (formData.get('essay') || '').trim()
