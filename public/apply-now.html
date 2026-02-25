@@ -849,6 +849,7 @@
                     essay: (formData.get('essay') || '').trim()
                 };
 
+                console.log('Submitting application payload:', applicationData);
                 const response = await fetch(`${API_BASE_URL}/applications`, {
                     method: 'POST',
                     headers: {
@@ -856,8 +857,13 @@
                     },
                     body: JSON.stringify(applicationData)
                 });
-
-                const data = await response.json();
+                let data;
+                try {
+                    data = await response.json();
+                } catch (parseError) {
+                    console.warn('Failed to parse JSON response', parseError);
+                    data = null;
+                }
 
                 if (response.ok) {
                     // Show success message
@@ -894,9 +900,11 @@
                         appRes.style.display = 'block';
                     }
                 } else {
-                    // Show error message
+                    // Try to show server message if available, otherwise fallback to status text
+                    const serverMsg = (data && data.message) ? data.message : (response.statusText || `Request failed with status ${response.status}`);
+                    console.error('Application submission failed:', response.status, serverMsg, data);
                     alertMessage.className = 'alert alert-danger';
-                    alertMessage.textContent = data.message || 'Application submission failed. Please try again.';
+                    alertMessage.textContent = serverMsg;
                     alertMessage.style.display = 'block';
                 }
             } catch (error) {
