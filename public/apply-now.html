@@ -731,8 +731,10 @@
 
                 departments.forEach(dept => {
                     const option = document.createElement('option');
-                    option.value = dept.name;
-                    option.textContent = dept.name;
+                    // If department object comes from API it should have an _id and name
+                    option.value = dept._id || dept.id || dept.name;
+                    option.dataset.name = dept.name || dept;
+                    option.textContent = dept.name || dept;
                     departmentSelect.appendChild(option);
                 });
             } else {
@@ -740,34 +742,51 @@
             }
         });
 
-        // Handle department selection change - generate course options
-        document.getElementById('department').addEventListener('change', function() {
-            const departmentName = this.value;
-            const facultySelect = document.getElementById('faculty');
+        // Handle department selection change - fetch course options from API when possible, otherwise use static data
+        document.getElementById('department').addEventListener('change', async function() {
+            const departmentValue = this.value; // may be _id or name
             const courseSelect = document.getElementById('course');
-            const facultyId = facultySelect.value;
 
             // Reset course
             courseSelect.innerHTML = '<option value="">Choose a course...</option>';
             courseSelect.disabled = true;
 
-            if (!departmentName) return;
+            if (!departmentValue) return;
+
+            // If departmentValue looks like an ObjectId (24 hex) try API
+            const isObjectId = /^[0-9a-fA-F]{24}$/.test(departmentValue);
 
             try {
-                // Get faculty name for degree prefix
-                const faculties = StaticData.getFaculties();
-                const faculty = faculties.find(f => f.id === facultyId);
-                const facultyName = faculty ? faculty.name : '';
-                
-                // Get course options for the selected department
-                const courses = StaticData.getCourseOptions(departmentName, facultyName);
-                
+                let courses = [];
+
+                if (isObjectId) {
+                    const res = await fetch(`${API_BASE_URL}/departments/${departmentValue}/courses`);
+                    if (res.ok) {
+                        const d = await res.json();
+                        // controller may return { courses: [...] } or an array
+                        courses = d.courses || d;
+                    }
+                }
+
+                // Fallback to static data when API didn't return courses
+                if (!courses || courses.length === 0) {
+                    // Try to infer department name from selected option dataset
+                    const deptName = this.options[this.selectedIndex]?.dataset?.name || this.value;
+                    const faculties = StaticData.getFaculties();
+                    // try to find faculty by matching earlier selected faculty id/name
+                    const facultySelect = document.getElementById('faculty');
+                    const facultyId = facultySelect.value;
+                    const faculty = faculties.find(f => f._id === facultyId || f.id === facultyId || f.name === facultySelect.options[facultySelect.selectedIndex]?.dataset?.name);
+                    const facultyName = faculty ? faculty.name : '';
+                    courses = StaticData.getCourseOptions(deptName, facultyName) || [];
+                }
+
                 if (courses && courses.length > 0) {
                     courseSelect.disabled = false;
                     courses.forEach(course => {
                         const option = document.createElement('option');
-                        option.value = course;
-                        option.textContent = course;
+                        option.value = typeof course === 'string' ? course : course.name || course.title || '';
+                        option.textContent = typeof course === 'string' ? course : course.name || course.title || '';
                         courseSelect.appendChild(option);
                     });
                 }
@@ -799,39 +818,38 @@
 
             try {
                 const formData = new FormData(this);
-                const applicationData = {
-                    firstName: formData.get('firstName'),
-                    lastName: formData.get('lastName'),
-                    email: formData.get('email'),
-                    phone: formData.get('phone'),
-                    address: formData.get('address'),
-                    highSchool: formData.get('highSchool'),
-                    gpa: formData.get('gpa') ? parseFloat(formData.get('gpa')) : undefined,
-                    satScore: formData.get('satScore') ? parseInt(formData.get('satScore')) : undefined,
-                    actScore: formData.get('actScore') ? parseInt(formData.get('actScore')) : undefined,
-                    faculty: formData.get('faculty'),
-                    department: formData.get('department'),
-                    course: formData.get('course'),
-                    essay: formData.get('essay')
-                };
 
-                // Basic client-side validation to catch missing required fields early
-                const requiredFields = ['firstName','lastName','email','phone','faculty','department','course'];
-                for (const key of requiredFields) {
-                    if (!applicationData[key] || String(applicationData[key]).trim() === '') {
-                        alertMessage.className = 'alert alert-danger';
-                        alertMessage.textContent = `Please complete the required field: ${key}`;
-                        alertMessage.style.display = 'block';
-                        applyBtn.disabled = false;
-                        loadingSpinner.style.display = 'none';
-                        return;
-                    }
+                // Basic client-side required-field check to avoid sending incomplete payload
+                const facultyVal = formData.get('faculty');
+                const deptVal = formData.get('department');
+                const courseVal = formData.get('course');
+
+                if (!formData.get('firstName') || !formData.get('lastName') || !formData.get('email') || !formData.get('phone') || !formData.get('highSchool') || !facultyVal || !deptVal || !courseVal) {
+                    alertMessage.className = 'alert alert-danger';
+                    alertMessage.textContent = 'Please complete all required fields before submitting.';
+                    alertMessage.style.display = 'block';
+                    applyBtn.disabled = false;
+                    loadingSpinner.style.display = 'none';
+                    return;
                 }
 
-                // Log payload so developers can inspect what's being sent
-                console.log('Submitting application payload:', applicationData);
+                const applicationData = {
+                    firstName: (formData.get('firstName') || '').trim(),
+                    lastName: (formData.get('lastName') || '').trim(),
+                    email: (formData.get('email') || '').trim(),
+                    phone: (formData.get('phone') || '').trim(),
+                    address: (formData.get('address') || '').trim(),
+                    highSchool: (formData.get('highSchool') || '').trim(),
+                    gpa: formData.get('gpa') ? parseFloat(formData.get('gpa')) : null,
+                    satScore: formData.get('satScore') ? parseInt(formData.get('satScore')) : null,
+                    actScore: formData.get('actScore') ? parseInt(formData.get('actScore')) : null,
+                    faculty: facultyVal,
+                    department: deptVal,
+                    course: formData.get('course'),
+                    essay: (formData.get('essay') || '').trim()
+                };
 
-                const response = await fetch('https://school-management-api-zeta-two.vercel.app/api/applications', {
+                const response = await fetch(`${API_BASE_URL}/applications`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -839,10 +857,7 @@
                     body: JSON.stringify(applicationData)
                 });
 
-                // Try to read response text first (handles non-JSON error bodies)
-                const raw = await response.text();
-                let data = {};
-                try { data = raw ? JSON.parse(raw) : {}; } catch (parseErr) { data = { message: raw }; }
+                const data = await response.json();
 
                 if (response.ok) {
                     // Show success message
