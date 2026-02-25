@@ -1948,22 +1948,34 @@
             });
         });
 
-        // Load academic programs from static data
-        function loadPrograms() {
+        // API Base URL - Vercel API
+        const API_BASE_URL = 'https://school-management-api-zeta-two.vercel.app/api';
+
+        // Load academic programs from backend API with static fallback
+        async function loadPrograms() {
             const programsLoading = document.getElementById('programsLoading');
             const facultiesAccordion = document.getElementById('facultiesAccordion');
             const errorDetails = document.getElementById('errorDetails');
 
             try {
-                console.log('Loading programs from static data...');
+                console.log('Loading programs from backend API...');
                 
-                // Get all faculties from static data
-                const faculties = StaticData.getFaculties();
-                console.log(`Loaded ${faculties.length} faculties`);
+                // Fetch faculties from backend API
+                const facultiesResponse = await fetch(`${API_BASE_URL}/faculties`);
+                
+                if (!facultiesResponse.ok) {
+                    throw new Error('Failed to fetch faculties from API');
+                }
+                
+                const facultiesData = await facultiesResponse.json();
+                const faculties = facultiesData.faculties || facultiesData;
                 
                 if (!faculties || faculties.length === 0) {
+                    console.log('No faculties from API, falling back to static data');
                     throw new Error('No faculties found');
                 }
+
+                console.log(`Loaded ${faculties.length} faculties from API`);
 
                 // Build accordion items for each faculty
                 let accordionHTML = '';
@@ -1971,21 +1983,49 @@
                     const faculty = faculties[i];
                     const isExpanded = i === 0; // Expand first faculty
                     
-                    // Get departments for this faculty from static data
-                    const departments = faculty.departments;
+                    // Get departments for this faculty from API
+                    let departments = [];
+                    try {
+                        const deptResponse = await fetch(`${API_BASE_URL}/faculties/${faculty._id || faculty.id}/departments`);
+                        if (deptResponse.ok) {
+                            const deptData = await deptResponse.json();
+                            departments = deptData.departments || deptData;
+                        }
+                    } catch (deptError) {
+                        console.warn(`Could not fetch departments for ${faculty.name}, using static data`);
+                    }
+                    
+                    // If no departments from API, use static data
+                    if (departments.length === 0) {
+                        const staticFaculties = StaticData.getFaculties();
+                        const staticFaculty = staticFaculties.find(f => f.name === faculty.name);
+                        if (staticFaculty) {
+                            departments = staticFaculty.departments.map(d => ({ name: d, courses: [] }));
+                        }
+                    }
+                    
                     console.log(`Loaded ${departments.length} departments for ${faculty.name}`);
                     
                     // Build department HTML
                     let departmentsHTML = '';
                     let colIndex = 0;
-                    for (const deptName of departments) {
+                    
+                    for (const dept of departments) {
                         if (colIndex % 2 === 0) {
                             if (colIndex > 0) departmentsHTML += '</div>';
                             departmentsHTML += '<div class="row">';
                         }
                         
-                        // Get course options for this department
-                        const courseOptions = StaticData.getCourseOptions(deptName, faculty.name);
+                        const deptName = dept.name;
+                        
+                        // Get courses from API or generate from static data
+                        let courses = [];
+                        if (dept.courses && dept.courses.length > 0) {
+                            courses = dept.courses;
+                        } else {
+                            // Fall back to static data course generation
+                            courses = StaticData.getCourseOptions(deptName, faculty.name).map(c => ({ name: c, type: 'Program' }));
+                        }
                         
                         departmentsHTML += `
                             <div class="col-md-6">
@@ -1994,8 +2034,10 @@
                         `;
                         
                         // Add program options
-                        courseOptions.forEach(program => {
-                            departmentsHTML += `<li><i class="fas fa-graduation-cap me-2"></i>${program}</li>`;
+                        courses.forEach(program => {
+                            const programName = program.name || program;
+                            const programType = program.type || '';
+                            departmentsHTML += `<li><i class="fas fa-graduation-cap me-2"></i>${programName}</li>`;
                         });
                         
                         departmentsHTML += `
@@ -2007,11 +2049,12 @@
                     if (colIndex > 0) departmentsHTML += '</div>';
                     
                     // Create accordion item
+                    const facultyIcon = faculty.icon || '📚';
                     accordionHTML += `
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="heading${i}">
                                 <button class="accordion-button ${isExpanded ? '' : 'collapsed'}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${i}" aria-expanded="${isExpanded}" aria-controls="collapse${i}">
-                                    ${faculty.icon} ${faculty.name}
+                                    ${facultyIcon} ${faculty.name}
                                 </button>
                             </h2>
                             <div id="collapse${i}" class="accordion-collapse collapse ${isExpanded ? 'show' : ''}" aria-labelledby="heading${i}" data-bs-parent="#facultiesAccordion">
@@ -2029,12 +2072,86 @@
                 facultiesAccordion.style.display = 'block';
                 errorDetails.style.display = 'none';
                 
-                console.log('Programs loaded successfully');
+                console.log('Programs loaded successfully from API');
             } catch (error) {
-                console.error('Error loading programs:', error);
-                programsLoading.style.display = 'none';
-                facultiesAccordion.style.display = 'none';
-                errorDetails.style.display = 'block';
+                console.warn('API fetch failed, falling back to static data:', error);
+                
+                // Fallback to static data
+                try {
+                    console.log('Loading programs from static data fallback...');
+                    
+                    const faculties = StaticData.getFaculties();
+                    console.log(`Loaded ${faculties.length} faculties from static data`);
+                    
+                    if (!faculties || faculties.length === 0) {
+                        throw new Error('No faculties found');
+                    }
+
+                    // Build accordion items for each faculty
+                    let accordionHTML = '';
+                    for (let i = 0; i < faculties.length; i++) {
+                        const faculty = faculties[i];
+                        const isExpanded = i === 0;
+                        
+                        const departments = faculty.departments;
+                        console.log(`Loaded ${departments.length} departments for ${faculty.name}`);
+                        
+                        let departmentsHTML = '';
+                        let colIndex = 0;
+                        for (const deptName of departments) {
+                            if (colIndex % 2 === 0) {
+                                if (colIndex > 0) departmentsHTML += '</div>';
+                                departmentsHTML += '<div class="row">';
+                            }
+                            
+                            const courseOptions = StaticData.getCourseOptions(deptName, faculty.name);
+                            
+                            departmentsHTML += `
+                                <div class="col-md-6">
+                                    <h5>${deptName}</h5>
+                                    <ul class="list-unstyled">
+                            `;
+                            
+                            courseOptions.forEach(program => {
+                                departmentsHTML += `<li><i class="fas fa-graduation-cap me-2"></i>${program}</li>`;
+                            });
+                            
+                            departmentsHTML += `
+                                    </ul>
+                                </div>
+                            `;
+                            colIndex++;
+                        }
+                        if (colIndex > 0) departmentsHTML += '</div>';
+                        
+                        accordionHTML += `
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading${i}">
+                                    <button class="accordion-button ${isExpanded ? '' : 'collapsed'}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${i}" aria-expanded="${isExpanded}" aria-controls="collapse${i}">
+                                        ${faculty.icon} ${faculty.name}
+                                    </button>
+                                </h2>
+                                <div id="collapse${i}" class="accordion-collapse collapse ${isExpanded ? 'show' : ''}" aria-labelledby="heading${i}" data-bs-parent="#facultiesAccordion">
+                                    <div class="accordion-body">
+                                        ${departmentsHTML}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    facultiesAccordion.innerHTML = accordionHTML;
+                    programsLoading.style.display = 'none';
+                    facultiesAccordion.style.display = 'block';
+                    errorDetails.style.display = 'none';
+                    
+                    console.log('Programs loaded successfully from static data');
+                } catch (staticError) {
+                    console.error('Error loading programs:', staticError);
+                    programsLoading.style.display = 'none';
+                    facultiesAccordion.style.display = 'none';
+                    errorDetails.style.display = 'block';
+                }
             }
         }
 

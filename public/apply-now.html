@@ -567,6 +567,9 @@
     <script src="js/static-data.js"></script>
     <!-- Custom JS -->
     <script>
+        // API Base URL - Vercel API
+        const API_BASE_URL = 'https://school-management-api-zeta-two.vercel.app/api';
+
         // Helper functions moved from CSS block
         function copyApplicationId(id) {
             if (!id) return;
@@ -593,7 +596,7 @@
             if (!statusPreview) return;
             statusPreview.textContent = 'Checking...';
             try {
-                const res = await fetch(`https://school-management-api-zeta-two.vercel.app/api/applications/${encodeURIComponent(applicationId)}/status`, {
+                const res = await fetch(`${API_BASE_URL}/applications/${encodeURIComponent(applicationId)}/status`, {
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json' }
                 });
@@ -621,21 +624,52 @@
             if (timeout > 0) setTimeout(() => { alertMessage.style.display = 'none'; }, timeout);
         }
 
-        // Initialize faculty dropdown with static data
-        function initializeFacultyDropdown() {
+        // Initialize faculty dropdown - tries API first, then falls back to static data
+        async function initializeFacultyDropdown() {
+            const facultySelect = document.getElementById('faculty');
+            facultySelect.innerHTML = '<option value="">Loading faculties...</option>';
+
+            try {
+                // Try to fetch from API first
+                const response = await fetch(`${API_BASE_URL}/faculties`);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const faculties = data.faculties || data;
+
+                    if (faculties && faculties.length > 0) {
+                        facultySelect.innerHTML = '<option value="">Choose a faculty...</option>';
+
+                        faculties.forEach(faculty => {
+                            const option = document.createElement('option');
+                            option.value = faculty._id || faculty.id;
+                            option.dataset.name = faculty.name;
+                            option.dataset.icon = faculty.icon || '📚';
+                            option.textContent = (faculty.icon || '📚') + ' ' + faculty.name;
+                            facultySelect.appendChild(option);
+                        });
+                        console.log('Faculties loaded from API');
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.warn('API fetch failed for faculties, using static data:', error);
+            }
+
+            // Fallback to static data
             try {
                 const faculties = StaticData.getFaculties();
-                const facultySelect = document.getElementById('faculty');
-                
-                // Clear loading option and populate with actual faculties
                 facultySelect.innerHTML = '<option value="">Choose a faculty...</option>';
-                
+
                 faculties.forEach(faculty => {
                     const option = document.createElement('option');
                     option.value = faculty.id;
+                    option.dataset.name = faculty.name;
+                    option.dataset.icon = faculty.icon;
                     option.textContent = faculty.icon + ' ' + faculty.name;
                     facultySelect.appendChild(option);
                 });
+                console.log('Faculties loaded from static data');
             } catch (error) {
                 console.error('Error initializing faculty dropdown:', error);
                 showTempMessage('Error loading faculties. Please refresh the page.', 'danger');
@@ -645,39 +679,64 @@
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', initializeFacultyDropdown);
 
-        // Handle faculty selection change - departments will be loaded from static data
-        document.getElementById('faculty').addEventListener('change', function() {
+        // Handle faculty selection change - fetch departments from API or use static data
+        document.getElementById('faculty').addEventListener('change', async function() {
             const facultyId = this.value;
+            const facultyName = this.options[this.selectedIndex]?.dataset?.name || '';
             const departmentSelect = document.getElementById('department');
             const courseSelect = document.getElementById('course');
 
             // Reset dropdowns
-            departmentSelect.innerHTML = '<option value="">Choose a department...</option>';
+            departmentSelect.innerHTML = '<option value="">Loading departments...</option>';
             courseSelect.innerHTML = '<option value="">Choose a course...</option>';
             departmentSelect.disabled = true;
             courseSelect.disabled = true;
 
-            if (!facultyId) return;
+            if (!facultyId) {
+                departmentSelect.innerHTML = '<option value="">Choose a department...</option>';
+                return;
+            }
 
+            // Try to fetch departments from API
+            let departments = [];
             try {
-                // Get departments for this faculty from static data
-                const faculties = StaticData.getFaculties();
-                const faculty = faculties.find(f => f.id === facultyId);
-                
-                if (faculty && faculty.departments && faculty.departments.length > 0) {
-                    departmentSelect.disabled = false;
-                    faculty.departments.forEach(dept => {
-                        const option = document.createElement('option');
-                        option.value = dept;
-                        option.textContent = dept;
-                        departmentSelect.appendChild(option);
-                    });
-                } else {
-                    departmentSelect.innerHTML = '<option value="">No departments available</option>';
+                const response = await fetch(`${API_BASE_URL}/faculties/${facultyId}/departments`);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    departments = data.departments || data;
                 }
             } catch (error) {
-                console.error('Error fetching departments:', error);
-                departmentSelect.innerHTML = '<option value="">Error loading departments</option>';
+                console.warn('API fetch failed for departments, using static data:', error);
+            }
+
+            // Fallback to static data if no departments from API
+            if (!departments || departments.length === 0) {
+                try {
+                    const faculties = StaticData.getFaculties();
+                    const faculty = faculties.find(f => f.id === facultyId || f.name === facultyName);
+
+                    if (faculty && faculty.departments) {
+                        departments = faculty.departments.map(d => ({ name: d }));
+                    }
+                } catch (staticError) {
+                    console.error('Error loading departments from static data:', staticError);
+                }
+            }
+
+            // Populate department dropdown
+            if (departments && departments.length > 0) {
+                departmentSelect.innerHTML = '<option value="">Choose a department...</option>';
+                departmentSelect.disabled = false;
+
+                departments.forEach(dept => {
+                    const option = document.createElement('option');
+                    option.value = dept.name;
+                    option.textContent = dept.name;
+                    departmentSelect.appendChild(option);
+                });
+            } else {
+                departmentSelect.innerHTML = '<option value="">No departments available</option>';
             }
         });
 
