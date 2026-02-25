@@ -642,7 +642,7 @@
 
                         faculties.forEach(faculty => {
                             const option = document.createElement('option');
-                            option.value = faculty._id || faculty.id;
+                            option.value = faculty._id;
                             option.dataset.name = faculty.name;
                             option.dataset.icon = faculty.icon || '📚';
                             option.textContent = (faculty.icon || '📚') + ' ' + faculty.name;
@@ -663,7 +663,7 @@
 
                 faculties.forEach(faculty => {
                     const option = document.createElement('option');
-                    option.value = faculty.id;
+                    option.value = faculty._id || faculty.id;
                     option.dataset.name = faculty.name;
                     option.dataset.icon = faculty.icon;
                     option.textContent = faculty.icon + ' ' + faculty.name;
