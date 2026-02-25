@@ -837,13 +837,14 @@
                     return;
                 }
 
-                // Get dept name for logging  
+                // Get the department name - always send the name to the API, not the ID
+                // The API expects the department name, not the ObjectId
                 const deptNameAttr = document.getElementById('department').options[document.getElementById('department').selectedIndex]?.dataset?.name;
                 const deptDisplay = deptNameAttr || deptVal;
                 
-                // If deptVal is not an ObjectId (24 hex chars), try to send the name instead
-                // This ensures compatibility with both API ObjectIds and static dept names
-                const deptToSend = /^[0-9a-fA-F]{24}$/.test(deptVal) ? deptVal : (deptNameAttr || deptVal);
+                // Always send department name to API (not ObjectId) to avoid "Department not found" error
+                // The backend validates department by name
+                const deptToSend = deptNameAttr || deptVal;
                 
                 const applicationData = {
                     firstName: (formData.get('firstName') || '').trim(),
@@ -862,7 +863,7 @@
                 };
 
                 console.log('Submitting application payload:', applicationData);
-                console.log('Faculty ID:', facultyVal, 'Department Value:', deptVal, 'Dept To Send:', deptToSend, 'Course:', courseVal);
+                console.log('Faculty ID:', facultyVal, 'Department Value:', deptVal, 'Department Name:', deptToSend, 'Course:', courseVal);
                 const response = await fetch(`${API_BASE_URL}/applications`, {
                     method: 'POST',
                     headers: {
