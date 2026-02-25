@@ -704,7 +704,9 @@
 
                 if (response.ok) {
                     const data = await response.json();
-                    departments = data.departments || data;
+                    // API returns either { faculty: {...}, departments: [...] } or just departments
+                    departments = data.departments || data.faculty?.departments || [];
+                    console.log('Departments from API:', departments);
                 }
             } catch (error) {
                 console.warn('API fetch failed for departments, using static data:', error);
@@ -717,7 +719,9 @@
                     const faculty = faculties.find(f => f.id === facultyId || f.name === facultyName);
 
                     if (faculty && faculty.departments) {
-                        departments = faculty.departments.map(d => ({ name: d }));
+                        // Convert static dept names to objects with both id (name) and name for consistency
+                        departments = faculty.departments.map(d => ({ _id: d, name: d, id: d }));
+                        console.log('Departments from static data:', departments);
                     }
                 } catch (staticError) {
                     console.error('Error loading departments from static data:', staticError);
@@ -731,8 +735,8 @@
 
                 departments.forEach(dept => {
                     const option = document.createElement('option');
-                    // If department object comes from API it should have an _id and name
-                    option.value = dept._id || dept.id || dept.name;
+                    // Prefer _id (ObjectId from API), fall back to name or id (from static)
+                    option.value = dept._id || dept.id || dept.name || dept;
                     option.dataset.name = dept.name || dept;
                     option.textContent = dept.name || dept;
                     departmentSelect.appendChild(option);
@@ -833,6 +837,14 @@
                     return;
                 }
 
+                // Get dept name for logging  
+                const deptNameAttr = document.getElementById('department').options[document.getElementById('department').selectedIndex]?.dataset?.name;
+                const deptDisplay = deptNameAttr || deptVal;
+                
+                // If deptVal is not an ObjectId (24 hex chars), try to send the name instead
+                // This ensures compatibility with both API ObjectIds and static dept names
+                const deptToSend = /^[0-9a-fA-F]{24}$/.test(deptVal) ? deptVal : (deptNameAttr || deptVal);
+                
                 const applicationData = {
                     firstName: (formData.get('firstName') || '').trim(),
                     lastName: (formData.get('lastName') || '').trim(),
@@ -844,12 +856,13 @@
                     satScore: formData.get('satScore') ? parseInt(formData.get('satScore')) : null,
                     actScore: formData.get('actScore') ? parseInt(formData.get('actScore')) : null,
                     faculty: facultyVal,
-                    department: deptVal,
+                    department: deptToSend,
                     course: formData.get('course'),
                     essay: (formData.get('essay') || '').trim()
                 };
 
                 console.log('Submitting application payload:', applicationData);
+                console.log('Faculty ID:', facultyVal, 'Department Value:', deptVal, 'Dept To Send:', deptToSend, 'Course:', courseVal);
                 const response = await fetch(`${API_BASE_URL}/applications`, {
                     method: 'POST',
                     headers: {
