@@ -2024,17 +2024,25 @@
                         const deptResponse = await fetch(`${API_BASE_URL}/faculties/${faculty._id || faculty.id}/departments`);
                         if (deptResponse.ok) {
                             const deptData = await deptResponse.json();
-                            departments = deptData.departments || deptData;
+                            // Ensure departments is always an array before iterating
+                            if (Array.isArray(deptData.departments)) {
+                                departments = deptData.departments;
+                            } else if (Array.isArray(deptData)) {
+                                departments = deptData;
+                            } else {
+                                console.warn(`Unexpected departments format for ${faculty.name}:`, deptData);
+                            }
                         }
                     } catch (deptError) {
-                        console.warn(`Could not fetch departments for ${faculty.name}, using static data`);
+                        console.error(`Error fetching departments for ${faculty.name}:`, deptError);
                     }
                     
-                    // If no departments from API, use static data
-                    if (departments.length === 0) {
+                    // Only use static data fallback if departments is still empty after API attempt
+                    if (!departments || !Array.isArray(departments) || departments.length === 0) {
+                        console.log(`No departments from API for ${faculty.name}, loading from static data`);
                         const staticFaculties = StaticData.getFaculties();
                         const staticFaculty = staticFaculties.find(f => f.name === faculty.name);
-                        if (staticFaculty) {
+                        if (staticFaculty && staticFaculty.departments) {
                             departments = staticFaculty.departments.map(d => ({ name: d, courses: [] }));
                         }
                     }
