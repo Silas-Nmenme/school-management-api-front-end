@@ -614,7 +614,9 @@ facultySelect.addEventListener('change', async function() {
     try {
         const res = await fetch(`${API_BASE_URL}/faculties/${facultyId}/departments`);
         const data = await res.json();
-        const departments = data.departments || data;
+        
+        // Response is { faculty: {...}, departments: [...], totalDepartments: n }
+        const departments = data.departments || [];
 
         departmentSelect.innerHTML = '<option value="">Choose a department...</option>';
         departmentSelect.disabled = false;
@@ -626,6 +628,7 @@ facultySelect.addEventListener('change', async function() {
             departmentSelect.appendChild(option);
         });
     } catch (err) {
+        console.error('Error loading departments:', err);
         showError('Failed to load departments.');
     }
 });
@@ -643,7 +646,16 @@ departmentSelect.addEventListener('change', async function() {
 
     try {
         const res = await fetch(`${API_BASE_URL}/departments/${departmentId}`);
-        const department = await res.json();
+        const data = await res.json();
+        
+        // Response is { message: "...", department: {...} }
+        const department = data.department;
+
+        if (!department || !department.courses) {
+            courseSelect.innerHTML = '<option value="">No courses available</option>';
+            courseSelect.disabled = false;
+            return;
+        }
 
         courseSelect.innerHTML = '<option value="">Choose a course...</option>';
         courseSelect.disabled = false;
@@ -658,6 +670,7 @@ departmentSelect.addEventListener('change', async function() {
             });
 
     } catch (err) {
+        console.error('Error loading courses:', err);
         showError('Failed to load courses.');
     }
 });
