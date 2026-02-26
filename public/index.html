@@ -2024,8 +2024,11 @@
                         const deptResponse = await fetch(`${API_BASE_URL}/faculties/${faculty._id || faculty.id}/departments`);
                         if (deptResponse.ok) {
                             const deptData = await deptResponse.json();
-                            // Ensure departments is always an array before iterating
-                            if (Array.isArray(deptData.departments)) {
+                            // The API returns { message, faculty: { departments: [...] }, totalDepartments }
+                            // Extract departments from deptData.faculty.departments
+                            if (deptData.faculty && Array.isArray(deptData.faculty.departments)) {
+                                departments = deptData.faculty.departments;
+                            } else if (Array.isArray(deptData.departments)) {
                                 departments = deptData.departments;
                             } else if (Array.isArray(deptData)) {
                                 departments = deptData;
