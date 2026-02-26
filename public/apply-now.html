@@ -615,8 +615,8 @@ facultySelect.addEventListener('change', async function() {
         const res = await fetch(`${API_BASE_URL}/faculties/${facultyId}/departments`);
         const data = await res.json();
         
-        // Response is { faculty: {...}, departments: [...], totalDepartments: n }
-        const departments = data.departments || [];
+        // Response is { faculty: { departments: [...] }, totalDepartments: n }
+        const departments = data.faculty?.departments || [];
 
         departmentSelect.innerHTML = '<option value="">Choose a department...</option>';
         departmentSelect.disabled = false;
