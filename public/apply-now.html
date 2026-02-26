@@ -567,388 +567,195 @@
     <script src="js/static-data.js"></script>
     <!-- Custom JS -->
     <script>
-        // API Base URL - Vercel API
-        const API_BASE_URL = 'https://school-management-api-zeta-two.vercel.app/api';
+const API_BASE_URL = 'https://school-management-api-zeta-two.vercel.app/api';
 
-        // Helper functions moved from CSS block
-        function copyApplicationId(id) {
-            if (!id) return;
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(id).then(() => {
-                    showTempMessage('Copied ID to clipboard', 'success', 2500);
-                }).catch(() => {
-                    showTempMessage('Failed to copy ID', 'danger', 2500);
-                });
-            } else {
-                // fallback
-                const ta = document.createElement('textarea');
-                ta.value = id;
-                document.body.appendChild(ta);
-                ta.select();
-                try { document.execCommand('copy'); showTempMessage('Copied ID to clipboard', 'success', 2500); } catch (e) { showTempMessage('Failed to copy ID', 'danger', 2500); }
-                ta.remove();
-            }
-        }
+const facultySelect = document.getElementById('faculty');
+const departmentSelect = document.getElementById('department');
+const courseSelect = document.getElementById('course');
+const form = document.getElementById('applicationForm');
+const alertMessage = document.getElementById('alertMessage');
+const applyBtn = document.getElementById('applyBtn');
+const loadingSpinner = document.getElementById('loadingSpinner');
 
-        async function checkApplicationStatus(applicationId) {
-            if (!applicationId) return;
-            const statusPreview = document.getElementById('statusPreview');
-            if (!statusPreview) return;
-            statusPreview.textContent = 'Checking...';
-            try {
-                const res = await fetch(`${API_BASE_URL}/applications/${encodeURIComponent(applicationId)}/status`, {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                const data = await res.json();
-                if (res.ok) {
-                    statusPreview.innerHTML = `<strong>${data.status}</strong>` + (data.remarks ? ` - ${data.remarks}` : '');
-                } else {
-                    statusPreview.innerHTML = `<span class="text-danger">${data.message || 'Not found'}</span>`;
-                }
-            } catch (error) {
-                console.error('Error fetching application status:', error);
-                statusPreview.innerHTML = '<span class="text-danger">Error</span>';
-            }
-        }
+/* ============================================
+   LOAD FACULTIES
+============================================ */
+async function loadFaculties() {
+    try {
+        const res = await fetch(`${API_BASE_URL}/faculties`);
+        const faculties = await res.json();
 
-        function showTempMessage(message, type = 'info', timeout = 3000) {
-            const alertMessage = document.getElementById('alertMessage');
-            if (!alertMessage) {
-                alert(message);
-                return;
-            }
-            alertMessage.className = `alert alert-${type}`;
-            alertMessage.textContent = message;
-            alertMessage.style.display = 'block';
-            if (timeout > 0) setTimeout(() => { alertMessage.style.display = 'none'; }, timeout);
-        }
+        facultySelect.innerHTML = '<option value="">Choose a faculty...</option>';
 
-        // Map static faculty names to API-compatible IDs
-        const facultyNameToId = {};
-        
-        // Initialize faculty dropdown - tries API first, then falls back to static data
-        async function initializeFacultyDropdown() {
-            const facultySelect = document.getElementById('faculty');
-            facultySelect.innerHTML = '<option value="">Loading faculties...</option>';
+        faculties.forEach(faculty => {
+            const option = document.createElement('option');
+            option.value = faculty._id; // ✅ ObjectId
+            option.textContent = faculty.name;
+            facultySelect.appendChild(option);
+        });
+    } catch (err) {
+        showError('Failed to load faculties.');
+    }
+}
 
-            try {
-                // Try to fetch from API first
-                const response = await fetch(`${API_BASE_URL}/faculties`);
+/* ============================================
+   LOAD DEPARTMENTS BY FACULTY
+============================================ */
+facultySelect.addEventListener('change', async function() {
+    const facultyId = this.value;
 
-                if (response.ok) {
-                    const data = await response.json();
-                    const faculties = data.faculties || data;
+    departmentSelect.innerHTML = '<option value="">Loading departments...</option>';
+    departmentSelect.disabled = true;
+    courseSelect.innerHTML = '<option value="">Choose a course...</option>';
+    courseSelect.disabled = true;
 
-                    if (faculties && faculties.length > 0) {
-                        facultySelect.innerHTML = '<option value="">Choose a faculty...</option>';
+    if (!facultyId) return;
 
-                        faculties.forEach(faculty => {
-                            const option = document.createElement('option');
-                            option.value = faculty._id;
-                            option.dataset.name = faculty.name;
-                            option.dataset.icon = faculty.icon || '📚';
-                            option.textContent = (faculty.icon || '📚') + ' ' + faculty.name;
-                            facultySelect.appendChild(option);
-                        });
-                        console.log('Faculties loaded from API');
-                        return;
-                    }
-                }
-            } catch (error) {
-                console.warn('API fetch failed for faculties, using static data:', error);
-            }
+    try {
+        const res = await fetch(`${API_BASE_URL}/faculties/${facultyId}/departments`);
+        const data = await res.json();
+        const departments = data.departments || data;
 
-            // Fallback to static data
-            try {
-                const faculties = StaticData.getFaculties();
-                facultySelect.innerHTML = '<option value="">Choose a faculty...</option>';
+        departmentSelect.innerHTML = '<option value="">Choose a department...</option>';
+        departmentSelect.disabled = false;
 
-                faculties.forEach((faculty, index) => {
-                    const option = document.createElement('option');
-                    // Use index as fallback ID for static data
-                    const fallbackId = `static-faculty-${index}`;
-                    option.value = fallbackId;
-                    option.dataset.name = faculty.name;
-                    option.dataset.icon = faculty.icon;
-                    option.dataset.isStatic = 'true';
-                    option.textContent = faculty.icon + ' ' + faculty.name;
-                    
-                    // Map the name to our fallback ID
-                    facultyNameToId[faculty.name] = fallbackId;
-                    
-                    facultySelect.appendChild(option);
-                });
-                console.log('Faculties loaded from static data');
-            } catch (error) {
-                console.error('Error initializing faculty dropdown:', error);
-                showTempMessage('Error loading faculties. Please refresh the page.', 'danger');
-            }
-        }
-        
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', initializeFacultyDropdown);
+        departments.forEach(dept => {
+            const option = document.createElement('option');
+            option.value = dept._id; // ✅ ObjectId
+            option.textContent = dept.name;
+            departmentSelect.appendChild(option);
+        });
+    } catch (err) {
+        showError('Failed to load departments.');
+    }
+});
 
-        // Handle faculty selection change - fetch departments from API or use static data
-        document.getElementById('faculty').addEventListener('change', async function() {
-            const facultyId = this.value;
-            const facultyName = this.options[this.selectedIndex]?.dataset?.name || '';
-            const departmentSelect = document.getElementById('department');
-            const courseSelect = document.getElementById('course');
+/* ============================================
+   LOAD COURSES BY DEPARTMENT
+============================================ */
+departmentSelect.addEventListener('change', async function() {
+    const departmentId = this.value;
 
-            // Reset dropdowns
-            departmentSelect.innerHTML = '<option value="">Loading departments...</option>';
-            courseSelect.innerHTML = '<option value="">Choose a course...</option>';
-            departmentSelect.disabled = true;
-            courseSelect.disabled = true;
+    courseSelect.innerHTML = '<option value="">Loading courses...</option>';
+    courseSelect.disabled = true;
 
-            if (!facultyId) {
-                departmentSelect.innerHTML = '<option value="">Choose a department...</option>';
-                return;
-            }
+    if (!departmentId) return;
 
-            // Try to fetch departments from API
-            let departments = [];
-            try {
-                const response = await fetch(`${API_BASE_URL}/faculties/${facultyId}/departments`);
+    try {
+        const res = await fetch(`${API_BASE_URL}/departments/${departmentId}`);
+        const department = await res.json();
 
-                if (response.ok) {
-                    const data = await response.json();
-                    // API returns either { faculty: {...}, departments: [...] } or just departments
-                    departments = data.departments || data.faculty?.departments || [];
-                    console.log('Departments from API:', departments);
-                }
-            } catch (error) {
-                console.warn('API fetch failed for departments, using static data:', error);
-            }
+        courseSelect.innerHTML = '<option value="">Choose a course...</option>';
+        courseSelect.disabled = false;
 
-            // Fallback to static data if no departments from API
-            if (!departments || departments.length === 0) {
-                try {
-                    const faculties = StaticData.getFaculties();
-                    const faculty = faculties.find(f => f.id === facultyId || f.name === facultyName);
+        department.courses
+            .filter(c => c.isActive !== false)
+            .forEach(course => {
+                const option = document.createElement('option');
+                option.value = course.name;
+                option.textContent = course.name;
+                courseSelect.appendChild(option);
+            });
 
-                    if (faculty && faculty.departments) {
-                        // Convert static dept names to objects with both id (name) and name for consistency
-                        departments = faculty.departments.map(d => ({ _id: d, name: d, id: d }));
-                        console.log('Departments from static data:', departments);
-                    }
-                } catch (staticError) {
-                    console.error('Error loading departments from static data:', staticError);
-                }
-            }
+    } catch (err) {
+        showError('Failed to load courses.');
+    }
+});
 
-            // Populate department dropdown
-            if (departments && departments.length > 0) {
-                departmentSelect.innerHTML = '<option value="">Choose a department...</option>';
-                departmentSelect.disabled = false;
+/* ============================================
+   CHARACTER COUNTER
+============================================ */
+document.getElementById('essay').addEventListener('input', function() {
+    document.getElementById('charCount').textContent = 2000 - this.value.length;
+});
 
-                departments.forEach(dept => {
-                    const option = document.createElement('option');
-                    // Prefer _id (ObjectId from API), fall back to name or id (from static)
-                    option.value = dept._id || dept.id || dept.name || dept;
-                    option.dataset.name = dept.name || dept;
-                    option.textContent = dept.name || dept;
-                    departmentSelect.appendChild(option);
-                });
-            } else {
-                departmentSelect.innerHTML = '<option value="">No departments available</option>';
-            }
+/* ============================================
+   SUBMIT APPLICATION
+============================================ */
+form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    alertMessage.style.display = 'none';
+    applyBtn.disabled = true;
+    loadingSpinner.style.display = 'inline-block';
+
+    const formData = new FormData(form);
+    const departmentId = departmentSelect.value;
+
+    if (!departmentId) {
+        showError('Please select a department.');
+        resetButton();
+        return;
+    }
+
+    const payload = {
+        firstName: formData.get('firstName')?.trim(),
+        lastName: formData.get('lastName')?.trim(),
+        email: formData.get('email')?.trim(),
+        phone: formData.get('phone')?.trim(),
+        address: formData.get('address')?.trim(),
+        highSchool: formData.get('highSchool')?.trim(),
+        gpa: formData.get('gpa') ? parseFloat(formData.get('gpa')) : null,
+        satScore: formData.get('satScore') ? parseInt(formData.get('satScore')) : null,
+        actScore: formData.get('actScore') ? parseInt(formData.get('actScore')) : null,
+        departmentId: departmentId, // ✅ ONLY THIS
+        course: formData.get('course'),
+        essay: formData.get('essay')?.trim() || ''
+    };
+
+    try {
+        const res = await fetch(`${API_BASE_URL}/applications`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
         });
 
-        // Handle department selection change - fetch course options from API when possible, otherwise use static data
-        document.getElementById('department').addEventListener('change', async function() {
-            const departmentValue = this.value; // may be _id or name
-            const courseSelect = document.getElementById('course');
+        const data = await res.json();
 
-            // Reset course
-            courseSelect.innerHTML = '<option value="">Choose a course...</option>';
-            courseSelect.disabled = true;
+        if (!res.ok) {
+            showError(data.message || 'Submission failed.');
+            resetButton();
+            return;
+        }
 
-            if (!departmentValue) return;
+        showSuccess(`Application submitted successfully! Your ID: ${data.applicationId}`);
+        form.reset();
+        departmentSelect.disabled = true;
+        courseSelect.disabled = true;
+        document.getElementById('charCount').textContent = '2000';
 
-            // If departmentValue looks like an ObjectId (24 hex) try API
-            const isObjectId = /^[0-9a-fA-F]{24}$/.test(departmentValue);
+    } catch (err) {
+        showError('Network error. Please try again.');
+    } finally {
+        resetButton();
+    }
+});
 
-            try {
-                let courses = [];
+/* ============================================
+   HELPERS
+============================================ */
+function showError(message) {
+    alertMessage.className = 'alert alert-danger';
+    alertMessage.textContent = message;
+    alertMessage.style.display = 'block';
+}
 
-                if (isObjectId) {
-                    const res = await fetch(`${API_BASE_URL}/departments/${departmentValue}/courses`);
-                    if (res.ok) {
-                        const d = await res.json();
-                        // controller may return { courses: [...] } or an array
-                        courses = d.courses || d;
-                    }
-                }
+function showSuccess(message) {
+    alertMessage.className = 'alert alert-success';
+    alertMessage.textContent = message;
+    alertMessage.style.display = 'block';
+}
 
-                // Fallback to static data when API didn't return courses
-                if (!courses || courses.length === 0) {
-                    // Try to infer department name from selected option dataset
-                    const deptName = this.options[this.selectedIndex]?.dataset?.name || this.value;
-                    const faculties = StaticData.getFaculties();
-                    // try to find faculty by matching earlier selected faculty id/name
-                    const facultySelect = document.getElementById('faculty');
-                    const facultyId = facultySelect.value;
-                    const faculty = faculties.find(f => f._id === facultyId || f.id === facultyId || f.name === facultySelect.options[facultySelect.selectedIndex]?.dataset?.name);
-                    const facultyName = faculty ? faculty.name : '';
-                    courses = StaticData.getCourseOptions(deptName, facultyName) || [];
-                }
+function resetButton() {
+    applyBtn.disabled = false;
+    loadingSpinner.style.display = 'none';
+}
 
-                if (courses && courses.length > 0) {
-                    courseSelect.disabled = false;
-                    courses.forEach(course => {
-                        const option = document.createElement('option');
-                        option.value = typeof course === 'string' ? course : course.name || course.title || '';
-                        option.textContent = typeof course === 'string' ? course : course.name || course.title || '';
-                        courseSelect.appendChild(option);
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading course options:', error);
-            }
-        });
+/* ============================================
+   INIT
+============================================ */
+document.addEventListener('DOMContentLoaded', loadFaculties);
+</script>
 
-        // Character counter for essay
-        document.getElementById('essay').addEventListener('input', function() {
-            const remaining = 2000 - this.value.length;
-            document.getElementById('charCount').textContent = remaining;
-        });
-
-        // Form submission
-        document.getElementById('applicationForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const applyBtn = document.getElementById('applyBtn');
-            const loadingSpinner = document.getElementById('loadingSpinner');
-            const alertMessage = document.getElementById('alertMessage');
-
-            // Show loading state
-            applyBtn.disabled = true;
-            loadingSpinner.style.display = 'inline-block';
-
-            // Hide previous alerts
-            alertMessage.style.display = 'none';
-
-            try {
-                const formData = new FormData(this);
-
-                // Basic client-side required-field check to avoid sending incomplete payload
-                const facultyVal = formData.get('faculty');
-                const deptVal = formData.get('department');
-                const courseVal = formData.get('course');
-
-                if (!formData.get('firstName') || !formData.get('lastName') || !formData.get('email') || !formData.get('phone') || !formData.get('highSchool') || !facultyVal || !deptVal || !courseVal) {
-                    alertMessage.className = 'alert alert-danger';
-                    alertMessage.textContent = 'Please complete all required fields before submitting.';
-                    alertMessage.style.display = 'block';
-                    applyBtn.disabled = false;
-                    loadingSpinner.style.display = 'none';
-                    return;
-                }
-
-                // Get the department name - always send the name to the API, not the ID
-                // The API expects the department name, not the ObjectId
-                const deptNameAttr = document.getElementById('department').options[document.getElementById('department').selectedIndex]?.dataset?.name;
-                // Get faculty name for API
-                const facultyNameAttr = document.getElementById('faculty').options[document.getElementById('faculty').selectedIndex]?.dataset?.name;
-                
-                // Check if using static data fallback
-                const isStaticFaculty = document.getElementById('faculty').options[document.getElementById('faculty').selectedIndex]?.dataset?.isStatic === 'true';
-                
-                // Send faculty name if using static data, otherwise send the ID
-                const facultyToSend = isStaticFaculty ? facultyNameAttr : facultyVal;
-                
-                // Always send department name to API (not ObjectId) to avoid "Department not found" error
-                // The backend validates department by name
-                const deptToSend = deptNameAttr || deptVal;
-                
-                const applicationData = {
-                    firstName: (formData.get('firstName') || '').trim(),
-                    lastName: (formData.get('lastName') || '').trim(),
-                    email: (formData.get('email') || '').trim(),
-                    phone: (formData.get('phone') || '').trim(),
-                    address: (formData.get('address') || '').trim(),
-                    highSchool: (formData.get('highSchool') || '').trim(),
-                    gpa: formData.get('gpa') ? parseFloat(formData.get('gpa')) : null,
-                    satScore: formData.get('satScore') ? parseInt(formData.get('satScore')) : null,
-                    actScore: formData.get('actScore') ? parseInt(formData.get('actScore')) : null,
-                    faculty: facultyToSend,
-                    department: deptToSend,
-                    course: formData.get('course'),
-                    essay: (formData.get('essay') || '').trim()
-                };
-
-                console.log('Submitting application payload:', applicationData);
-                console.log('Faculty ID:', facultyVal, 'Department Value:', deptVal, 'Department Name:', deptToSend, 'Course:', courseVal);
-                const response = await fetch(`${API_BASE_URL}/applications`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(applicationData)
-                });
-                let data;
-                try {
-                    data = await response.json();
-                } catch (parseError) {
-                    console.warn('Failed to parse JSON response', parseError);
-                    data = null;
-                }
-
-                if (response.ok) {
-                    // Show success message
-                    alertMessage.className = 'alert alert-success';
-                    alertMessage.innerHTML = `
-                        <strong>Application submitted successfully!</strong><br>
-                        Thank you ${applicationData.firstName}! Your application has been received.<br>
-                        <small>You will receive a confirmation email shortly.</small>
-                    `;
-                    alertMessage.style.display = 'block';
-
-                    // Reset form
-                    this.reset();
-                    document.getElementById('charCount').textContent = '2000';
-                    // Reset dropdowns
-                    document.getElementById('department').disabled = true;
-                    document.getElementById('course').disabled = true;
-                    // Show application id and quick actions
-                    const applicationId = data.applicationId || data.applicationId || data.id || null;
-                    if (applicationId) {
-                        const appRes = document.getElementById('applicationResult');
-                        appRes.innerHTML = `
-                            <div class="alert alert-info">
-                                <strong>Application ID:</strong> <span id="appIdText">${applicationId}</span>
-                                        <div style="margin-top:8px">
-                                            <button class="btn btn-sm btn-secondary me-2" onclick="copyApplicationId('${applicationId}')"><i class="fas fa-copy me-1"></i>Copy ID</button>
-                                            <button class="btn btn-sm btn-custom me-2" onclick="checkApplicationStatus('${applicationId}')"><i class="fas fa-search me-1"></i>Check Status</button>
-                                            <a class="btn btn-sm btn-outline-primary me-2" href="application-status.html?id=${encodeURIComponent(applicationId)}"><i class="fas fa-route me-1"></i>Track Application</a>
-                                            <a class="btn btn-sm btn-secondary" href="mailto:admissions@bethel.edu?subject=${encodeURIComponent('Application Enquiry - ' + applicationId)}&body=${encodeURIComponent('Hello Admissions,%0D%0A%0D%0AI would like to enquire about my application with ID: ' + applicationId + '%0D%0A%0D%0AThank you.')}"><i class="fas fa-envelope me-1"></i>Contact Admissions</a>
-                                            <span id="statusPreview" style="margin-left:12px"></span>
-                                        </div>
-                            </div>
-                        `;
-                        appRes.style.display = 'block';
-                    }
-                } else {
-                    // Try to show server message if available, otherwise fallback to status text
-                    const serverMsg = (data && data.message) ? data.message : (response.statusText || `Request failed with status ${response.status}`);
-                    console.error('Application submission failed:', response.status, serverMsg, data);
-                    alertMessage.className = 'alert alert-danger';
-                    alertMessage.textContent = serverMsg;
-                    alertMessage.style.display = 'block';
-                }
-            } catch (error) {
-                console.error('Application submission error:', error);
-                alertMessage.className = 'alert alert-danger';
-                alertMessage.textContent = 'Network error. Please check your connection and try again.';
-                alertMessage.style.display = 'block';
-            } finally {
-                // Hide loading state
-                applyBtn.disabled = false;
-                loadingSpinner.style.display = 'none';
-            }
-        });
-    </script>
 </body>
 </html>
