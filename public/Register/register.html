@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Bethel College</title>
+</head>
+<body>
+      <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Custom CSS -->
+
+<link href="./register.css" rel="stylesheet">
+
+ <div class="back-to-home">
+        <a href="../Home/home.html"><i class="fas fa-arrow-left"></i>Back to Home</a>
+    </div>
+
+    <!-- Success Overlay -->
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-icon animate__animated animate__bounceIn">
+            <i class="fas fa-check"></i>
+        </div>
+        <div class="success-text">
+            <h3>Welcome to Bethel College!</h3>
+            <p>Your account has been created successfully.</p>
+            <p style="margin-top: 12px; font-size: 0.9rem; color: #9ca3af;">Redirecting to login page...</p>
+        </div>
+    </div>
+
+    <div class="register-container">
+        <div class="register-header">
+            <h2><i class="fas fa-graduation-cap me-2"></i>Bethel College</h2>
+            <p>Create your account to get started</p>
+        </div>
+        <div class="register-body">
+            <!-- Alert Messages -->
+            <div id="alertMessage" class="alert" style="display: none;"></div>
+
+            <!-- Registration Type Selector -->
+            <div class="registration-type-selector">
+                <h5><i class="fas fa-user-plus me-2"></i>Register as:</h5>
+                <div class="type-buttons">
+                    <button type="button" class="type-btn active" data-type="student">
+                        <i class="fas fa-user-graduate me-1"></i>Student
+                    </button>
+                    <!-- Admin registration removed to prevent public admin self-registration
+                    <button type="button" class="type-btn" data-type="admin">
+                        <i class="fas fa-crown me-1"></i>Admin
+                    </button>
+                    -->
+                </div>
+            </div>
+
+            <!-- Student Registration Form -->
+            <div id="studentForm">
+                <!-- Progress Steps -->
+                <div class="progress-steps" id="studentProgressSteps">
+                    <div class="progress-step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Personal</div>
+                    </div>
+                    <div class="progress-step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Contact</div>
+                    </div>
+                    <div class="progress-step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Account</div>
+                    </div>
+                </div>
+
+                <form id="registerForm">
+                    <!-- Step 1: Personal Information -->
+                    <div class="form-step active" data-step="1">
+                        <div class="form-section">
+                            <h6><i class="fas fa-user-graduate"></i>Personal Information</h6>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="studentId" class="form-label">
+                                        <i class="fas fa-id-badge"></i>Student ID <span class="required">*</span>
+                                    </label>
+                                    <div class="input-group-validate">
+                                        <input type="text" class="form-control" id="studentId" name="studentId" placeholder="e.g. STU123456" required>
+                                        <span class="validation-icon" id="studentIdIcon"></span>
+                                    </div>
+                                    <div class="invalid-feedback" id="studentIdError">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName" class="form-label">
+                                        <i class="fas fa-user"></i>First Name <span class="required">*</span>
+                                    </label>
+                                    <div class="input-group-validate">
+                                        <input type="text" class="form-control" id="firstName" name="Firstname" placeholder="Enter your first name" required>
+                                        <span class="validation-icon" id="firstNameIcon"></span>
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <span>First name is required</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName" class="form-label">
+                                        <i class="fas fa-user"></i>Last Name <span class="required">*</span>
+                                    </label>
+                                    <div class="input-group-validate">
+                                        <input type="text" class="form-control" id="lastName" name="Lastname" placeholder="Enter your last name" required>
+                                        <span class="validation-icon" id="lastNameIcon"></span>
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <span>Last name is required</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="age" class="form-label">
+                                    <i class="fas fa-birthday-cake"></i>Age <span class="required">*</span>
+                                </label>
+                                <div class="input-group-validate">
+                                    <input type="number" class="form-control" id="age" name="age" min="1" max="150" placeholder="Enter your age" required>
+                                    <span class="validation-icon" id="ageIcon"></span>
+                                </div>
+                                <div class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>Please enter a valid age</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-navigation">
+                            <button type="button" class="btn btn-next" onclick="nextStep('student')">
+                                Next Step <i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Contact Information -->
+                    <div class="form-step" data-step="2">
+                        <div class="form-section">
+                            <h6><i class="fas fa-address-book"></i>Contact Information</h6>
+                            <div class="form-group">
+                                <label for="email" class="form-label">
+                                    <i class="fas fa-envelope"></i>Email Address <span class="required">*</span>
+                                </label>
+                                <div class="input-group-validate">
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="your.email@example.com" required>
+                                    <span class="validation-icon" id="emailIcon"></span>
+                                </div>
+                                <div class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>Please enter a valid email address</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone" class="form-label">
+                                    <i class="fas fa-phone"></i>Phone Number <span class="required">*</span>
+                                </label>
+                                <div class="input-group-validate">
+                                    <input type="tel" class="form-control" id="phone" name="phone" placeholder="e.g. +1 234 567 8900" required>
+                                    <span class="validation-icon" id="phoneIcon"></span>
+                                </div>
+                                <div class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>Phone number is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-navigation">
+                            <button type="button" class="btn btn-prev" onclick="prevStep('student')">
+                                <i class="fas fa-arrow-left me-2"></i>Previous
+                            </button>
+                            <button type="button" class="btn btn-next" onclick="nextStep('student')">
+                                Next Step <i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Account Setup -->
+                    <div class="form-step" data-step="3">
+                        <div class="form-section">
+                            <h6><i class="fas fa-lock"></i>Account Setup</h6>
+                            <div class="form-group">
+                                <label for="password" class="form-label">
+                                    <i class="fas fa-lock"></i>Password <span class="required">*</span>
+                                </label>
+                                <div class="input-group-validate">
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Create a strong password" required>
+                                    <span class="validation-icon" id="passwordIcon"></span>
+                                </div>
+                                <div class="password-strength-container">
+                                    <div class="password-strength-bar">
+                                        <div class="password-strength-fill" id="passwordStrengthFill"></div>
+                                    </div>
+                                    <div class="password-strength-text" id="passwordStrengthText"></div>
+                                </div>
+                                <div class="password-requirements">
+                                    <div class="password-requirements-title">Password must contain:</div>
+                                    <div class="password-requirement" id="req-length">
+                                        <met><i class="fas fa-check"></i></met>
+                                        <span>At least 8 characters</span>
+                                    </div>
+                                    <div class="password-requirement" id="req-lower">
+                                        <met><i class="fas fa-check"></i></met>
+                                        <span>Lowercase letter (a-z)</span>
+                                    </div>
+                                    <div class="password-requirement" id="req-upper">
+                                        <met><i class="fas fa-check"></i></met>
+                                        <span>Uppercase letter (A-Z)</span>
+                                    </div>
+                                    <div class="password-requirement" id="req-number">
+                                        <met><i class="fas fa-check"></i></met>
+                                        <span>Number (0-9)</span>
+                                    </div>
+                                    <div class="password-requirement" id="req-special">
+                                        <met><i class="fas fa-check"></i></met>
+                                        <span>Special character (!@#$%^&*)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmPassword" class="form-label">
+                                    <i class="fas fa-lock"></i>Confirm Password <span class="required">*</span>
+                                </label>
+                                <div class="input-group-validate">
+                                    <input type="password" class="form-control" id="confirmPassword" name="confirmpassword" placeholder="Confirm your password" required>
+                                    <span class="validation-icon" id="confirmPasswordIcon"></span>
+                                </div>
+                                <div class="password-match" id="passwordMatch">
+                                    <i class="fas fa-circle"></i>
+                                    <span>Passwords do not match</span>
+                                </div>
+                            </div>
+
+                            <!-- Privacy Policy Checkbox -->
+                            <div class="privacy-checkbox">
+                                <input type="checkbox" id="privacyPolicy" name="privacyPolicy" required>
+                                <label for="privacyPolicy">
+                                    I agree to the <a href="privacy.html" target="_blank">Privacy Policy</a> and <a href="terms.html" target="_blank">Terms of Service</a>. I understand that my personal information will be processed securely.
+                                </label>
+                            </div>
+                            <div class="invalid-feedback" id="privacyError" style="display: none; margin-top: 10px;">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>You must agree to the privacy policy</span>
+                            </div>
+                        </div>
+                        <div class="form-navigation">
+                            <button type="button" class="btn btn-prev" onclick="prevStep('student')">
+                                <i class="fas fa-arrow-left me-2"></i>Previous
+                            </button>
+                            <button type="submit" class="btn btn-register" id="registerBtn">
+                                <span class="loading-spinner" id="loadingSpinner"></span>
+                                <i class="fas fa-user-plus me-2"></i>Create Account
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Admin registration removed entirely. -->
+
+            <div class="login-link">
+                Already have an account? <a href="../Login/login.html">Sign in here</a>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./register.js"></script>
+</body>
+</html>
