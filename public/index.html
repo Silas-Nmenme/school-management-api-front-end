@@ -1815,12 +1815,12 @@
             <div class="row">
                 <div class="col-lg-4 mb-4 mb-lg-0">
                     <div class="d-flex align-items-center justify-content-center justify-content-lg-start mb-3">
-                        <div class="brand-icon me-2" style="width: 50px; height: 50px; background: var(--gradient-primary); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                        <div class="brand-icon me-2" style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
                             <i class="fas fa-graduation-cap"></i>
                         </div>
-                        <h5 class="mb-0" style="font-size: 1.5rem;">Bethel College</h5>
+                        <h5 class="mb-0" style="font-size: 1.5rem; color: white;">Bethel College</h5>
                     </div>
-                    <p class="text-light mb-3" style="color: var(--neutral-400);">Excellence in Education, Innovation in Learning. Empowering minds, shaping futures since 2005.</p>
+                    <p class="text-light mb-3" style="color: #e6e9f2;">Excellence in Education, Innovation in Learning. Empowering minds, shaping futures since 2005.</p>
                     <div class="social-links" style="justify-content: flex-start;">
                         <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
@@ -1829,7 +1829,7 @@
                     </div>
                 </div>
                 <div class="col-lg-4 mb-4 mb-lg-0">
-                    <h5 class="mb-3">Quick Links</h5>
+                    <h5 class="mb-3" style="color: white;">Quick Links</h5>
                     <ul class="footer-links">
                         <li><a href="#home">Home</a></li>
                         <li><a href="#features">Why Choose Us</a></li>
@@ -1839,7 +1839,7 @@
                     </ul>
                 </div>
                 <div class="col-lg-4">
-                    <h5 class="mb-3">Admissions</h5>
+                    <h5 class="mb-3" style="color: white;">Admissions</h5>
                     <ul class="footer-links">
                         <li><a href="apply-now.html">Apply Now</a></li>
                         <li><a href="tuition-fees.html">Tuition & Fees</a></li>
@@ -1850,7 +1850,7 @@
                 </div>
             </div>
             <hr style="border-color: rgba(255,255,255,0.1); margin: 30px 0;">
-            <p class="mb-0" style="color: var(--neutral-500);">&copy; 2026 Bethel College. All rights reserved.</p>
+            <p class="mb-0" style="color: #dbe4ff;">&copy; <span id="currentYear"></span> Bethel College. All rights reserved.</p>
         </div>
     </footer>
 
@@ -2236,6 +2236,9 @@
                 }
             });
         });
+
+        // Automatic year adjustment
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
     </script>
 </body>
 </html>
