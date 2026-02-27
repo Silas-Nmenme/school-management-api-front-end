@@ -533,6 +533,13 @@
                 top: 50%;
                 transform: translateY(-50%);
                 z-index: 1001;
+                transition: transform 0.3s ease;
+            }
+            .navbar-toggler.collapsed .fas {
+                transform: rotate(0deg);
+            }
+            .navbar-toggler:not(.collapsed) .fas {
+                transform: rotate(90deg);
             }
             .navbar-brand {
                 padding-right: 50px;
@@ -1551,7 +1558,7 @@
                 <span>Bethel <span>College</span></span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+                <i class="fas fa-bars"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
@@ -2203,6 +2210,34 @@
 
         // Load programs when page loads
         document.addEventListener('DOMContentLoaded', loadPrograms);
+
+        // Navbar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbarToggler = document.querySelector('.navbar-toggler');
+            const navbarCollapse = document.getElementById('navbarNav');
+            const navbarTogglerIcon = navbarToggler.querySelector('i');
+
+            // Toggle icon on collapse show/hide
+            navbarCollapse.addEventListener('show.bs.collapse', function() {
+                navbarTogglerIcon.classList.remove('fa-bars');
+                navbarTogglerIcon.classList.add('fa-times');
+            });
+
+            navbarCollapse.addEventListener('hide.bs.collapse', function() {
+                navbarTogglerIcon.classList.remove('fa-times');
+                navbarTogglerIcon.classList.add('fa-bars');
+            });
+
+            // Close navbar when clicking outside
+            document.addEventListener('click', function(event) {
+                const isClickInsideNavbar = navbarCollapse.contains(event.target) || navbarToggler.contains(event.target);
+                if (!isClickInsideNavbar && navbarCollapse.classList.contains('show')) {
+                    const bsCollapse = new bootstrap.Collapse(navbarCollapse, {
+                        hide: true
+                    });
+                }
+            });
+        });
     </script>
 </body>
 </html>
