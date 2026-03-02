@@ -127,14 +127,14 @@
                     `;
                     alertMessage.style.display = 'block';
 
-                    // Redirect to appropriate dashboard after delay
+// Redirect to appropriate dashboard after delay
                     setTimeout(() => {
                         // Determine dashboard based on role (you can store role in localStorage)
                         const userRole = localStorage.getItem('userRole') || 'staff';
                         if (userRole === 'admin') {
-                            window.location.href = 'admin_dashboard.html';
+                            window.location.href = '../Admindashboard/admin_dashboard.html';
                         } else {
-                            window.location.href = 'staff_dashboard.html';
+                            window.location.href = '../Staffdashboard/staff_dashboard.html';
                         }
                     }, 3000);
                 } else {

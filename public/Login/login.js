@@ -140,7 +140,7 @@
                     return;
                 }
 
-                // Handle successful login with token
+// Handle successful login with token
                 if (data.token) {
                     // Store authentication data
                     localStorage.setItem('token', data.token);
@@ -162,14 +162,28 @@
                     // Store staff-specific data
                     if (selectedRole === 'staff' && data.staff) {
                         localStorage.setItem('staffData', JSON.stringify(data.staff));
+                        // Store staff ID for password change redirect
+                        localStorage.setItem('staffId', data.staff._id);
                     }
 
                     // Show success message
                     showAlert('alert-success', 'Login successful! Redirecting...');
 
+                    // Check if password change is required (first-time login)
+                    const requiresPasswordChange = data.mustChangePassword === true;
+
                     // Redirect after short delay
                     setTimeout(() => {
-                        const redirectUrl = getRedirectUrl(selectedRole);
+                        let redirectUrl;
+                        
+                        if (requiresPasswordChange && selectedRole === 'staff') {
+                            // For first-time staff login, redirect to password change page
+                            const staffId = data.staff?._id || localStorage.getItem('staffId');
+                            redirectUrl = `../Changepassword/password.html?staffId=${staffId}`;
+                        } else {
+                            redirectUrl = getRedirectUrl(selectedRole);
+                        }
+                        
                         window.location.href = redirectUrl;
                     }, 800);
                 } else {
