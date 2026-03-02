@@ -27,7 +27,7 @@
     localStorage.removeItem('staffToken');
     localStorage.removeItem('staffData');
     localStorage.removeItem('userData');
-    window.location.href = 'login.html';
+    window.location.href = '../Login/login.html';
   }
 
   // Check if user is authenticated

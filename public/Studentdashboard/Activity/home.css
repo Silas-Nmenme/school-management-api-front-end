@@ -1,0 +1,455 @@
+:root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary-color: #667eea;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --card-shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .dashboard-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin: 15px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .dashboard-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .dashboard-header h1 {
+            margin: 0;
+            font-size: 1.75rem;
+            font-weight: bold;
+        }
+        
+        .dashboard-header p {
+            margin: 8px 0 0;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .student-info {
+            position: static;
+            text-align: center;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .dashboard-body {
+            padding: 20px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-shadow-hover);
+        }
+        
+        .card-header {
+            background: var(--primary-gradient);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 15px;
+        }
+        
+        .card-header h5 {
+            margin: 0;
+            font-size: 1rem;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .btn-custom {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 10px;
+            padding: 10px 16px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+        
+        .btn-back {
+            background: #6c757d;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 16px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-back:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            color: white;
+        }
+        
+        .logout-btn {
+            background: #dc3545;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 16px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+        
+        .logout-btn:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            color: white;
+        }
+        
+        .navbar {
+            background: var(--primary-gradient);
+            padding: 12px 15px;
+        }
+        
+        .navbar-brand {
+            color: white !important;
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
+        
+        .navbar-toggler {
+            border: none;
+            padding: 8px 12px;
+        }
+        
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+        
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+        
+        .navbar-nav .nav-link {
+            color: white !important;
+            margin: 5px 0;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 8px 0;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            color: #f8f9fa !important;
+        }
+        
+        .navbar-collapse {
+            text-align: center;
+            padding-top: 10px;
+        }
+        
+        .nav-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .activity-item {
+            background: #f8f9fa;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .activity-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .activity-item.success {
+            border-left-color: #28a745;
+        }
+        
+        .activity-item.warning {
+            border-left-color: #ffc107;
+        }
+        
+        .activity-item.info {
+            border-left-color: #17a2b8;
+        }
+        
+        .activity-item.danger {
+            border-left-color: #dc3545;
+        }
+        
+        .activity-icon {
+            font-size: 1.25rem;
+            margin-right: 12px;
+            width: 30px;
+            text-align: center;
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        
+        .activity-description {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+        
+        .activity-time {
+            color: #adb5bd;
+            font-size: 0.8rem;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-btn {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            border-radius: 20px;
+            padding: 6px 16px;
+            color: var(--primary-color);
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--primary-gradient);
+            border-color: transparent;
+            color: white;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: center;
+            width: 100%;
+            font-size: 0.85rem;
+        }
+        
+        .footer p {
+            margin: 5px 0;
+        }
+        
+        .text-muted {
+            color: #6c757d !important;
+            font-size: 0.85rem;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 15px;
+        }
+        
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .stat-card h5 {
+            font-size: 0.9rem;
+            margin: 5px 0 0;
+        }
+        
+        .icon-large {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        @media (min-width: 768px) {
+            .dashboard-container {
+                margin: 20px;
+            }
+            
+            .dashboard-header {
+                padding: 30px;
+            }
+            
+            .dashboard-header h1 {
+                font-size: 2rem;
+            }
+            
+            .student-info {
+                position: absolute;
+                top: 20px;
+                right: 30px;
+                text-align: right;
+                margin-top: 0;
+                padding-top: 0;
+                border-top: none;
+            }
+            
+            .dashboard-body {
+                padding: 30px;
+            }
+            
+            .card-body {
+                padding: 25px;
+            }
+            
+            .card-header {
+                padding: 18px;
+            }
+            
+            .card-header h5 {
+                font-size: 1.1rem;
+            }
+            
+            .navbar {
+                padding: 15px 30px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.5rem;
+            }
+            
+            .navbar-nav .nav-link {
+                margin: 0 15px;
+                padding: 0;
+            }
+            
+            .nav-actions {
+                flex-direction: row;
+                margin-top: 0;
+            }
+            
+            .footer {
+                padding: 20px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .dashboard-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .dashboard-body {
+                padding: 40px;
+            }
+            
+            .card-body {
+                padding: 30px;
+            }
+            
+            .btn-custom {
+                padding: 12px 20px;
+            }
+        }
+        
+        @media (max-width: 575.98px) {
+            .dashboard-container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .dashboard-header {
+                padding: 20px 15px;
+            }
+            
+            .dashboard-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .dashboard-body {
+                padding: 15px;
+            }
+            
+            .card {
+                margin-bottom: 15px;
+                border-radius: 12px;
+            }
+            
+            .card-header {
+                padding: 12px 15px;
+                border-radius: 12px 12px 0 0;
+            }
+            
+            .card-header h5 {
+                font-size: 0.95rem;
+            }
+            
+            .card-body {
+                padding: 15px;
+            }
+            
+            .activity-item {
+                padding: 12px;
+            }
+            
+            .activity-icon {
+                font-size: 1rem;
+                width: 25px;
+            }
+            
+            .footer {
+                padding: 12px 10px;
+                font-size: 0.75rem;
+            }
+        }

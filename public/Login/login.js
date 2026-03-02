@@ -18,9 +18,9 @@
             
             // Dashboard redirects for each role
             dashboards: {
-                student: 'student_dashboard.html',
+                student: '../Studentdashboard/home.html',
                 admin: 'admin_dashboard.html',
-                staff: 'staff_dashboard.html'
+                staff: '../Staffdashboard/staff_dashboard.html'
             }
         };
 
