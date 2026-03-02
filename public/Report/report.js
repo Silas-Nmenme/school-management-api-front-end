@@ -85,7 +85,7 @@ const API_BASE_URL = 'https://school-management-api-zeta-two.vercel.app/api/admi
                     let html = `<h6>Total Courses: ${totalCourses}</h6>`;
                     html += '<table class="table table-striped"><thead><tr><th>ID</th><th>Name</th><th>Instructor</th><th>Max Students</th><th>Duration</th></tr></thead><tbody>';
                     courses.forEach(course => {
-                        const instructorName = typeof course.instructor === 'object' ? course.instructor.name : course.instructor;
+                        const instructorName = course.instructor && typeof course.instructor === 'object' ? course.instructor.name : (course.instructor || 'N/A');
                         html += `<tr><td>${course.courseId}</td><td>${course.name}</td><td>${instructorName}</td><td>${course.maxStudents}</td><td>${course.duration}</td></tr>`;
                     });
                     html += '</tbody></table>';
