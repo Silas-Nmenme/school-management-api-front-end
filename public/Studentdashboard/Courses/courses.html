@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses - Bethel College</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+     <link rel="stylesheet" href="./courses.css">
+</head>
+<body>
+    <div class="courses-container">
+        <div class="courses-header">
+            <h1><i class="fas fa-book me-2"></i>Courses - Bethel College</h1>
+            <p>Browse available courses and manage your enrollments</p>
+        </div>
+        <div class="courses-body">
+            <!-- Alert Messages -->
+            <div id="alertMessage" class="alert" style="display: none;"></div>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="text-center" style="padding: 60px 20px;">
+                <div class="loading-spinner" style="width: 40px; height: 40px; border-width: 3px; margin: 0 auto 20px;"></div>
+                <h5>Loading courses...</h5>
+            </div>
+
+            <!-- Available Courses Section -->
+            <div id="availableCoursesSection" style="display: none;">
+                <h3 class="section-title"><i class="fas fa-plus-circle me-2"></i>Available Courses</h3>
+                <div class="row" id="availableCoursesRow">
+                    <!-- Available courses will be populated here -->
+                </div>
+                <div id="noAvailableCourses" class="no-courses" style="display: none;">
+                    <i class="fas fa-book-open"></i>
+                    <h4>No Available Courses</h4>
+                    <p>All courses are currently full or unavailable.</p>
+                </div>
+            </div>
+
+            <!-- Registered Courses Section -->
+            <div id="registeredCoursesSection" style="display: none;">
+                <h3 class="section-title"><i class="fas fa-check-circle me-2"></i>Registered Courses</h3>
+                <div class="row" id="registeredCoursesRow">
+                    <!-- Registered courses will be populated here -->
+                </div>
+                <div id="noRegisteredCourses" class="no-courses" style="display: none;">
+                    <i class="fas fa-user-graduate"></i>
+                    <h4>No Registered Courses</h4>
+                    <p>You haven't registered for any courses yet.</p>
+                </div>
+            </div>
+
+            <!-- Exam Registration Button -->
+            <div class="text-center mt-4">
+                <button class="btn btn-custom" onclick="registerForExam()">
+                    <i class="fas fa-clipboard-list me-2"></i>Register for Exams
+                </button>
+            </div>
+
+            <!-- Exam Registration Modal -->
+            <div class="modal fade" id="examRegistrationModal" tabindex="-1" aria-labelledby="examRegistrationModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="examRegistrationModalLabel">Register for Exams</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                <div class="modal-body">
+                    <p>Select the courses for which you want to register for exams:</p>
+                    <form id="examRegistrationForm">
+                        <div id="examCoursesList" class="mb-3">
+                            <!-- Courses will be populated here -->
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-custom">Register for Selected Exams</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Course Details Modal -->
+            <div class="modal fade" id="courseDetailsModal" tabindex="-1" aria-labelledby="courseDetailsModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="courseDetailsModalLabel">Course Details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" id="courseDetailsBody">
+                            <!-- Details will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+            <!-- Back Button -->
+            <div class="text-center mt-4">
+                <a href="student_dashboard.html" class="btn btn-secondary-custom">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+     <script src="./courses.js"></script>
+</body>
+</html>
