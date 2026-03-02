@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgot Password - School Management System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="forgot.css" rel="stylesheet">
+</head>
+<body>
+    <div class="back-to-home">
+        <a href="home/home.html"><i class="fas fa-arrow-left me-2"></i>Back to Home</a>
+    </div>
+
+    <div class="forgot-container">
+        <div class="forgot-header">
+            <h2><i class="fas fa-key me-2"></i>Forgot Password</h2>
+            <p>We'll help you reset your password</p>
+        </div>
+        <div class="forgot-body">
+            <!-- Step Indicator -->
+            <div class="step-indicator">
+                <div class="step active" id="step1">1</div>
+                <div class="step" id="step2">2</div>
+                <div class="step" id="step3">3</div>
+            </div>
+
+            <!-- Alert Messages -->
+            <div id="alertMessage" class="alert" style="display: none;"></div>
+
+            <!-- Step 1: Email Input -->
+            <div id="step1Content">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="email" name="email" required placeholder="Enter your registered email">
+                </div>
+                <button type="button" class="btn btn-send-otp" id="sendOtpBtn">
+                    <span class="loading-spinner" id="loadingSpinner"></span>
+                    Send OTP
+                </button>
+            </div>
+
+            <!-- Step 2: OTP Verification -->
+            <div id="step2Content" style="display: none;">
+                <div class="form-group">
+                    <label for="otp" class="form-label">Enter OTP</label>
+                    <input type="text" class="form-control" id="otp" name="otp" required placeholder="Enter 6-digit OTP" maxlength="6">
+                </div>
+                <button type="button" class="btn btn-send-otp" id="verifyOtpBtn">
+                    <span class="loading-spinner" id="verifySpinner"></span>
+                    Verify OTP
+                </button>
+            </div>
+
+            <!-- Step 3: Reset Password -->
+            <div id="step3Content" style="display: none;">
+                <div class="form-group">
+                    <label for="newPassword" class="form-label">New Password</label>
+                    <input type="password" class="form-control" id="newPassword" name="newPassword" required placeholder="Enter new password">
+                </div>
+                <div class="form-group">
+                    <label for="confirmNewPassword" class="form-label">Confirm New Password</label>
+                    <input type="password" class="form-control" id="confirmNewPassword" name="confirmNewPassword" required placeholder="Confirm new password">
+                </div>
+                <button type="button" class="btn btn-send-otp" id="resetPasswordBtn">
+                    <span class="loading-spinner" id="resetSpinner"></span>
+                    Reset Password
+                </button>
+            </div>
+
+            <div class="back-to-login">
+                Remember your password? <a href="../Login/login.html">Back to Login</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+     <script src="forgot.js"></script>
+</body>
+</html>

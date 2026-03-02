@@ -5,7 +5,7 @@
 
             if (!token || userRole !== 'student') {
                 alert('Access denied. Please log in as a student.');
-                window.location.href = 'login.html';
+                window.location.href = '../Login/login.html';
                 return;
             }
 

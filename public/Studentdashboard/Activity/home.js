@@ -8,7 +8,7 @@
 
             if (!token || userRole !== 'student') {
                 alert('Access denied. Please log in as a student.');
-                window.location.href = 'login.html';
+                window.location.href = '../Login/login.html';
                 return;
             }
 
@@ -50,7 +50,7 @@
             localStorage.removeItem('token');
             localStorage.removeItem('userRole');
             localStorage.removeItem('studentName');
-            window.location.href = 'login.html';
+            window.location.href = '../Login/login.html';
         });
 
         // Helper function to extract meaningful activity details

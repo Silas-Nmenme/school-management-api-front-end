@@ -6,38 +6,29 @@
     <title>Application Status - Bethel College</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root { --brand-1: #667eea; --brand-2: #764ba2; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg,var(--brand-1) 0,var(--brand-2) 100%); margin:0; min-height:100vh; }
-        .container-page { max-width:1100px; margin: 90px auto 60px; }
-        .card-status { border-radius:12px; box-shadow:0 20px 40px rgba(0,0,0,0.08); }
-        .brand-btn { background: linear-gradient(135deg,var(--brand-1),var(--brand-2)); color:#fff; border:none }
-        .back-link { position: absolute; left:16px; top:18px; }
-        .navbar-brand { color: #fff !important; font-weight:700 }
-        footer { background:#0e1536; color:#e6e9f2; padding:32px 0 }
-        footer a { color:#dbe4ff }
-    </style>
+    <link href="status.css" rel="stylesheet">
+
 </head>
 <body>
-    <!-- Top navbar -->
+     <!-- Top navbar -->
     <nav class="navbar navbar-expand-lg" style="background:linear-gradient(135deg,var(--brand-1),var(--brand-2));">
         <div class="container">
-            <a class="navbar-brand" href="Home/home.html"><i class="fas fa-graduation-cap me-2"></i>Bethel College</a>
+            <a class="navbar-brand" href="../Studentdashboard/home.html"><i class="fas fa-graduation-cap me-2"></i>Bethel College</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navTop" aria-controls="navTop" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navTop">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link text-white" href="apply-now.html">Apply Now</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="./Register/register.html">Register</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="./Contact/contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="../Applynow/apply.html">Apply Now</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="../Register/register.html">Register</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="../Contact/contact.html">Contact</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <div class="container container-page">
-        <a href="Home/home.html" class="btn btn-light btn-sm back-link"><i class="fas fa-arrow-left me-1"></i>Back</a>
+        <a href="../Studentdashboard/home.html" class="btn btn-light btn-sm back-link"><i class="fas fa-arrow-left me-1"></i>Back</a>
 
         <div class="row g-4">
             <div class="col-lg-8">
@@ -52,7 +43,7 @@
                         </div>
                         <div class="col-md-4 mb-3 d-flex gap-2">
                             <button id="checkBtn" class="btn brand-btn w-100">Check Status</button>
-                            <a id="newAppBtn" href="apply-now.html" class="btn btn-outline-secondary w-100">New Application</a>
+                            <a id="newAppBtn" href="../Applynow/apply.html" class="btn btn-outline-secondary w-100">New Application</a>
                         </div>
                     </div>
 
@@ -70,8 +61,8 @@
                     <hr>
                     <p class="small text-muted mb-1">Quick links</p>
                     <div class="d-flex flex-column">
-                        <a class="btn btn-sm btn-outline-primary mb-2" href="apply-now.html"><i class="fas fa-file-circle-plus me-1"></i>Apply Now</a>
-                        <a class="btn btn-sm btn-outline-secondary" href="register.html"><i class="fas fa-user-plus me-1"></i>Register</a>
+                        <a class="btn btn-sm btn-outline-primary mb-2" href="../Applynow/apply.html"><i class="fas fa-file-circle-plus me-1"></i>Apply Now</a>
+                        <a class="btn btn-sm btn-outline-secondary" href="../Register/register.html"><i class="fas fa-user-plus me-1"></i>Register</a>
                     </div>
                 </div>
             </div>
@@ -100,21 +91,21 @@
                 <div class="col-lg-4 mb-4 mb-lg-0">
                     <h5 class="mb-3">Quick Links</h5>
                     <ul class="footer-links">
-                        <li><a href="Home/home.html#home">Home</a></li>
-                        <li><a href="Home/home.html#features">Why Choose Us</a></li>
-                        <li><a href="Home/home.html#programs">Academic Programs</a></li>
-                        <li><a href="Home/home.html#about">About</a></li>
-                        <li><a href="Home/home.html#contact">Contact</a></li>
+                        <li><a href="../Home/home.html#home">Home</a></li>
+                        <li><a href="../Home/home.html#features">Why Choose Us</a></li>
+                        <li><a href="../Home/home.html#programs">Academic Programs</a></li>
+                        <li><a href="../Home/home.html#about">About</a></li>
+                        <li><a href="../Home/home.html#contact">Contact</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-4">
                     <h5 class="mb-3">Admissions</h5>
                     <ul class="footer-links">
-                        <li><a href="apply-now.html">Apply Now</a></li>
-                        <li><a href="tuition-fees.html">Tuition & Fees</a></li>
-                        <li><a href="financial-aid.html">Financial Aid</a></li>
-                        <li><a href="visit-campus.html">Visit Campus</a></li>
-                        <li><a href="student-life.html">Student Life</a></li>
+                        <li><a href="../Applynow/apply.html">Apply Now</a></li>
+                        <li><a href="../Tuitionfees/fees.html">Tuition & Fees</a></li>
+                        <li><a href="../Financialaid/financial.html">Financial Aid</a></li>
+                        <li><a href="../Visitcampus/campus.html">Visit Campus</a></li>
+                        <li><a href="../Studentlife/life.html">Student Life</a></li>
                     </ul>
                 </div>
             </div>
@@ -124,49 +115,6 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        const statusResult = document.getElementById('statusResult');
-        const appIdInput = document.getElementById('appIdInput');
-        const checkBtn = document.getElementById('checkBtn');
-
-        function showResult(html) {
-            statusResult.style.display = 'block';
-            statusResult.innerHTML = html;
-        }
-
-        async function fetchStatus(id) {
-            if (!id) return;
-            showResult('<div class="alert alert-info">Checking status&hellip;</div>');
-            try {
-                const res = await fetch(`https://school-management-api-zeta-two.vercel.app/api/applications/${encodeURIComponent(id)}/status`, { method: 'GET', headers: { 'Content-Type': 'application/json' } });
-                const data = await res.json();
-                if (res.ok) {
-                    const submitted = data.submissionDate ? new Date(data.submissionDate).toLocaleString() : 'N/A';
-                    showResult(`
-                        <div class="alert alert-success">
-                            <h5 class="mb-1">Status: ${data.status}</h5>
-                            <p class="mb-1"><strong>Submitted:</strong> ${submitted}</p>
-                            <p class="mb-0"><strong>Remarks:</strong> ${data.remarks || 'None'}</p>
-                        </div>
-                    `);
-                } else {
-                    showResult(`<div class="alert alert-danger">${data.message || 'Application not found'}</div>`);
-                }
-            } catch (err) {
-                console.error('Error fetching status', err);
-                showResult('<div class="alert alert-danger">Network error while checking status.</div>');
-            }
-        }
-
-        checkBtn.addEventListener('click', () => fetchStatus(appIdInput.value.trim()));
-
-        // Auto-check from URL ?id=
-        const params = new URLSearchParams(window.location.search);
-        const idFromUrl = params.get('id');
-        if (idFromUrl) {
-            appIdInput.value = idFromUrl;
-            fetchStatus(idFromUrl);
-        }
-    </script>
+    <script src="status.js"></script>
 </body>
 </html>

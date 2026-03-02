@@ -307,7 +307,7 @@
 
             // Redirect after animation
             setTimeout(() => {
-                window.location.href = 'login.html';
+                window.location.href = '../Login/login.html';
             }, 3000);
         }
 

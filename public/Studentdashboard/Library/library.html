@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library - Bethel College</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+     <link href="./library.css" rel="stylesheet">
+</head>
+<body>
+     <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><i class="fas fa-graduation-cap me-2"></i>Bethel College</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="../Studentdashboard/home.html"><i class="fas fa-home me-1"></i>Dashboard</a>
+                <a class="nav-link" href="../Studentdashboard/Profile/profile.html"><i class="fas fa-user me-1"></i>Profile</a>
+                <a class="nav-link" href="../Studentdashboard/Courses/courses.html"><i class="fas fa-book me-1"></i>Courses</a>
+                <a class="nav-link active" href="./library.html"><i class="fas fa-book-open me-1"></i>Library</a>
+                <button class="btn logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt me-1"></i>Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1><i class="fas fa-book-open me-2"></i>Library Resources</h1>
+            <p>Access books, e-books, videos, and other learning materials</p>
+            <div class="student-info">
+                <strong id="studentName">John Doe</strong><br>
+                <small>Student ID: 2023001</small>
+            </div>
+        </div>
+        <div class="dashboard-body">
+            <!-- Search and Filter -->
+            <div class="search-container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <input type="text" class="search-input" id="searchInput" placeholder="Search resources by title, author, or type...">
+                    </div>
+                    <div class="col-md-4">
+                        <button class="filter-btn active" data-filter="all">All Resources</button>
+                        <button class="filter-btn" data-filter="book">Books</button>
+                        <button class="filter-btn" data-filter="ebook">E-books</button>
+                        <button class="filter-btn" data-filter="video">Videos</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resources Grid -->
+            <div class="row" id="resourcesGrid">
+                <!-- Resources will be loaded here -->
+            </div>
+
+            <!-- Loading Message -->
+            <div id="loadingMessage" class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Loading library resources...</p>
+            </div>
+
+            <!-- No Results Message -->
+            <div id="noResultsMessage" class="text-center d-none">
+                <i class="fas fa-search icon-large text-muted"></i>
+                <h4 class="mt-3">No resources found</h4>
+                <p class="text-muted">Try adjusting your search or filter criteria</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; 2026 Bethel College. All rights reserved. | <a href="../Contact/contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a></p>
+        <p class="text-muted mb-0">123 College Ave, Bethel, IN 46501 | (555) 123-4567</p>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+
+</body>
+</html>

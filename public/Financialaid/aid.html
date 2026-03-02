@@ -11,193 +11,10 @@
     <!-- Animate.css -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <!-- Custom CSS -->
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            margin: 0;
-            padding: 0;
-        }
-        .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-        .navbar-brand {
-            font-weight: bold;
-            font-size: 1.5rem;
-            color: #667eea !important;
-        }
-        .navbar-nav .nav-link {
-            color: #333 !important;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-        .navbar-nav .nav-link:hover {
-            color: #667eea !important;
-        }
-        .dropdown-menu {
-            border: none;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-        .hero-section {
-            padding: 120px 0 80px;
-            text-align: center;
-            color: white;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .hero-title {
-            font-size: 3rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-        .hero-subtitle {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-        .content-section {
-            padding: 80px 0;
-            background: white;
-        }
-        .aid-card {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-            transition: all 0.3s ease;
-            border-left: 5px solid #667eea;
-        }
-        .aid-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        }
-        .aid-icon {
-            font-size: 2.5rem;
-            color: #667eea;
-            margin-bottom: 1rem;
-        }
-        .aid-type {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 1rem;
-        }
-        .aid-description {
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 1rem;
-        }
-        .btn-primary {
-            background: #667eea;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            background: #5a67d8;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
-        }
-        .table {
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        .table th {
-            background: #667eea;
-            color: white;
-            font-weight: 600;
-        }
-        .footer {
-            background: #2c3e50;
-            color: white;
-            padding: 40px 0;
-            text-align: center;
-        }
-        .footer-links {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .footer-links li {
-            display: inline-block;
-            margin: 0 15px;
-        }
-        .footer-links a {
-            color: white;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        .footer-links a:hover {
-            color: #667eea;
-        }
-        .social-links a {
-            color: white;
-            font-size: 1.5rem;
-            transition: color 0.3s ease;
-        }
-        .social-links a:hover {
-            color: #667eea;
-        }
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .animate__animated {
-            animation-duration: 1s;
-        }
-
-        /* Mobile Responsiveness */
-        @media (max-width: 991px) {
-            .hero-title { font-size: 2rem; }
-            .hero-subtitle { font-size: 1rem; }
-            .hero-section { padding: 100px 0 60px; }
-            .navbar-collapse { background: rgba(255,255,255,0.95); padding: 15px; border-radius: 10px; margin-top: 10px; }
-            .navbar-nav { margin-bottom: 15px; }
-            .navbar-nav .nav-link { padding: 10px 0; }
-            .dropdown-menu { box-shadow: none; border: 1px solid #e1e5e9; }
-        }
-
-        @media (max-width: 768px) {
-            .hero-title { font-size: 1.75rem; }
-            .hero-subtitle { font-size: 0.95rem; }
-            .hero-section { padding: 90px 0 50px; }
-            .content-section { padding: 50px 0; }
-            .aid-card { padding: 20px; margin-bottom: 20px; }
-            .aid-icon { font-size: 2rem; }
-            .aid-type { font-size: 1.25rem; }
-            .stat-number { font-size: 1.5rem; }
-            .footer { padding: 30px 0; }
-            .footer-links li { display: block; margin: 10px 0; }
-            .footer h5 { margin-top: 20px; }
-        }
-
-        @media (max-width: 576px) {
-            .hero-title { font-size: 1.5rem; }
-            .hero-subtitle { font-size: 0.9rem; }
-            .content-section { padding: 40px 0; }
-            .btn-primary { padding: 10px 20px; font-size: 0.9rem; }
-        }
-    </style>
+    <link href="aid.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Navigation -->
+     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
             <a class="navbar-brand" href="home/home.html"><i class="fas fa-graduation-cap me-2"></i>Bethel College</a>
@@ -440,21 +257,21 @@
                 <div class="col-md-4">
                     <h5>Quick Links</h5>
                     <ul class="footer-links">
-                        <li><a href="home/home.html#home">Home</a></li>
-                        <li><a href="home/home.html#features">Why Choose Us</a></li>
-                        <li><a href="home/home.html#programs">Academic Programs</a></li>
-                        <li><a href="home/home.html#about">About</a></li>
-                        <li><a href="home/home.html#contact">Contact</a></li>
+                        <li><a href="../Studentdashboard/home.html#home">Home</a></li>
+                        <li><a href="../Studentdashboard/home.html#features">Why Choose Us</a></li>
+                        <li><a href="../Studentdashboard/home.html#programs">Academic Programs</a></li>
+                        <li><a href="../Studentdashboard/home.html#about">About</a></li>
+                        <li><a href="../Studentdashboard/home.html#contact">Contact</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4">
                     <h5>Admissions</h5>
                     <ul class="footer-links">
-                        <li><a href="apply-now.html">Apply Now</a></li>
-                        <li><a href="tuition-fees.html">Tuition & Fees</a></li>
-                        <li><a href="financial-aid.html">Financial Aid</a></li>
-                        <li><a href="visit-campus.html">Visit Campus</a></li>
-                        <li><a href="student-life.html">Student Life</a></li>
+                        <li><a href="../Applynow/apply.html">Apply Now</a></li>
+                        <li><a href="../Tuitionfees/fees.html">Tuition & Fees</a></li>
+                        <li><a href="../Financialaid/aid.html">Financial Aid</a></li>
+                        <li><a href="../Visitcampus/campus.html">Visit Campus</a></li>
+                        <li><a href="../Studentlife/life.html">Student Life</a></li>
                     </ul>
                 </div>
             </div>
@@ -466,38 +283,6 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
-    <script>
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Animate on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate__animated', 'animate__fadeInUp');
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.aid-card, .stat-number').forEach(el => {
-            observer.observe(el);
-        });
-    </script>
+    <script src="aid.js"></script>
 </body>
 </html>

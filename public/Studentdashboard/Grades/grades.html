@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grades - Bethel College</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="./grades.css" rel="stylesheet">
+</head>
+<body>
+     <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><i class="fas fa-graduation-cap me-2"></i>Bethel College</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="../home.html"><i class="fas fa-home me-1"></i>Dashboard</a>
+                <a class="nav-link" href="../Profile/profile.html"><i class="fas fa-user me-1"></i>Profile</a>
+                <a class="nav-link" href="../Courses/courses.html"><i class="fas fa-book me-1"></i>Courses</a>
+                <a class="nav-link active" href="./grades.html"><i class="fas fa-chart-line me-1"></i>Grades</a>
+                <button class="btn logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt me-1"></i>Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1><i class="fas fa-chart-line me-2"></i>Grades & Performance</h1>
+            <p>View your academic performance and grades</p>
+            <div class="student-info">
+                <strong id="studentName">John Doe</strong><br>
+                <small>Student ID: 2023001</small>
+            </div>
+        </div>
+        <div class="dashboard-body">
+            <!-- Performance Overview -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card stat-card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-chart-bar icon-large"></i>
+                            <div class="stat-number" id="currentGPA">3.75</div>
+                            <h5>Current GPA</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card stat-card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-graduation-cap icon-large"></i>
+                            <div class="stat-number" id="totalCredits">60</div>
+                            <h5>Total Credits</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card stat-card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-calendar-alt icon-large"></i>
+                            <div class="stat-number" id="currentSemester">Fall 2025</div>
+                            <h5>Current Semester</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grades Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-table me-2"></i>Grade Report</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="grade-table" id="gradesTable">
+                            <thead>
+                                <tr>
+                                    <th>Course Code</th>
+                                    <th>Course Name</th>
+                                    <th>Credits</th>
+                                    <th>Grade</th>
+                                    <th>Grade Points</th>
+                                    <th>Semester</th>
+                                </tr>
+                            </thead>
+                            <tbody id="gradesTableBody">
+                                <!-- Grades will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grade Legend -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Grade Legend</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><span class="grade-A">A (4.0)</span> - Excellent</p>
+                            <p><span class="grade-B">B (3.0)</span> - Good</p>
+                            <p><span class="grade-C">C (2.0)</span> - Satisfactory</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><span class="grade-D">D (1.0)</span> - Poor</p>
+                            <p><span class="grade-F">F (0.0)</span> - Fail</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; 2026 Bethel College. All rights reserved. | <a href="/public/Contact/contact.html">Contact Us</a> | <a href="../Privacy/privacy.html">Privacy Policy</a></p>
+        <p class="text-muted mb-0">123 College Ave, Bethel, IN 46501 | (555) 123-4567</p>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+     <script src="./grades.js"></script>
+     
+</body>
+</html>

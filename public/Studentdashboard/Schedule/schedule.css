@@ -1,0 +1,226 @@
+body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .dashboard-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin: 20px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        .dashboard-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        .dashboard-header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        .dashboard-header p {
+            margin: 10px 0 0;
+            opacity: 0.9;
+        }
+        .student-info {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            text-align: right;
+            font-size: 0.9rem;
+        }
+        .dashboard-body {
+            padding: 40px;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 20px;
+        }
+        .card-body {
+            padding: 30px;
+        }
+        .btn-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+        .logout-btn {
+            background: #dc3545;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .logout-btn:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            color: white;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 30px;
+        }
+        .navbar-brand {
+            color: white !important;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        .navbar-nav .nav-link {
+            color: white !important;
+            margin: 0 15px;
+            font-weight: 500;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #f8f9fa !important;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .icon-large {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        .text-muted {
+            color: #6c757d !important;
+        }
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+        }
+        .timetable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .timetable th, .timetable td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+            vertical-align: middle;
+        }
+        .timetable th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #495057;
+        }
+        .timetable .time-column {
+            background-color: #e9ecef;
+            font-weight: bold;
+            width: 120px;
+        }
+        .course-cell {
+            background-color: #f8f9ff;
+            border-left: 4px solid #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .course-cell:hover {
+            background-color: #e7f3ff;
+            transform: scale(1.02);
+        }
+        .course-cell.empty {
+            background-color: #f8f9fa;
+            border-left: none;
+        }
+        .course-name {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+        .course-details {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+        .semester-selector {
+            margin-bottom: 30px;
+        }
+        .semester-btn {
+            margin: 0 10px 10px 0;
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .semester-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        .semester-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 991px) {
+            .navbar { padding: 10px 15px; }
+            .navbar-nav .nav-link { margin: 0 10px; font-size: 0.9rem; }
+            .dashboard-header { padding: 20px; }
+            .dashboard-header h1 { font-size: 2rem; }
+            .student-info { position: static; text-align: center; margin-top: 15px; }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container { margin: 10px; }
+            .dashboard-header h1 { font-size: 1.5rem; }
+            .dashboard-body { padding: 20px; }
+            .semester-btn { padding: 8px 15px; font-size: 0.9rem; }
+            .timetable { display: block; overflow-x: auto; }
+            .timetable th, .timetable td { padding: 8px 4px; font-size: 0.8rem; }
+            .timetable .time-column { width: 80px; font-size: 0.7rem; }
+            .course-name { font-size: 0.8rem; }
+            .course-details { font-size: 0.7rem; }
+        }
+
+        @media (max-width: 576px) {
+            .navbar-brand { font-size: 1.2rem; }
+            .logout-btn { padding: 8px 12px; font-size: 0.85rem; }
+            .dashboard-header h1 { font-size: 1.25rem; }
+            .card-header { padding: 15px; }
+            .card-body { padding: 15px; }
+            .semester-btn { padding: 6px 12px; font-size: 0.8rem; margin: 0 5px 8px 0; }
+        }
